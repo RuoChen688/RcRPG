@@ -7,7 +7,6 @@ import RcRPG.RPG.*;
 import RcRPG.Society.Money;
 import RcRPG.Society.Points;
 import RcRPG.Society.Prefix;
-import RcRPG.Society.Trade;
 import cn.nukkit.Player;
 import cn.nukkit.Server;
 import cn.nukkit.command.Command;
@@ -44,9 +43,6 @@ public class Commands extends Command {
                 sender.sendMessage("/rpg point help 点券指令");
                 sender.sendMessage("/rpg shop help 商店指令");
                 sender.sendMessage("/rpg py 切换交易模式");
-                break;
-            case "py":
-                Trade.setTrade((Player) sender);
                 break;
             case "guild":
                 guildForm.make_one((Player) sender);

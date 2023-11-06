@@ -2,9 +2,11 @@ package RcRPG;
 
 import RcRPG.Form.guildForm;
 import RcRPG.Form.inlayForm;
-import RcRPG.Panel.DisplayPanel;
 import RcRPG.RPG.*;
-import RcRPG.Society.*;
+import RcRPG.Society.Guild;
+import RcRPG.Society.Money;
+import RcRPG.Society.Prefix;
+import RcRPG.Society.Shop;
 import RcRPG.Task.removeFloatingText;
 import cn.nukkit.Player;
 import cn.nukkit.Server;
@@ -15,7 +17,6 @@ import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.Listener;
 import cn.nukkit.event.block.BlockBreakEvent;
 import cn.nukkit.event.entity.EntityDamageByEntityEvent;
-import cn.nukkit.event.inventory.InventoryClickEvent;
 import cn.nukkit.event.player.*;
 import cn.nukkit.form.response.FormResponseCustom;
 import cn.nukkit.form.response.FormResponseData;
@@ -373,39 +374,6 @@ public class Events implements Listener {
         player.setNameTagVisible();
         player.setNameTagAlwaysVisible();
         player.setMaxHealth(Handle.getMaxHealth(player));
-    }
-
-    public LinkedHashMap<Player,Item> playerItem = new LinkedHashMap<>();
-
-    @EventHandler
-    public void onPy(InventoryClickEvent event){
-        Player player = event.getPlayer();
-        if(Trade.isTrade(player) && Trade.playerTrade.containsKey(player)){
-            Player to = Trade.playerTrade.get(player);
-            Item item = event.getSourceItem();
-            int slot = event.getSlot();
-            if(this.playerItem.containsKey(player) && this.playerItem.get(player).equals(item)){
-                Trade.addItem(player,item);
-                player.getInventory().remove(item);
-                DisplayPanel panel = Trade.playerPanel.get(player);
-                panel.getInventory().setContents(panel.getPanel(player));
-            }
-        }
-    }
-
-    @EventHandler
-    public void onClick(PlayerInteractEntityEvent event){
-        Player player = event.getPlayer();
-        Entity entity = event.getEntity();
-        if(entity instanceof Player){
-            if(Trade.isTrade(player) && Trade.isTrade((Player) entity)){
-                DisplayPanel panel = new DisplayPanel();
-                panel.displayPlayer(player,"交易面板");
-                Trade.playerPanel.put(player,panel);
-                panel.displayPlayer((Player) entity,"交易面板");
-                Trade.playerPanel.put((Player) entity,panel);
-            }
-        }
     }
 
 }

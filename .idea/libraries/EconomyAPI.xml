@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="EconomyAPI">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../EconomyAPI.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

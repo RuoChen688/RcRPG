@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="RcRPG">
+    <output-path>$PROJECT_DIR$/out/artifacts/RcRPG</output-path>
+    <root id="archive" name="RcRPG.jar">
+      <element id="module-output" name="RcRPG" />
+      <element id="file-copy" path="$PROJECT_DIR$/plugin.yml" />
+      <element id="dir-copy" path="$PROJECT_DIR$/src/resources" />
+    </root>
+  </artifact>
+</component>

@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="RcNPC">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../RcNPC/out/artifacts/RcNPC/RcNPC.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

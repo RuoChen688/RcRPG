@@ -50,7 +50,7 @@ public class ItemAttr extends Manager {
                     attrMap.put(key, floatValue);
                 }
             } else {
-                RcRPGMain.instance.getLogger().warning(key + " ItemAttr中不知道是啥类型");
+                RcRPGMain.getInstance().getLogger().warning(key + " ItemAttr中不知道是啥类型");
             }
         }
         mainAttr = attrMap;

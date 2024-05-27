@@ -60,13 +60,13 @@ public class Shop {
 
             return shop;
         }catch (Exception e){
-            RcRPGMain.instance.getLogger().error("加载商店"+name+"配置文件失败");
+            RcRPGMain.getInstance().getLogger().error("加载商店"+name+"配置文件失败");
             return null;
         }
     }
 
     public static Config getShopConfig(String name){
-        File file = new File(RcRPGMain.instance.getDataFolder()+"/Shop/"+name+".yml");
+        File file = new File(RcRPGMain.getInstance().getDataFolder()+"/Shop/"+name+".yml");
         Config config;
         if(file.exists()){
             config = new Config(file,Config.YAML);
@@ -78,8 +78,8 @@ public class Shop {
 
     public static Config addShopConfig(String name,String pos){
         if(getShopConfig(name) == null){
-            RcRPGMain.instance.saveResource("Shop.yml","/Shop/"+name+".yml",false);
-            Config config = new Config(RcRPGMain.instance.getShopFile()+"/"+name+".yml");
+            RcRPGMain.getInstance().saveResource("Shop.yml","/Shop/"+name+".yml",false);
+            Config config = new Config(RcRPGMain.getInstance().getShopFile()+"/"+name+".yml");
             config.set("位置",pos);
             config.save();
             return config;
@@ -89,7 +89,7 @@ public class Shop {
 
     public static boolean delShopConfig(String name){
         if(getShopConfig(name) != null){
-            File file = new File(RcRPGMain.instance.getShopFile(),"/"+name+".yml");
+            File file = new File(RcRPGMain.getInstance().getShopFile(),"/"+name+".yml");
             file.delete();
             return true;
         }

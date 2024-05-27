@@ -28,8 +28,8 @@ public class Money {
                 Config config = Handle.getPlayerConfig(name);
                 config.set("金币",config.getInt("金币") + money);
                 config.save();
-                if(!RcRPGMain.instance.config.getString("金币增加提示").equals("")){
-                    String text = RcRPGMain.instance.config.getString("金币增加提示");
+                if(!RcRPGMain.getInstance().config.getString("金币增加提示").equals("")){
+                    String text = RcRPGMain.getInstance().config.getString("金币增加提示");
                     if(text.contains("@player")) text = text.replace("@player",name);
                     if(text.contains("@money")) text = text.replace("@money",String.valueOf(money));
                     player.sendMessage(text);

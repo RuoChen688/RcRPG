@@ -10,7 +10,7 @@ import RcRPG.RPG.*;
 import RcRPG.Society.Money;
 import RcRPG.Society.Prefix;
 import RcRPG.Society.Shop;
-import RcRPG.Task.removeFloatingText;
+import RcRPG.floatingtext.TextEntity;
 import RcRPG.guild.Guild;
 import cn.nukkit.Player;
 import cn.nukkit.Server;
@@ -28,12 +28,10 @@ import cn.nukkit.form.response.FormResponseCustom;
 import cn.nukkit.form.response.FormResponseData;
 import cn.nukkit.form.response.FormResponseSimple;
 import cn.nukkit.item.Item;
-import cn.nukkit.level.Location;
 import cn.nukkit.level.Sound;
-import cn.nukkit.math.Vector3;
 import cn.nukkit.potion.Effect;
 import cn.nukkit.utils.Config;
-import com.smallaswater.littlemonster.entity.LittleNpc;
+import com.smallaswater.littlemonster.entity.IEntity;
 import com.smallaswater.npc.entitys.EntityRsNPC;
 import healthapi.PlayerHealth;
 
@@ -165,7 +163,7 @@ public class Events implements Listener {
                     if (Handle.getGuilds().contains(response10.getInputResponse(1))) {
                         guildForm.create_failed(player);
                     } else {
-                        if (Money.getMoney(player) < RcRPGMain.instance.config.getInt("公会创建初始资金")) {
+                        if (Money.getMoney(player) < RcRPGMain.getInstance().config.getInt("公会创建初始资金")) {
                             guildForm.create_failed(player);
                         } else {
                             Guild.addGuild(player, response10.getInputResponse(1));
@@ -300,8 +298,8 @@ public class Events implements Listener {
 
         if (damagerIsPlayer) {
             DAttr = PlayerAttr.getPlayerAttr((Player) damager);
-        } else if (hasLittleMonster && damager instanceof LittleNpc) {
-            DAttr = new LittleMonsterAttr(((LittleNpc) damager).getConfig());
+        } else if (hasLittleMonster && damager instanceof IEntity) {
+            DAttr = new LittleMonsterAttr(((IEntity) damager).getConfig());
 //        } else if (hasRcEntity && damager instanceof BaseEntity) {
 //            String name = ((BaseEntity) damager).getName();
 //            if (RcEntity.Main.getInstance().loadEntity.containsKey(name)) {
@@ -318,8 +316,8 @@ public class Events implements Listener {
 
         if (woundedIsPlayer) {
             WAttr = PlayerAttr.getPlayerAttr((Player) wounded);
-        } else if (hasLittleMonster && wounded instanceof LittleNpc) {
-            WAttr = new LittleMonsterAttr(((LittleNpc) wounded).getConfig());
+        } else if (hasLittleMonster && wounded instanceof IEntity) {
+            WAttr = new LittleMonsterAttr(((IEntity) wounded).getConfig());
 //        } else if (hasRcEntity && wounded instanceof BaseEntity) {
 //            String name = ((BaseEntity) wounded).getName();
 //            if (RcEntity.Main.getInstance().loadEntity.containsKey(name)) {
@@ -569,10 +567,9 @@ public class Events implements Listener {
             }
 
             // 伤害 浮空字
-            Vector3 go = Damage.go(damager.yaw, damager.pitch,2);
-            FloatingText floatingText = new FloatingText(new Location(damager.x + go.x, damager.y+1, damager.z+ go.z, damager.level), "§c-"+finalDamage);
-            floatingText.spawnToAll();
-            RcRPGMain.instance.getServer().getScheduler().scheduleDelayedTask(new removeFloatingText(RcRPGMain.instance, floatingText),15);
+            //Vector3 go = Damage.go(damager.yaw, damager.pitch,2);
+            TextEntity floatingText = TextEntity.send(wounded, "§c-"+finalDamage);
+            //RcRPGMain.getInstance().getServer().getScheduler().scheduleDelayedTask(new removeFloatingText(RcRPGMain.getInstance(), floatingText),15);
         }
     }
     @EventHandler
@@ -600,12 +597,12 @@ public class Events implements Listener {
 
     @EventHandler
     public void chatEvent(PlayerChatEvent event){
-        if (RcRPGMain.instance.disableChatStyle) return;
+        if (RcRPGMain.getInstance().disableChatStyle) return;
         Player player = event.getPlayer();
         String name = player.getName();
         String message = event.getMessage();
         event.setCancelled();
-        String text = RcRPGMain.instance.config.getString("聊天显示");
+        String text = RcRPGMain.getInstance().config.getString("聊天显示");
         if(text.contains("@name")) text = text.replace("@name", player.getName());
         if(text.contains("@hp")) text = text.replace("@hp",String.valueOf(player.getHealth()));
         if(text.contains("@maxhp")) text = text.replace("@maxhp",String.valueOf(player.getMaxHealth()));
@@ -625,20 +622,20 @@ public class Events implements Listener {
 
         PlayerAttr.setPlayerAttr(player);
 
-        File file = new File(RcRPGMain.instance.getDataFolder()+"/Players/"+name+".yml");
+        File file = new File(RcRPGMain.getInstance().getDataFolder()+"/Players/"+name+".yml");
         if(!file.exists()){
-            RcRPGMain.instance.saveResource("Player.yml","/Players/"+name+".yml",false);
-            Config config = new Config(RcRPGMain.instance.getPlayerFile()+"/"+name+".yml");
+            RcRPGMain.getInstance().saveResource("Player.yml","/Players/"+name+".yml",false);
+            Config config = new Config(RcRPGMain.getInstance().getPlayerFile()+"/"+name+".yml");
             config.set("名称",name);
-            config.set("公会", RcRPGMain.instance.config.getString("初始公会"));
-            config.set("称号", RcRPGMain.instance.config.getString("初始称号"));
+            config.set("公会", RcRPGMain.getInstance().config.getString("初始公会"));
+            config.set("称号", RcRPGMain.getInstance().config.getString("初始称号"));
             ArrayList<String> list = (ArrayList<String>) config.getStringList("称号列表");
-            list.add(RcRPGMain.instance.config.getString("初始称号"));
+            list.add(RcRPGMain.getInstance().config.getString("初始称号"));
             config.set("称号列表",list);
             config.save();
         }
-        if (RcRPGMain.instance.config.exists("顶部显示") && !RcRPGMain.instance.config.getString("顶部显示").equals("")) {
-            String text = RcRPGMain.instance.config.getString("顶部显示");
+        if (RcRPGMain.getInstance().config.exists("顶部显示") && !RcRPGMain.getInstance().config.getString("顶部显示").equals("")) {
+            String text = RcRPGMain.getInstance().config.getString("顶部显示");
             if (text.contains("@name")) text = text.replace("@name", player.getName());
             if (text.contains("@hp")) text = text.replace("@hp", String.valueOf(player.getHealth()));
             if (text.contains("@maxhp")) text = text.replace("@maxhp", String.valueOf(player.getMaxHealth()));
@@ -654,7 +651,6 @@ public class Events implements Listener {
             player.setNameTagAlwaysVisible();
         }
     }
-
 
     @EventHandler
     public void deathEvent(PlayerDeathEvent event) {

@@ -5,8 +5,10 @@ import RcRPG.Society.Shop;
 import RcRPG.Task.BoxTimeTask;
 import RcRPG.Task.PlayerAttrUpdateTask;
 import RcRPG.Task.Tip;
+import RcRPG.floatingtext.TextEntity;
 import RcRPG.tips.TipsVariables;
 import cn.nukkit.Server;
+import cn.nukkit.entity.Entity;
 import cn.nukkit.event.Listener;
 import cn.nukkit.lang.PluginI18n;
 import cn.nukkit.lang.PluginI18nManager;
@@ -63,6 +65,8 @@ public class RcRPGMain extends PluginBase implements Listener {
     }
 
     public void onEnable(){
+        Entity.registerEntity("TextEntity", TextEntity.class);
+
         this.getNewFile();
         this.saveResource("Config.yml","/Config.yml",false);
         config = new Config(this.getDataFolder() + "/Config.yml");
@@ -84,9 +88,9 @@ public class RcRPGMain extends PluginBase implements Listener {
         //this.getServer().getScheduler().scheduleRepeatingTask(new loadHealth(this), 10);
         this.getServer().getScheduler().scheduleRepeatingTask(new PlayerAttrUpdateTask(this),20);
 
-        Server.getInstance().getPluginManager().addPermission(new Permission("plugin.rcrpg", "rcrpg 命令权限", "true"));
-        Server.getInstance().getPluginManager().addPermission(new Permission("plugin.rcrpg.admin", "rcrpg 管理员命令权限", "op"));
-        Server.getInstance().getCommandMap().register("rpg", new Commands("rpg"));
+        this.getServer().getPluginManager().addPermission(new Permission("plugin.rcrpg", "rcrpg 命令权限", "true"));
+        this.getServer().getPluginManager().addPermission(new Permission("plugin.rcrpg.admin", "rcrpg 管理员命令权限", "op"));
+        this.getServer().getCommandMap().register("rpg", new Commands("rpg"));
 
         if(Server.getInstance().getPluginManager().getPlugin("EconomyAPI") == null){
             this.getLogger().info("检测到未安装核心，将使用默认的经济核心");
@@ -120,7 +124,7 @@ public class RcRPGMain extends PluginBase implements Listener {
         disableChatStyle = !config.exists("底部显示") || config.getString("底部显示").isEmpty();
 
         this.getLogger().info("开始读取武器信息");
-        for(String name: Handle.getDefaultFiles("Weapon")){
+        for(String name : Handle.getDefaultFiles("Weapon")){
             Weapon weapon = null;
             try {
                 weapon = Weapon.loadWeapon(name,new Config(this.getDataFolder()+"/Weapon/"+name+".yml",Config.YAML));
@@ -310,6 +314,7 @@ public class RcRPGMain extends PluginBase implements Listener {
         attrDisplayPercent.add("PVE攻击加成");
 
         // 添加保守向 (10)的百分比属性
+        attrDisplayPercent.add("反伤率");
         attrDisplayPercent.add("闪避率");
         attrDisplayPercent.add("暴击闪避");
         attrDisplayPercent.add("暴击抵抗");
@@ -327,8 +332,8 @@ public class RcRPGMain extends PluginBase implements Listener {
         attrDisplayPercent.add("燃烧概率");
         attrDisplayPercent.add("雷击概率");
         attrDisplayPercent.add("冰冻概率");
-        if (RcRPGMain.instance.config.exists("AttrDisplayPercent")) {
-            attrDisplayPercentConfig = RcRPGMain.instance.config.getStringList("AttrDisplayPercent");
+        if (RcRPGMain.getInstance().config.exists("AttrDisplayPercent")) {
+            attrDisplayPercentConfig = RcRPGMain.getInstance().config.getStringList("AttrDisplayPercent");
         } else {
             attrDisplayPercentConfig = attrDisplayPercent;
         }

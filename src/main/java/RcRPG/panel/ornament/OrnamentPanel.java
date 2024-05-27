@@ -35,13 +35,13 @@ public class OrnamentPanel implements InventoryHolder {
     }
 
     public void sendPanel(Player player) {
-        Map<Integer, Item> panel = getPanel(player);
-        displayPlayer(player, panel);
-    }
-
-    public void displayPlayer(Player player, Map<Integer, Item> itemMap) {
         OrnamentInventory inv = new OrnamentInventory("饰品背包");
-        inv.setContents(itemMap);
+        inv.setContents(getPanel(player));
+        Item mask = Item.fromString("minecraft:black_stained_glass_pane");
+        mask.setCustomName("§r§c饰品仅允许置于空槽位中");
+        for (int i = RcRPGMain.getInstance().config.getInt("饰品生效格数"); i < inv.getSize(); i++) {
+            inv.setItem(i, mask);
+        }
 
         inv.setDefaultItemHandler((item, event) -> {
             for (InventoryAction action : event.getTransaction().getActions()) {

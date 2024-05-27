@@ -1,21 +1,22 @@
 package RcRPG.Task;
 
-import RcRPG.FloatingText;
 import RcRPG.RcRPGMain;
+import RcRPG.floatingtext.TextEntity;
 import cn.nukkit.scheduler.PluginTask;
 
-public class removeFloatingText extends PluginTask {
+public class removeFloatingText extends PluginTask<RcRPGMain> {
 
-    protected FloatingText floatingText;
+    protected TextEntity floatingText;
 
-    public removeFloatingText(RcRPGMain rcRPGMain, FloatingText floatingText){
+    public removeFloatingText(RcRPGMain rcRPGMain, TextEntity floatingText){
         super(rcRPGMain);
         this.floatingText = floatingText;
     }
 
     @Override
     public void onRun(int i) {
-        this.floatingText.respawnAll();
-        this.cancel();
+        if(((TextEntity) floatingText).close){
+            floatingText.kill();
+        }
     }
 }

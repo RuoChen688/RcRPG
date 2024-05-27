@@ -12,11 +12,11 @@ rcrpg.playerattr.set_suit_message=You feel the effects of §l{%0} ({%1})§r's §
 rcrpg.event.item_consume=§l§cOrnament§r are non-consumable! Please put them in your §l§eOrnament backpack§r to use them.
 
 rcrpg.window.select_config_manage=Please select the configuration you want to manage
-rcrpg.window.rcRPGMain.title=RcRPG Management - Accessories List
-rcrpg.window.rcRPGMain.button1=Weapon
-rcrpg.window.rcRPGMain.button2=Armour
-rcrpg.window.rcRPGMain.button3=Stone (Gems)
-rcrpg.window.rcRPGMain.button4=Ornament
+rcrpg.window.main.title=RcRPG Management - Accessories List
+rcrpg.window.main.button1=Weapon
+rcrpg.window.main.button2=Armour
+rcrpg.window.main.button3=Stone (Gems)
+rcrpg.window.main.button4=Ornament
 
 rcrpg.window.armour.title=RcRPG Management - Armor List
 

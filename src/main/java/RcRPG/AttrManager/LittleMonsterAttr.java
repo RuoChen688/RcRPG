@@ -50,7 +50,7 @@ public class LittleMonsterAttr extends Manager {
                     attrMap.put(key, floatValue);
                 }
             } else {
-                RcRPGMain.instance.getLogger().warning(key + "不知道是啥类型");
+                RcRPGMain.getInstance().getLogger().warning(key + "不知道是啥类型");
             }
         }
 

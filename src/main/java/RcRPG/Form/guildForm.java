@@ -15,7 +15,7 @@ public class guildForm {
 
     public static void make_one(Player player){
         Config config = Handle.getPlayerConfig(player.getName());
-        if(config.getString("公会").equals(RcRPGMain.instance.config.getString("初始公会"))){
+        if(config.getString("公会").equals(RcRPGMain.getInstance().config.getString("初始公会"))){
             FormWindowSimple form = new FormWindowSimple("公会系统","你当前并未加入公会\n点击按钮加入/创建公会吧");
             form.addButton(new ElementButton("加入公会"));
             form.addButton(new ElementButton("创建公会"));
@@ -50,7 +50,7 @@ public class guildForm {
     }
 
     public static void make_create(Player player){
-        ElementLabel elementLabel = new ElementLabel("创建公会需要消耗"+ RcRPGMain.instance.config.getString("公会创建初始资金"));
+        ElementLabel elementLabel = new ElementLabel("创建公会需要消耗"+ RcRPGMain.getInstance().config.getString("公会创建初始资金"));
         ElementInput elementInput = new ElementInput("输入你的公会名字");
         ArrayList<Element> list = new ArrayList<>();
         list.add(elementLabel);

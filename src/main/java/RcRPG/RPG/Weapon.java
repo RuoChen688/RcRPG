@@ -139,13 +139,13 @@ public class Weapon extends ItemAttr {
             weapon.setServerMessage(config.getString("全服通知"));
             return weapon;
         }catch(Exception e){
-            RcRPGMain.instance.getLogger().error("加载武器"+name+"配置文件失败");
+            RcRPGMain.getInstance().getLogger().error("加载武器"+name+"配置文件失败");
             return null;
         }
     }
 
     public static Config getWeaponConfig(String name){
-        File file = new File(RcRPGMain.instance.getDataFolder()+"/Weapon/"+name+".yml");
+        File file = new File(RcRPGMain.getInstance().getDataFolder()+"/Weapon/"+name+".yml");
         Config config;
         if(file.exists()){
             config = new Config(file,Config.YAML);
@@ -157,8 +157,8 @@ public class Weapon extends ItemAttr {
 
     public static Config addWeaponConfig(String name,String id){
         if(getWeaponConfig(name) == null){
-            RcRPGMain.instance.saveResource("Weapon.yml","/Weapon/"+name+".yml",false);
-            Config config = new Config(RcRPGMain.instance.getWeaponFile()+"/"+name+".yml");
+            RcRPGMain.getInstance().saveResource("Weapon.yml","/Weapon/"+name+".yml",false);
+            Config config = new Config(RcRPGMain.getInstance().getWeaponFile()+"/"+name+".yml");
             config.set("物品ID",id);
             config.save();
             return config;
@@ -168,7 +168,7 @@ public class Weapon extends ItemAttr {
 
     public static boolean delWeaponConfig(String name){
         if(getWeaponConfig(name) != null){
-            File file = new File(RcRPGMain.instance.getWeaponFile(),"/"+name+".yml");
+            File file = new File(RcRPGMain.getInstance().getWeaponFile(),"/"+name+".yml");
             file.delete();
             return true;
         }
@@ -212,7 +212,7 @@ public class Weapon extends ItemAttr {
             String text = weapon.getServerMessage();
             if(text.contains("@player")) text = text.replace("@player", player.getName());
             if(text.contains("@item")) text = text.replace("@item", weapon.getLabel());
-            RcRPGMain.instance.getServer().broadcastMessage(text);
+            RcRPGMain.getInstance().getServer().broadcastMessage(text);
         }
         return true;
     }

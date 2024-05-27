@@ -65,13 +65,13 @@ public class Box {
 
             return box;
         }catch(Exception e){
-            RcRPGMain.instance.getLogger().error("加载箱子"+name+"配置文件失败");
+            RcRPGMain.getInstance().getLogger().error("加载箱子"+name+"配置文件失败");
             return null;
         }
     }
 
     public static Config getBoxConfig(String name){
-        File file = new File(RcRPGMain.instance.getDataFolder()+"/Box/"+name+".yml");
+        File file = new File(RcRPGMain.getInstance().getDataFolder()+"/Box/"+name+".yml");
         Config config;
         if(file.exists()){
             config = new Config(file,Config.YAML);
@@ -83,8 +83,8 @@ public class Box {
 
     public static Config addBoxConfig(String name,String id){
         if(getBoxConfig(name) == null){
-            RcRPGMain.instance.saveResource("Box.yml","/Box/"+name+".yml",false);
-            Config config = new Config(RcRPGMain.instance.getBoxFile()+"/"+name+".yml");
+            RcRPGMain.getInstance().saveResource("Box.yml","/Box/"+name+".yml",false);
+            Config config = new Config(RcRPGMain.getInstance().getBoxFile()+"/"+name+".yml");
             config.set("物品ID",id);
             config.save();
             return config;
@@ -94,7 +94,7 @@ public class Box {
 
     public static boolean delBoxConfig(String name){
         if(getBoxConfig(name) != null){
-            File file = new File(RcRPGMain.instance.getBoxFile(),"/"+name+".yml");
+            File file = new File(RcRPGMain.getInstance().getBoxFile(),"/"+name+".yml");
             file.delete();
             return true;
         }
@@ -127,7 +127,7 @@ public class Box {
                 String text = box.getServerMessage();
                 if(text.contains("@player")) text = text.replace("@player", player.getName());
                 if(text.contains("@item")) text = text.replace("@item", box.getLabel());
-                RcRPGMain.instance.getServer().broadcastMessage(text);
+                RcRPGMain.getInstance().getServer().broadcastMessage(text);
             }
             return true;
         }

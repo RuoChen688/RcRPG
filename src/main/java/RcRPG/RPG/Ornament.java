@@ -95,13 +95,13 @@ public class Ornament extends ItemAttr {
             ornament.setEffectiveSlot(config.getInt("生效槽", -1));
             return ornament;
         }catch(Exception e){
-            RcRPGMain.instance.getLogger().error("加载饰品"+name+"配置文件失败");
+            RcRPGMain.getInstance().getLogger().error("加载饰品"+name+"配置文件失败");
             return null;
         }
     }
 
     public static Config getOrnamentConfig(String name){
-        File file = new File(RcRPGMain.instance.getDataFolder()+"/Ornament/"+name+".yml");
+        File file = new File(RcRPGMain.getInstance().getDataFolder()+"/Ornament/"+name+".yml");
         Config config;
         if(file.exists()){
             config = new Config(file,Config.YAML);
@@ -113,8 +113,8 @@ public class Ornament extends ItemAttr {
 
     public static Config addOrnamentConfig(String name,String id){
         if(getOrnamentConfig(name) == null){
-            RcRPGMain.instance.saveResource("Ornament.yml","/Ornament/"+name+".yml",false);
-            Config config = new Config(RcRPGMain.instance.getOrnamentFile()+"/"+name+".yml");
+            RcRPGMain.getInstance().saveResource("Ornament.yml","/Ornament/"+name+".yml",false);
+            Config config = new Config(RcRPGMain.getInstance().getOrnamentFile()+"/"+name+".yml");
             config.set("物品ID",id);
             config.save();
             return config;
@@ -124,7 +124,7 @@ public class Ornament extends ItemAttr {
 
     public static boolean delOrnamentConfig(String name){
         if(getOrnamentConfig(name) != null){
-            File file = new File(RcRPGMain.instance.getOrnamentFile(),"/"+name+".yml");
+            File file = new File(RcRPGMain.getInstance().getOrnamentFile(),"/"+name+".yml");
             file.delete();
             return true;
         }
@@ -166,7 +166,7 @@ public class Ornament extends ItemAttr {
             String text = ornament.getServerMessage();
             if(text.contains("@player")) text = text.replace("@player", player.getName());
             if(text.contains("@item")) text = text.replace("@item", ornament.getLabel());
-            RcRPGMain.instance.getServer().broadcastMessage(text);
+            RcRPGMain.getInstance().getServer().broadcastMessage(text);
         }
         return true;
     }

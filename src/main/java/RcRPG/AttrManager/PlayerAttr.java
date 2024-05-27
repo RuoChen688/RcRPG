@@ -16,10 +16,12 @@ public class PlayerAttr extends Manager {
 
     private final Player player;
     private ArrayList<String> labelList = new ArrayList<>();
+
     public PlayerAttr(Player player) {
         this.player = player;
         myAttr.put("Main", new HashMap<>());
     }
+
     public static LinkedHashMap<Player, PlayerAttr> playerlist = new LinkedHashMap<>();
 
     public static PlayerAttr getPlayerAttr(Player player) {
@@ -28,14 +30,15 @@ public class PlayerAttr extends Manager {
         }
         return playerlist.get(player);
     }
+
     public static void setPlayerAttr(Player player) {
         playerlist.put(player, new PlayerAttr(player));
     }
 
     public void update() {
         // 等级加点
-        if (RcRPGMain.instance.config.exists("等级增加血量")) {
-            String[] s = RcRPGMain.instance.config.getString("等级增加血量").split(":");
+        if (RcRPGMain.getInstance().config.exists("等级增加血量")) {
+            String[] s = RcRPGMain.getInstance().config.getString("等级增加血量").split(":");
             int lvAddHealth;
             if (Level.enable) {
                 lvAddHealth = Level.getLevel(player) / Integer.parseInt(s[0]) * Integer.parseInt(s[1]);
@@ -95,15 +98,15 @@ public class PlayerAttr extends Manager {
             labelList.add(armour.getLabel());
         }
         // 饰品
-        Map<Integer,Item> map = OrnamentPanel.getPanel(player);
+        Map<Integer, Item> map = OrnamentPanel.getPanel(player);
         if (!map.isEmpty()) {
             Map<String, float[]> attr = new HashMap<>();
-            for(int i = 0; i < Math.min(RcRPGMain.getInstance().config.getInt("饰品生效格数"), map.size()); i++){
+            for (int i = 0; i < Math.min(RcRPGMain.getInstance().config.getInt("饰品生效格数"), map.size()); i++) {
                 if (!map.get(i).hasCompoundTag()) continue;
                 Ornament ornament = RcRPGMain.loadOrnament.get(map.get(i).getNamedTag().getString("name"));
                 if (ornament == null) continue;
                 if (!ornament.isValidSlot(i)) continue;
-                OverAttr(attr,ornament.getMainAttr());
+                OverAttr(attr, ornament.getMainAttr());
                 setItemAttrConfig(ornament.getLabel(), attr);
 
                 if (!ornament.getSuit().isEmpty()) {
@@ -135,34 +138,33 @@ public class PlayerAttr extends Manager {
         });
     }
 
-    public void OverAttr(Map<String, float[]> map1,Map<String, float[]> map2){
-        for(Map.Entry<String,float[]> entry : map2.entrySet()){
+    public void OverAttr(Map<String, float[]> map1, Map<String, float[]> map2) {
+        for (Map.Entry<String, float[]> entry : map2.entrySet()) {
             String key = entry.getKey();
             float[] value = entry.getValue();
-            if(value.length == 1){
-                value = new float[]{value[0],value[0]};
+            if (value.length == 1) {
+                value = new float[]{value[0], value[0]};
             }
-            if(!map1.containsKey(key)){
-                map1.put(key,value);
-            }
-            else{
-                map1.put(key,new float[]{map1.get(key)[0] + value[0],map1.get(key)[1] + value[1]});
+            if (!map1.containsKey(key)) {
+                map1.put(key, value);
+            } else {
+                map1.put(key, new float[]{map1.get(key)[0] + value[0], map1.get(key)[1] + value[1]});
             }
         }
     }
 
     public void checkItemStoneAttr(String mainItemName, LinkedList<Stone> list, ArrayList<String> beforLabel, ArrayList<String> labelList) {
-        LinkedHashMap<String,Map<String,float[]>> map = new LinkedHashMap<>();
+        LinkedHashMap<String, Map<String, float[]>> map = new LinkedHashMap<>();
         Map<String, float[]> attr = new HashMap<>();
-        for(Stone stone : list){
-            if(stone == null) continue;
-            if(!map.containsKey(stone.getLabel())){
+        for (Stone stone : list) {
+            if (stone == null) continue;
+            if (!map.containsKey(stone.getLabel())) {
                 attr.clear();
-                OverAttr(attr,stone.getMainAttr());
+                OverAttr(attr, stone.getMainAttr());
                 setItemAttrConfig(mainItemName + " -> " + stone.getLabel(), attr);
-                map.put(stone.getLabel(),attr);
-            }else{
-                OverAttr(map.get(stone.getLabel()),stone.getMainAttr());
+                map.put(stone.getLabel(), attr);
+            } else {
+                OverAttr(map.get(stone.getLabel()), stone.getMainAttr());
                 setItemAttrConfig(mainItemName + " -> " + stone.getLabel(), map.get(stone.getLabel()));
             }
             beforLabel.remove(mainItemName + " -> " + stone.getLabel());
@@ -170,14 +172,16 @@ public class PlayerAttr extends Manager {
         }
     }
 
-    /** 属性结构
+    /**
+     * 属性结构
      * {
-     *     "Main": {
-     *         "攻击力": [1,3]
-     *     }
+     * "Main": {
+     * "攻击力": [1,3]
      * }
-     * */
+     * }
+     */
     public Map<String, Map<String, float[]>> myAttr = new HashMap<>();
+
     public void setItemAttrConfig(String id, Object newAttr) {
         Map<String, float[]> attrMap = new HashMap<>();
         Map<String, Object> attr = (Map<String, Object>) newAttr;
@@ -186,25 +190,26 @@ public class PlayerAttr extends Manager {
             Object value = entry.getValue();
             if (value instanceof List) {
                 List<?> values = (List<?>) value;
-                float[] floatValues = new float[values.size()];
+                float[] floatValue = new float[values.size()];
                 for (int i = 0; i < values.size(); i++) {
                     if (values.get(i) instanceof Double) {
-                        floatValues[i] = ((Double) values.get(i)).floatValue();
+                        floatValue[i] = ((Double) values.get(i)).floatValue();
                     } else if (values.get(i) instanceof Integer) {
-                        floatValues[i] = ((Integer) values.get(i)).floatValue();
+                        floatValue[i] = ((Integer) values.get(i)).floatValue();
                     }
                 }
-                attrMap.put(key, floatValues);
-            } else if (value instanceof float[]){
-                float[] floatValue = (float[]) value;
-                if (floatValue.length == 1) {
-                    float[] newValue = { floatValue[0], floatValue[0] };
-                    attrMap.put(key, newValue);
-                } else {
-                    attrMap.put(key, floatValue);
+                if (floatValue.length < 2) {
+                    floatValue = new float[]{floatValue[0], floatValue[0]};
                 }
+                attrMap.put(key, floatValue);
+            } else if (value instanceof float[]) {
+                float[] floatValue = (float[]) value;
+                if (floatValue.length < 2) {
+                    floatValue = new float[]{floatValue[0], floatValue[0]};
+                }
+                attrMap.put(key, floatValue);
             } else {
-                RcRPGMain.instance.getLogger().warning(key + "不知道是啥类型");
+                RcRPGMain.getInstance().getLogger().warning(key + "不知道是啥类型");
             }
         }
 
@@ -214,10 +219,14 @@ public class PlayerAttr extends Manager {
         // 处理newAttr属性
         for (Map.Entry<String, float[]> entry : attrMap.entrySet()) {
             String key = entry.getKey();
-            float[] mainValues = new float[]{ 0.0f, 0.0f };
+            float[] mainValues = new float[]{0.0f, 0.0f};
             if (mainAttrMap.containsKey(key)) {
                 mainValues = mainAttrMap.get(key);
             }
+            if (mainValues.length < 2) {
+                mainValues = new float[]{mainValues[0], mainValues[0]};
+            }
+
             float[] values = attrMap.get(key);
             mainValues[0] = mainValues[0] - (oldAttrMap.containsKey(key) ? oldAttrMap.get(key)[0] : 0) + values[0];
             mainValues[1] = mainValues[1] - (oldAttrMap.containsKey(key) ? oldAttrMap.get(key)[1] : 0) + values[1];
@@ -238,40 +247,6 @@ public class PlayerAttr extends Manager {
             }
         }
     }
-    public void setItemAttr(String id, Object newAttr) {
-        Map<String, float[]> attrMap = new HashMap<>();
-        Map<String, Object> attr = (Map<String, Object>) newAttr;
-        for (Map.Entry<String, Object> entry : attr.entrySet()) {
-            String key = entry.getKey();
-            Object value = entry.getValue();
-            if (value instanceof List) {
-                List<Float> values = (List<Float>) value;
-                float[] floatValues = new float[values.size()];
-                for (int i = 0; i < values.size(); i++) {
-                    floatValues[i] = values.get(i);
-                }
-                attrMap.put(key, floatValues);
-            } else if (value instanceof float[]){
-                attrMap.put(key, (float[]) value);
-            } else {
-                RcRPGMain.instance.getLogger().warning(key + "不知道是啥类型");
-            }
-        }
-        Map<String, float[]> mainAttrMap = myAttr.get("Main");
-        for (Map.Entry<String, float[]> entry : mainAttrMap.entrySet()) {
-            String key = entry.getKey();
-            if (attrMap.containsKey(key)) {
-                float[] mainValues = mainAttrMap.get(key);
-                float[] values = attrMap.get(key);
-                mainValues[0] -= values[0];
-                mainValues[1] -= values[1];
-                mainAttrMap.put(key, mainValues);
-            } else {
-                mainAttrMap.remove(key);
-            }
-        }
-        myAttr.put(id, attrMap);
-    }
 
     public float getItemAttr(String attrName) {
         Map<String, float[]> mainAttrMap = myAttr.get("Main");
@@ -279,15 +254,16 @@ public class PlayerAttr extends Manager {
         if (mainAttrMap.containsKey(attrName)) {
             data = mainAttrMap.get(attrName);
         } else {
-            data = new float[] {0, 0};
+            data = new float[]{0, 0};
         }
         return getRandomNum(data);
     }
 
     /**
      * 获取指定属性的原始值
+     *
      * @param attrName 属性名
-     * @param index 索引，0为min，1为max。内部可能传入-1
+     * @param index    索引，0为min，1为max。内部可能传入-1
      * @return
      */
     public float getItemAttr(String attrName, int index) {
@@ -343,19 +319,19 @@ public class PlayerAttr extends Manager {
         }
 
         /**
-        str = "";
-        long nowTime = (System.currentTimeMillis() / 1000);
-        for (String i : data.get("Effect").keySet()) {
-            float[] effectData = data.get("Effect").get(i);
-            long time = (long) effectData[0];
-            int level = (int) effectData[1];
-            str += "  " + i + " (" + (time - nowTime) + "s): " + level + "\n";
-        }
+         str = "";
+         long nowTime = (System.currentTimeMillis() / 1000);
+         for (String i : data.get("Effect").keySet()) {
+         float[] effectData = data.get("Effect").get(i);
+         long time = (long) effectData[0];
+         int level = (int) effectData[1];
+         str += "  " + i + " (" + (time - nowTime) + "s): " + level + "\n";
+         }
 
-        if (!str.equals("")) {
-            list.add(new ElementLabel(" §a# 临时效果§r\n" + str));
-        }
-        */
+         if (!str.equals("")) {
+         list.add(new ElementLabel(" §a# 临时效果§r\n" + str));
+         }
+         */
         FormWindowCustom win = new FormWindowCustom("玩家属性 - " + p.getName(), list);
         player.showFormWindow(win);
     }
@@ -384,31 +360,40 @@ public class PlayerAttr extends Manager {
 
         return result.toString();
     }
+    protected static String lessZero(float value) {
+        String strValue = Float.toString(value);
+        if (strValue.endsWith(".0")) {
+            return Integer.toString((int) value);
+        }
+        return Float.toString(value);
+    }
+
     /**
      * 将数据可视化，输入data,属性输出min-max或x%
-      */
-
+     */
     public static String valueToString(float[] data, String attribute) {
-        List<String> attrDisplayPercent = RcRPGMain.instance.attrDisplayPercentConfig;
+        List<String> attrDisplayPercent = RcRPGMain.getInstance().attrDisplayPercentConfig;
         String back = "";
         if (data.length == 2 && data[0] == data[1]) {
             data = new float[]{data[0]};
         } else if (data.length == 1) {
             data = new float[]{data[0]};
         } else {
-            return data[0] + " - " + data[1];
+            return lessZero(data[0]) + " - " + lessZero(data[1]);
         }
         if (attrDisplayPercent.contains(attribute)) {
-            DecimalFormat decimalFormat = new DecimalFormat("0.00");
-            float formattedData = data[0] * 100;
-            if (decimalFormat.format(formattedData).endsWith(".00")) {
-                data = new float[]{(int) formattedData};
+            // 百分比的值
+            DecimalFormat decimalFormat = new DecimalFormat("#.00");
+            String formattedData = decimalFormat.format(data[0] * 100);
+            if (formattedData.endsWith(".00")) {
+                back = (int) (data[0] * 100) + "%%";
+            } else if (formattedData.endsWith("0")) {
+                back = formattedData.substring(0, formattedData.length() - 1) + "%%";
             } else {
-                data = new float[]{formattedData};
+                back = formattedData + "%%";
             }
-            back = data[0] + "%%";
         } else {
-            back = Float.toString(data[0]);
+            back = lessZero(data[0]);
         }
         if (data[0] == 0) {
             back = "0";
@@ -418,9 +403,10 @@ public class PlayerAttr extends Manager {
 
     /**
      * 获取指定属性的原始值
-     * @param label 标签名
+     *
+     * @param label    标签名
      * @param attrName 属性名
-     * @param index 索引，0为min，1为max。内部可能传入-1
+     * @param index    索引，0为min，1为max。内部可能传入-1
      * @return
      */
     public float getItemAttr(String label, String attrName, int index) {
@@ -432,7 +418,7 @@ public class PlayerAttr extends Manager {
         if (mainAttrMap.containsKey(attrName)) {
             data = mainAttrMap.get(attrName);
         } else {
-            data = new float[] {0, 0};
+            data = new float[]{0, 0};
         }
         assert index == 0 || index == 1 : "Index should be 0 or 1";
         return data[index];
@@ -441,6 +427,7 @@ public class PlayerAttr extends Manager {
     public Map<String, float[]> getItemAttrMap() {
         return getItemAttrMap("Main");
     }
+
     public Map<String, float[]> getItemAttrMap(String label) {
         Map<String, float[]> data;
         data = myAttr.getOrDefault(label, null);
@@ -453,7 +440,7 @@ public class PlayerAttr extends Manager {
         if (getItemAttrMap().containsKey("PVP攻击力")) {
             return getItemAttrMap().get("PVP攻击力");
         }
-        return new float[]{ 0.0f, 0.0f };
+        return new float[]{0.0f, 0.0f};
     }
 
     @Override
@@ -461,7 +448,7 @@ public class PlayerAttr extends Manager {
         if (getItemAttrMap().containsKey("PVE攻击力")) {
             return getItemAttrMap().get("PVE攻击力");
         }
-        return new float[]{ 0.0f, 0.0f };
+        return new float[]{0.0f, 0.0f};
     }
 
     @Override
@@ -469,7 +456,7 @@ public class PlayerAttr extends Manager {
         if (getItemAttrMap().containsKey("PVP攻击加成")) {
             return getItemAttrMap().get("PVP攻击加成");
         }
-        return new float[]{ 0.0f, 0.0f };
+        return new float[]{0.0f, 0.0f};
     }
 
     @Override
@@ -477,7 +464,7 @@ public class PlayerAttr extends Manager {
         if (getItemAttrMap().containsKey("PVE攻击加成")) {
             return getItemAttrMap().get("PVE攻击加成");
         }
-        return new float[]{ 0.0f, 0.0f };
+        return new float[]{0.0f, 0.0f};
     }
 
     @Override
@@ -485,7 +472,7 @@ public class PlayerAttr extends Manager {
         if (getItemAttrMap().containsKey("暴击率")) {
             return getItemAttrMap().get("暴击率");
         }
-        return new float[]{ 0.0f, 0.0f };
+        return new float[]{0.0f, 0.0f};
     }
 
     @Override
@@ -493,7 +480,7 @@ public class PlayerAttr extends Manager {
         if (getItemAttrMap().containsKey("暴击倍率")) {
             return getItemAttrMap().get("暴击倍率");
         }
-        return new float[]{ 0.0f, 0.0f };
+        return new float[]{0.0f, 0.0f};
     }
 
     @Override
@@ -501,7 +488,7 @@ public class PlayerAttr extends Manager {
         if (getItemAttrMap().containsKey("吸血率")) {
             return getItemAttrMap().get("吸血率");
         }
-        return new float[]{ 0.0f, 0.0f };
+        return new float[]{0.0f, 0.0f};
     }
 
     @Override
@@ -509,7 +496,7 @@ public class PlayerAttr extends Manager {
         if (getItemAttrMap().containsKey("吸血倍率")) {
             return getItemAttrMap().get("吸血倍率");
         }
-        return new float[]{ 0.0f, 0.0f };
+        return new float[]{0.0f, 0.0f};
     }
 
     @Override
@@ -517,7 +504,7 @@ public class PlayerAttr extends Manager {
         if (getItemAttrMap().containsKey("破防率")) {
             return getItemAttrMap().get("破防率");
         }
-        return new float[]{ 0.0f, 0.0f };
+        return new float[]{0.0f, 0.0f};
     }
 
     @Override
@@ -525,7 +512,7 @@ public class PlayerAttr extends Manager {
         if (getItemAttrMap().containsKey("破防攻击")) {
             return getItemAttrMap().get("破防攻击");
         }
-        return new float[]{ 0.0f, 0.0f };
+        return new float[]{0.0f, 0.0f};
     }
 
     @Override
@@ -533,7 +520,7 @@ public class PlayerAttr extends Manager {
         if (getItemAttrMap().containsKey("破甲率")) {
             return getItemAttrMap().get("破甲率");
         }
-        return new float[]{ 0.0f, 0.0f };
+        return new float[]{0.0f, 0.0f};
     }
 
     @Override
@@ -541,7 +528,7 @@ public class PlayerAttr extends Manager {
         if (getItemAttrMap().containsKey("破甲强度")) {
             return getItemAttrMap().get("破甲强度");
         }
-        return new float[]{ 0.0f, 0.0f };
+        return new float[]{0.0f, 0.0f};
     }
 
     @Override
@@ -549,7 +536,7 @@ public class PlayerAttr extends Manager {
         if (getItemAttrMap().containsKey("命中率")) {
             return getItemAttrMap().get("命中率");
         }
-        return new float[]{ 0.0f, 0.0f };
+        return new float[]{0.0f, 0.0f};
     }
 
     @Override
@@ -557,7 +544,7 @@ public class PlayerAttr extends Manager {
         if (getItemAttrMap().containsKey("伤害加成")) {
             return getItemAttrMap().get("伤害加成");
         }
-        return new float[]{ 0.0f, 0.0f };
+        return new float[]{0.0f, 0.0f};
     }
 
     //保守向 (9)
@@ -566,7 +553,7 @@ public class PlayerAttr extends Manager {
         if (getItemAttrMap().containsKey("闪避率")) {
             return getItemAttrMap().get("闪避率");
         }
-        return new float[]{ 0.0f, 0.0f };
+        return new float[]{0.0f, 0.0f};
     }
 
     @Override
@@ -574,7 +561,7 @@ public class PlayerAttr extends Manager {
         if (getItemAttrMap().containsKey("暴击抵抗")) {
             return getItemAttrMap().get("暴击抵抗");
         }
-        return new float[]{ 0.0f, 0.0f };
+        return new float[]{0.0f, 0.0f};
     }
 
     @Override
@@ -582,7 +569,7 @@ public class PlayerAttr extends Manager {
         if (getItemAttrMap().containsKey("吸血抵抗")) {
             return getItemAttrMap().get("吸血抵抗");
         }
-        return new float[]{ 0.0f, 0.0f };
+        return new float[]{0.0f, 0.0f};
     }
 
     @Override
@@ -590,7 +577,7 @@ public class PlayerAttr extends Manager {
         if (getItemAttrMap().containsKey("血量值")) {
             return getItemAttrMap().get("血量值");
         }
-        return new float[]{ 0.0f, 0.0f };
+        return new float[]{0.0f, 0.0f};
     }
 
     @Override
@@ -598,7 +585,7 @@ public class PlayerAttr extends Manager {
         if (getItemAttrMap().containsKey("防御力")) {
             return getItemAttrMap().get("防御力");
         }
-        return new float[]{ 0.0f, 0.0f };
+        return new float[]{0.0f, 0.0f};
     }
 
     @Override
@@ -606,7 +593,7 @@ public class PlayerAttr extends Manager {
         if (getItemAttrMap().containsKey("血量加成")) {
             return getItemAttrMap().get("血量加成");
         }
-        return new float[]{ 0.0f, 0.0f };
+        return new float[]{0.0f, 0.0f};
     }
 
     @Override
@@ -614,7 +601,7 @@ public class PlayerAttr extends Manager {
         if (getItemAttrMap().containsKey("防御加成")) {
             return getItemAttrMap().get("防御加成");
         }
-        return new float[]{ 0.0f, 0.0f };
+        return new float[]{0.0f, 0.0f};
     }
 
     @Override
@@ -622,7 +609,7 @@ public class PlayerAttr extends Manager {
         if (getItemAttrMap().containsKey("生命加成")) {
             return getItemAttrMap().get("生命加成");
         }
-        return new float[]{ 0.0f, 0.0f };
+        return new float[]{0.0f, 0.0f};
     }
 
     @Override
@@ -630,7 +617,7 @@ public class PlayerAttr extends Manager {
         if (getItemAttrMap().containsKey("护甲强度")) {
             return getItemAttrMap().get("护甲强度");
         }
-        return new float[]{ 0.0f, 0.0f };
+        return new float[]{0.0f, 0.0f};
     }
 
     //辅助增益向 (3)
@@ -639,7 +626,7 @@ public class PlayerAttr extends Manager {
         if (getItemAttrMap().containsKey("经验加成")) {
             return getItemAttrMap().get("经验加成");
         }
-        return new float[]{ 0.0f, 0.0f };
+        return new float[]{0.0f, 0.0f};
     }
 
     @Override
@@ -647,7 +634,7 @@ public class PlayerAttr extends Manager {
         if (getItemAttrMap().containsKey("每秒恢复")) {
             return getItemAttrMap().get("每秒恢复");
         }
-        return new float[]{ 0.0f, 0.0f };
+        return new float[]{0.0f, 0.0f};
     }
 
     @Override
@@ -655,7 +642,7 @@ public class PlayerAttr extends Manager {
         if (getItemAttrMap().containsKey("生命恢复")) {
             return getItemAttrMap().get("生命恢复");
         }
-        return new float[]{ 0.0f, 0.0f };
+        return new float[]{0.0f, 0.0f};
     }
 
     @Override
@@ -663,7 +650,7 @@ public class PlayerAttr extends Manager {
         if (getItemAttrMap().containsKey("移速加成")) {
             return getItemAttrMap().get("移速加成");
         }
-        return new float[]{ 0.0f, 0.0f };
+        return new float[]{0.0f, 0.0f};
     }
 
 

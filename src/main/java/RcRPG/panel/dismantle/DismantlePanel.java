@@ -17,7 +17,7 @@ public class DismantlePanel implements InventoryHolder {
 
     public static Map<Integer, Item> getPanel(Player player) {
         Map<Integer, Item> panel = new LinkedHashMap<>();
-        Item tipItem = Item.fromString("minecraft:oak_hanging_sign");
+        Item tipItem = Item.fromString("minecraft:oak_sign");
         tipItem.setCustomName("提示");
         tipItem.setLore(
                 "将武器、防具放入`分解炉`中关闭即可",
@@ -28,13 +28,8 @@ public class DismantlePanel implements InventoryHolder {
     }
 
     public void sendPanel(Player player) {
-        Map<Integer, Item> panel = getPanel(player);
-        displayPlayer(player, panel);
-    }
-
-    public void displayPlayer(Player player, Map<Integer, Item> itemMap) {
         FakeInventory inv = new DismantleInventory("分解炉");
-        inv.setContents(itemMap);
+        inv.setContents(getPanel(player));
         inv.setDefaultItemHandler((item, event) -> {
             for (InventoryAction action : event.getTransaction().getActions()) {
                 Item sourceItem = action.getSourceItem();

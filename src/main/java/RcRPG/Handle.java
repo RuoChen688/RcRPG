@@ -17,7 +17,7 @@ import java.util.Random;
 public class Handle {
 
     public static Config getPlayerConfig(String name){
-        File file = new File(RcRPGMain.instance.getDataFolder()+"/Players/"+name+".yml");
+        File file = new File(RcRPGMain.getInstance().getDataFolder()+"/Players/"+name+".yml");
         if(file.exists()){
             return new Config(file, Config.YAML);
         }
@@ -26,7 +26,7 @@ public class Handle {
 
     public static String[] getDefaultFiles(String fileName) {
         List<String> names = new ArrayList<>();
-        File files = new File(RcRPGMain.instance.getDataFolder()+ "/"+fileName);
+        File files = new File(RcRPGMain.getInstance().getDataFolder()+ "/"+fileName);
         if(files.isDirectory()){
             File[] filesArray = files.listFiles();
             if(filesArray != null){
@@ -40,7 +40,7 @@ public class Handle {
 
     public static List<String> getGuilds(){
         List<String> names = new ArrayList<>();
-        File files = new File(RcRPGMain.instance.getDataFolder()+ "/Guild");
+        File files = new File(RcRPGMain.getInstance().getDataFolder()+ "/Guild");
         if(files.isDirectory()){
             File[] filesArray = files.listFiles();
             if(filesArray != null){

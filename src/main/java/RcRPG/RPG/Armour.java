@@ -119,7 +119,7 @@ public class Armour extends ItemAttr {
             return armour;
         }catch(Exception e){
             e.printStackTrace();
-            RcRPGMain.instance.getLogger().error("加载盔甲"+name+"配置文件失败");
+            RcRPGMain.getInstance().getLogger().error("加载盔甲"+name+"配置文件失败");
             return null;
         }
     }
@@ -153,7 +153,7 @@ public class Armour extends ItemAttr {
 
 
     public static Config getArmourConfig(String name){
-        File file = new File(RcRPGMain.instance.getDataFolder()+"/Armour/"+name+".yml");
+        File file = new File(RcRPGMain.getInstance().getDataFolder()+"/Armour/"+name+".yml");
         Config config;
         if(file.exists()){
             config = new Config(file,Config.YAML);
@@ -165,8 +165,8 @@ public class Armour extends ItemAttr {
 
     public static Config addArmourConfig(String name,String id){
         if(getArmourConfig(name) == null){
-            RcRPGMain.instance.saveResource("Armour.yml","/Armour/"+name+".yml",false);
-            Config config = new Config(RcRPGMain.instance.getArmourFile()+"/"+name+".yml");
+            RcRPGMain.getInstance().saveResource("Armour.yml","/Armour/"+name+".yml",false);
+            Config config = new Config(RcRPGMain.getInstance().getArmourFile()+"/"+name+".yml");
             config.set("物品ID",id);
             config.save();
             return config;
@@ -176,7 +176,7 @@ public class Armour extends ItemAttr {
 
     public static boolean delArmourConfig(String name){
         if(getArmourConfig(name) != null){
-            File file = new File(RcRPGMain.instance.getArmourFile(),"/"+name+".yml");
+            File file = new File(RcRPGMain.getInstance().getArmourFile(),"/"+name+".yml");
             file.delete();
             return true;
         }
@@ -216,7 +216,7 @@ public class Armour extends ItemAttr {
             String text = armour.getServerMessage();
             if(text.contains("@player")) text = text.replace("@player", player.getName());
             if(text.contains("@item")) text = text.replace("@item", armour.getLabel());
-            RcRPGMain.instance.getServer().broadcastMessage(text);
+            RcRPGMain.getInstance().getServer().broadcastMessage(text);
         }
         return true;
     }

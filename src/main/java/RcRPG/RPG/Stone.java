@@ -77,13 +77,13 @@ public class Stone extends ItemAttr {
 
             return stone;
         }catch(Exception e){
-            RcRPGMain.instance.getLogger().error("加载宝石"+name+"配置文件失败");
+            RcRPGMain.getInstance().getLogger().error("加载宝石"+name+"配置文件失败");
             return null;
         }
     }
 
     public static Config getStoneConfig(String name){
-        File file = new File(RcRPGMain.instance.getDataFolder()+"/Stone/"+name+".yml");
+        File file = new File(RcRPGMain.getInstance().getDataFolder()+"/Stone/"+name+".yml");
         Config config;
         if(file.exists()){
             config = new Config(file,Config.YAML);
@@ -95,8 +95,8 @@ public class Stone extends ItemAttr {
 
     public static Config addStoneConfig(String name,String id){
         if(getStoneConfig(name) == null){
-            RcRPGMain.instance.saveResource("Stone.yml","/Stone/"+name+".yml",false);
-            Config config = new Config(RcRPGMain.instance.getStoneFile()+"/"+name+".yml");
+            RcRPGMain.getInstance().saveResource("Stone.yml","/Stone/"+name+".yml",false);
+            Config config = new Config(RcRPGMain.getInstance().getStoneFile()+"/"+name+".yml");
             config.set("物品ID",id);
             config.save();
             return config;
@@ -106,7 +106,7 @@ public class Stone extends ItemAttr {
 
     public static boolean delStoneConfig(String name){
         if(getStoneConfig(name) != null){
-            File file = new File(RcRPGMain.instance.getStoneFile(),"/"+name+".yml");
+            File file = new File(RcRPGMain.getInstance().getStoneFile(),"/"+name+".yml");
             file.delete();
             return true;
         }
@@ -167,7 +167,7 @@ public class Stone extends ItemAttr {
             String text = stone.getServerMessage();
             if(text.contains("@player")) text = text.replace("@player", player.getName());
             if(text.contains("@item")) text = text.replace("@item", stone.getLabel());
-            RcRPGMain.instance.getServer().broadcastMessage(text);
+            RcRPGMain.getInstance().getServer().broadcastMessage(text);
         }
         return true;
     }

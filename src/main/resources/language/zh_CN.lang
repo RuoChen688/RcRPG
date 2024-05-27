@@ -12,11 +12,11 @@ rcrpg.playerattr.set_suit_message=你感受到了 §l{%0} ({%1}) §r的§d套装
 rcrpg.event.item_consume=§l§c饰品§r为非消耗品！请放入§l§e饰品背包§r使用。
 
 rcrpg.window.select_config_manage=请选择你需要管理的配置
-rcrpg.window.rcRPGMain.title=RcRPG管理 - 饰品列表
-rcrpg.window.rcRPGMain.button1=武器
-rcrpg.window.rcRPGMain.button2=护甲
-rcrpg.window.rcRPGMain.button3=宝石
-rcrpg.window.rcRPGMain.button4=饰品
+rcrpg.window.main.title=RcRPG管理 - 饰品列表
+rcrpg.window.main.button1=武器
+rcrpg.window.main.button2=护甲
+rcrpg.window.main.button3=宝石
+rcrpg.window.main.button4=饰品
 
 rcrpg.window.armour.title=RcRPG管理 - 护甲列表
 

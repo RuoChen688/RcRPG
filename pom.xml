@@ -6,7 +6,7 @@
 
     <groupId>RcRPG.Main</groupId>
     <artifactId>RcRPG</artifactId>
-    <version>1.0.4-MOT</version>
+    <version>1.0.5-MOT</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

@@ -29,16 +29,17 @@ import static RcRPG.RcRPGMain.disablePrefix;
 public class Commands extends PluginCommand<RcRPGMain> {
     protected RcRPGMain api;
     protected PluginI18n i18n;
+
     public Commands(String cmdName) {
         super(cmdName, RcRPGMain.getInstance());
         this.setDescription("RcRPG指令");
         this.setPermission("plugin.rcrpg");
         this.commandParameters.clear();
-        ArrayList<String> society = new ArrayList<>(){{
+        ArrayList<String> society = new ArrayList<>() {{
             add("money");
             add("point");
         }};
-        ArrayList<String> item = new ArrayList<>(){{
+        ArrayList<String> item = new ArrayList<>() {{
             add("weapon");
             add("armour");
             add("magic");
@@ -46,114 +47,114 @@ public class Commands extends PluginCommand<RcRPGMain> {
             add("box");
             add("ornament");
         }};
-        String[] list = new String[]{"weapon","armour","magic","stone","box","ornament","guild","prefix","money","point","exp","shop"};
-        this.addCommandParameters("help",new CommandParameter[]{
-                CommandParameter.newEnum("help",new String[]{"help"})
+        String[] list = new String[]{"weapon", "armour", "magic", "stone", "box", "ornament", "guild", "prefix", "money", "point", "exp", "shop"};
+        this.addCommandParameters("help", new CommandParameter[]{
+                CommandParameter.newEnum("help", new String[]{"help"})
         });
-        this.addCommandParameters("admin",new CommandParameter[]{
-                CommandParameter.newEnum("admin",new String[]{"admin"})
+        this.addCommandParameters("admin", new CommandParameter[]{
+                CommandParameter.newEnum("admin", new String[]{"admin"})
         });
-        this.addCommandParameters("reload",new CommandParameter[]{
-                CommandParameter.newEnum("reload",new String[]{"reload"})
+        this.addCommandParameters("reload", new CommandParameter[]{
+                CommandParameter.newEnum("reload", new String[]{"reload"})
         });
-        this.addCommandParameters("inlay",new CommandParameter[]{
-                CommandParameter.newEnum("inlay",new String[]{"inlay"})
+        this.addCommandParameters("inlay", new CommandParameter[]{
+                CommandParameter.newEnum("inlay", new String[]{"inlay"})
         });
-        this.addCommandParameters("dismantle",new CommandParameter[]{
-                CommandParameter.newEnum("dismantle",new String[]{"dismantle"})
+        this.addCommandParameters("dismantle", new CommandParameter[]{
+                CommandParameter.newEnum("dismantle", new String[]{"dismantle"})
         });
-        this.addCommandParameters("check",new CommandParameter[]{
+        this.addCommandParameters("check", new CommandParameter[]{
                 CommandParameter.newEnum("check", new String[]{"check"}),
-                CommandParameter.newEnum("type",new String[]{"attr"}),
+                CommandParameter.newEnum("type", new String[]{"attr"}),
                 CommandParameter.newType("player", CommandParamType.TARGET),
         });
-        this.addCommandParameters("guild",new CommandParameter[]{
-                CommandParameter.newEnum("guild",new String[]{"guild"})
+        this.addCommandParameters("guild", new CommandParameter[]{
+                CommandParameter.newEnum("guild", new String[]{"guild"})
         });
-        this.addCommandParameters("exp",new CommandParameter[]{
-                CommandParameter.newEnum("exp",new String[]{"exp"}),
-                CommandParameter.newEnum("give",new String[]{"give"}),
-                CommandParameter.newType("PlayerName",CommandParamType.STRING),
-                CommandParameter.newType("Exp",CommandParamType.INT)
+        this.addCommandParameters("exp", new CommandParameter[]{
+                CommandParameter.newEnum("exp", new String[]{"exp"}),
+                CommandParameter.newEnum("give", new String[]{"give"}),
+                CommandParameter.newType("PlayerName", CommandParamType.STRING),
+                CommandParameter.newType("Exp", CommandParamType.INT)
         });
-        this.addCommandParameters("shop",new CommandParameter[]{
-                CommandParameter.newEnum("shop",new String[]{"shop"}),
-                CommandParameter.newType("ShopName",CommandParamType.STRING)
+        this.addCommandParameters("shop", new CommandParameter[]{
+                CommandParameter.newEnum("shop", new String[]{"shop"}),
+                CommandParameter.newType("ShopName", CommandParamType.STRING)
         });
         for (String name : list) {
-            if(item.contains(name)){
-                if(name.equals("ornament")){
-                    this.addCommandParameters(name + "_my",new CommandParameter[]{
-                            CommandParameter.newEnum(name,new String[]{name}),
-                            CommandParameter.newEnum("my",new String[]{"my"})
+            if (item.contains(name)) {
+                if (name.equals("ornament")) {
+                    this.addCommandParameters(name + "_my", new CommandParameter[]{
+                            CommandParameter.newEnum(name, new String[]{name}),
+                            CommandParameter.newEnum("my", new String[]{"my"})
                     });
                 }
-                this.addCommandParameters(name + "_admin",new CommandParameter[]{
-                        CommandParameter.newEnum(name,new String[]{name}),
-                        CommandParameter.newEnum("admin",new String[]{"admin"})
+                this.addCommandParameters(name + "_admin", new CommandParameter[]{
+                        CommandParameter.newEnum(name, new String[]{name}),
+                        CommandParameter.newEnum("admin", new String[]{"admin"})
                 });
-                this.addCommandParameters(name + "_add",new CommandParameter[]{
-                        CommandParameter.newEnum(name,new String[]{name}),
-                        CommandParameter.newEnum("add",new String[]{"add"}),
-                        CommandParameter.newType(name.toLowerCase(),CommandParamType.STRING)
+                this.addCommandParameters(name + "_add", new CommandParameter[]{
+                        CommandParameter.newEnum(name, new String[]{name}),
+                        CommandParameter.newEnum("add", new String[]{"add"}),
+                        CommandParameter.newType(name.toLowerCase(), CommandParamType.STRING)
                 });
-                this.addCommandParameters(name + "_del",new CommandParameter[]{
-                        CommandParameter.newEnum(name,new String[]{name}),
-                        CommandParameter.newEnum("del",new String[]{"del"}),
-                        CommandParameter.newType(name.toLowerCase(),CommandParamType.STRING)
+                this.addCommandParameters(name + "_del", new CommandParameter[]{
+                        CommandParameter.newEnum(name, new String[]{name}),
+                        CommandParameter.newEnum("del", new String[]{"del"}),
+                        CommandParameter.newType(name.toLowerCase(), CommandParamType.STRING)
                 });
-                this.addCommandParameters(name + "_help",new CommandParameter[]{
-                        CommandParameter.newEnum(name,new String[]{name}),
-                        CommandParameter.newEnum("help",new String[]{"help"})
+                this.addCommandParameters(name + "_help", new CommandParameter[]{
+                        CommandParameter.newEnum(name, new String[]{name}),
+                        CommandParameter.newEnum("help", new String[]{"help"})
                 });
-                this.addCommandParameters(name + "_give",new CommandParameter[]{
-                        CommandParameter.newEnum(name,new String[]{name}),
-                        CommandParameter.newEnum("give",new String[]{"give", "drop"}),
-                        CommandParameter.newType("PlayerName",CommandParamType.STRING),
-                        CommandParameter.newType(name.toLowerCase(),CommandParamType.STRING),
-                        CommandParameter.newType("Count",true,CommandParamType.INT)
+                this.addCommandParameters(name + "_give", new CommandParameter[]{
+                        CommandParameter.newEnum(name, new String[]{name}),
+                        CommandParameter.newEnum("give", new String[]{"give", "drop"}),
+                        CommandParameter.newType("PlayerName", CommandParamType.STRING),
+                        CommandParameter.newType(name.toLowerCase(), CommandParamType.STRING),
+                        CommandParameter.newType("Count", true, CommandParamType.INT)
                 });
-            }else if(name.equals("prefix")){
-                this.addCommandParameters(name + "_give",new CommandParameter[]{
-                        CommandParameter.newEnum(name,new String[]{name}),
-                        CommandParameter.newEnum("give",new String[]{"give"}),
+            } else if (name.equals("prefix")) {
+                this.addCommandParameters(name + "_give", new CommandParameter[]{
+                        CommandParameter.newEnum(name, new String[]{name}),
+                        CommandParameter.newEnum("give", new String[]{"give"}),
                         CommandParameter.newType("player", CommandParamType.TARGET),
-                        CommandParameter.newType(name.toLowerCase(),CommandParamType.STRING)
+                        CommandParameter.newType(name.toLowerCase(), CommandParamType.STRING)
                 });
-                this.addCommandParameters(name + "_remove",new CommandParameter[]{
-                        CommandParameter.newEnum(name,new String[]{name}),
-                        CommandParameter.newEnum("remove",new String[]{"remove"}),
+                this.addCommandParameters(name + "_remove", new CommandParameter[]{
+                        CommandParameter.newEnum(name, new String[]{name}),
+                        CommandParameter.newEnum("remove", new String[]{"remove"}),
                         CommandParameter.newType("player", CommandParamType.TARGET),
-                        CommandParameter.newType(name.toLowerCase(),CommandParamType.STRING)
+                        CommandParameter.newType(name.toLowerCase(), CommandParamType.STRING)
                 });
-                this.addCommandParameters(name + "_help",new CommandParameter[]{
-                        CommandParameter.newEnum(name,new String[]{name}),
-                        CommandParameter.newEnum("help",new String[]{"help"})
+                this.addCommandParameters(name + "_help", new CommandParameter[]{
+                        CommandParameter.newEnum(name, new String[]{name}),
+                        CommandParameter.newEnum("help", new String[]{"help"})
                 });
-                this.addCommandParameters(name + "_my",new CommandParameter[]{
-                        CommandParameter.newEnum(name,new String[]{name}),
-                        CommandParameter.newEnum("my",new String[]{"my"})
+                this.addCommandParameters(name + "_my", new CommandParameter[]{
+                        CommandParameter.newEnum(name, new String[]{name}),
+                        CommandParameter.newEnum("my", new String[]{"my"})
                 });
-            } else if(society.contains(name)) {// money, point
-                this.addCommandParameters(name + "_add",new CommandParameter[]{
-                        CommandParameter.newEnum(name,new String[]{name}),
-                        CommandParameter.newEnum("add",new String[]{"add"}),
+            } else if (society.contains(name)) {// money, point
+                this.addCommandParameters(name + "_add", new CommandParameter[]{
+                        CommandParameter.newEnum(name, new String[]{name}),
+                        CommandParameter.newEnum("add", new String[]{"add"}),
                         CommandParameter.newType("player", CommandParamType.TARGET),
-                        CommandParameter.newType(name.toLowerCase(),CommandParamType.INT)
+                        CommandParameter.newType(name.toLowerCase(), CommandParamType.INT)
                 });
-                this.addCommandParameters(name + "_del",new CommandParameter[]{
-                        CommandParameter.newEnum(name,new String[]{name}),
-                        CommandParameter.newEnum("del",new String[]{"del"}),
-                        CommandParameter.newType("PlayerName",CommandParamType.STRING),
-                        CommandParameter.newType(name.toLowerCase(),CommandParamType.INT)
+                this.addCommandParameters(name + "_del", new CommandParameter[]{
+                        CommandParameter.newEnum(name, new String[]{name}),
+                        CommandParameter.newEnum("del", new String[]{"del"}),
+                        CommandParameter.newType("PlayerName", CommandParamType.STRING),
+                        CommandParameter.newType(name.toLowerCase(), CommandParamType.INT)
                 });
-                this.addCommandParameters(name + "_help",new CommandParameter[]{
-                        CommandParameter.newEnum(name,new String[]{name}),
-                        CommandParameter.newEnum("help",new String[]{"help"})
+                this.addCommandParameters(name + "_help", new CommandParameter[]{
+                        CommandParameter.newEnum(name, new String[]{name}),
+                        CommandParameter.newEnum("help", new String[]{"help"})
                 });
-                this.addCommandParameters(name + "_my",new CommandParameter[]{
-                        CommandParameter.newEnum(name,new String[]{name}),
-                        CommandParameter.newEnum("my",new String[]{"my"})
+                this.addCommandParameters(name + "_my", new CommandParameter[]{
+                        CommandParameter.newEnum(name, new String[]{name}),
+                        CommandParameter.newEnum("my", new String[]{"my"})
                 });
             }
         }
@@ -163,16 +164,16 @@ public class Commands extends PluginCommand<RcRPGMain> {
 
     @Override
     public boolean execute(CommandSender sender, String label, String[] args) {
-        if(!sender.isOp()){
-            sender.sendMessage(TextFormat.RED+"权限不足");
+        if (!sender.isOp()) {
+            sender.sendMessage(TextFormat.RED + "权限不足");
             return false;
         }
 
         if (args.length < 1) {
-            sender.sendMessage(TextFormat.RED+"缺少参数");
+            sender.sendMessage(TextFormat.RED + "缺少参数");
             return false;
         }
-        switch(args[0]) {
+        switch (args[0]) {
             case "help":
                 sender.sendMessage("/rpg check attr [playerName]   查询属性命令");
                 sender.sendMessage("/rpg inlay   镶嵌宝石的命令 (GUI)");
@@ -192,7 +193,7 @@ public class Commands extends PluginCommand<RcRPGMain> {
                 break;
             case "admin": {
                 if (!sender.isPlayer()) {
-                    sender.sendMessage(TextFormat.RED+"本命令必须是玩家执行");
+                    sender.sendMessage(TextFormat.RED + "本命令必须是玩家执行");
                     return false;
                 }
                 new RcRPGAdminWin((Player) sender);
@@ -200,12 +201,12 @@ public class Commands extends PluginCommand<RcRPGMain> {
             }
             case "reload": {
                 RcRPGMain.getInstance().init();
-                sender.sendMessage(TextFormat.GREEN+"rpg.commands.reloaded");
+                sender.sendMessage(TextFormat.GREEN + "rpg.commands.reloaded");
                 return true;
             }
             case "dismantle": {
                 if (!sender.isPlayer()) {
-                    sender.sendMessage(TextFormat.RED+"本命令必须是玩家执行");
+                    sender.sendMessage(TextFormat.RED + "本命令必须是玩家执行");
                     return false;
                 }
                 DismantlePanel panel = new DismantlePanel();
@@ -214,16 +215,16 @@ public class Commands extends PluginCommand<RcRPGMain> {
             }
             case "inlay": {
                 if (!sender.isPlayer()) {
-                    sender.sendMessage(TextFormat.RED+"本命令必须是玩家执行");
+                    sender.sendMessage(TextFormat.RED + "本命令必须是玩家执行");
                     return false;
                 }
                 Item item = ((Player) sender).getInventory().getItemInHand();
                 if (item.isNull()) {
-                    sender.sendMessage(TextFormat.RED+"未手持装备");
+                    sender.sendMessage(TextFormat.RED + "未手持装备");
                     return false;
                 }
                 if (!Weapon.isWeapon(item) && !Armour.isArmour(item)) {
-                    sender.sendMessage(TextFormat.RED+"请手持有效装备");
+                    sender.sendMessage(TextFormat.RED + "请手持有效装备");
                     return false;
                 }
                 new inlayForm().makeInlayForm((Player) sender, item);
@@ -231,18 +232,18 @@ public class Commands extends PluginCommand<RcRPGMain> {
             }
             case "check":
                 if (!(sender instanceof Player)) {
-                    sender.sendMessage(TextFormat.RED+"仅允许玩家执行");
+                    sender.sendMessage(TextFormat.RED + "仅允许玩家执行");
                     return false;
                 }
 
                 if (args.length < 2) {
-                    sender.sendMessage(TextFormat.RED+"缺少第2个参数");
+                    sender.sendMessage(TextFormat.RED + "缺少第2个参数");
                     return false;
                 }
                 if (args[1].equals("attr")) {
 
                     if (args.length < 3) {
-                        sender.sendMessage(TextFormat.RED+"缺少第3个参数");
+                        sender.sendMessage(TextFormat.RED + "缺少第3个参数");
                         return false;
                     }
                     Player player = api.getServer().getPlayer(args[2]);
@@ -262,10 +263,10 @@ public class Commands extends PluginCommand<RcRPGMain> {
                 break;
             case "shop":
                 if (args.length < 2) {
-                    sender.sendMessage(TextFormat.RED+"缺少第2个参数");
+                    sender.sendMessage(TextFormat.RED + "缺少第2个参数");
                     return false;
                 }
-                if(args[1].equals("help")){
+                if (args[1].equals("help")) {
                     sender.sendMessage("/rpg shop [Name]   创建一个名为Name的商店");
                     return true;
                 }
@@ -292,11 +293,11 @@ public class Commands extends PluginCommand<RcRPGMain> {
                         }
                     }
                 }
-                sender.sendMessage(TextFormat.RED+"错误的命令，请使用：/rpg help");
+                sender.sendMessage(TextFormat.RED + "错误的命令，请使用：/rpg help");
                 return false;
             case "money": {
                 if (args.length < 2) {
-                    sender.sendMessage(TextFormat.RED+"缺少第2个参数");
+                    sender.sendMessage(TextFormat.RED + "缺少第2个参数");
                     return false;
                 }
                 Player player = api.getServer().getPlayer(args[2]);
@@ -335,7 +336,7 @@ public class Commands extends PluginCommand<RcRPGMain> {
             }
             case "point": {
                 if (args.length < 2) {
-                    sender.sendMessage(TextFormat.RED+"缺少第2个参数");
+                    sender.sendMessage(TextFormat.RED + "缺少第2个参数");
                     return false;
                 }
                 Player player = null;
@@ -376,11 +377,11 @@ public class Commands extends PluginCommand<RcRPGMain> {
             }
             case "prefix": {
                 if (args.length < 2) {
-                    sender.sendMessage(TextFormat.RED+"缺少第2个参数");
+                    sender.sendMessage(TextFormat.RED + "缺少第2个参数");
                     return false;
                 }
                 if (disablePrefix) {
-                    sender.sendMessage(TextFormat.RED+"RcRPG 称号已被禁用");
+                    sender.sendMessage(TextFormat.RED + "RcRPG 称号已被禁用");
                     return false;
                 }
                 Player player = null;
@@ -429,7 +430,7 @@ public class Commands extends PluginCommand<RcRPGMain> {
             }
             case "weapon": {
                 if (args.length < 2) {
-                    sender.sendMessage(TextFormat.RED+"缺少第2个参数");
+                    sender.sendMessage(TextFormat.RED + "缺少第2个参数");
                     return false;
                 }
                 switch (args[1]) {
@@ -442,7 +443,7 @@ public class Commands extends PluginCommand<RcRPGMain> {
                     }
                     case "admin" -> {
                         if (!sender.isPlayer()) {
-                            sender.sendMessage(TextFormat.RED+"本命令必须是玩家执行");
+                            sender.sendMessage(TextFormat.RED + "本命令必须是玩家执行");
                             return false;
                         }
                         new SendWeaponAdminWin((Player) sender);
@@ -486,7 +487,7 @@ public class Commands extends PluginCommand<RcRPGMain> {
                         String playerName = args[2];
                         String weaponName = args[3];
                         int count = args.length > 4 ? Integer.parseInt(args[4]) : 1;
-                        Player player = RcRPGMain.instance.getServer().getPlayer(playerName);
+                        Player player = RcRPGMain.getInstance().getServer().getPlayer(playerName);
                         if (!player.isOnline()) {
                             sender.sendMessage("玩家不在线");
                             return false;
@@ -494,7 +495,7 @@ public class Commands extends PluginCommand<RcRPGMain> {
                         if (args[1].equals("drop")) {
                             Item item = Weapon.getItem(weaponName, count);
                             if (item == null) {
-                                RcRPGMain.getInstance().getLogger().warning("weapon drop失败："+weaponName);
+                                RcRPGMain.getInstance().getLogger().warning("weapon drop失败：" + weaponName);
                             } else {
                                 player.getLevel().dropItem(player.getPosition(), item);
                             }
@@ -511,7 +512,7 @@ public class Commands extends PluginCommand<RcRPGMain> {
             }
             case "armour": {
                 if (args.length < 2) {
-                    sender.sendMessage(TextFormat.RED+"缺少第2个参数");
+                    sender.sendMessage(TextFormat.RED + "缺少第2个参数");
                     return false;
                 }
                 switch (args[1]) {
@@ -524,7 +525,7 @@ public class Commands extends PluginCommand<RcRPGMain> {
                     }
                     case "admin" -> {
                         if (!sender.isPlayer()) {
-                            sender.sendMessage(TextFormat.RED+"本命令必须是玩家执行");
+                            sender.sendMessage(TextFormat.RED + "本命令必须是玩家执行");
                             return false;
                         }
                         new SendArmourAdminWin((Player) sender);
@@ -568,7 +569,7 @@ public class Commands extends PluginCommand<RcRPGMain> {
                         String playerName = args[2];
                         String armorName = args[3];
                         int count = args.length > 4 ? Integer.parseInt(args[4]) : 1;
-                        Player player = RcRPGMain.instance.getServer().getPlayer(playerName);
+                        Player player = RcRPGMain.getInstance().getServer().getPlayer(playerName);
                         if (!player.isOnline()) {
                             sender.sendMessage("玩家不在线");
                             return false;
@@ -576,7 +577,7 @@ public class Commands extends PluginCommand<RcRPGMain> {
                         if (args[1].equals("drop")) {
                             Item item = Armour.getItem(armorName, count);
                             if (item == null) {
-                                RcRPGMain.getInstance().getLogger().warning("armour drop失败："+armorName);
+                                RcRPGMain.getInstance().getLogger().warning("armour drop失败：" + armorName);
                             } else {
                                 player.getLevel().dropItem(player.getPosition(), item);
                             }
@@ -593,7 +594,7 @@ public class Commands extends PluginCommand<RcRPGMain> {
             }
             case "stone": {
                 if (args.length < 2) {
-                    sender.sendMessage(TextFormat.RED+"缺少第2个参数");
+                    sender.sendMessage(TextFormat.RED + "缺少第2个参数");
                     return false;
                 }
                 switch (args[1]) {
@@ -605,7 +606,7 @@ public class Commands extends PluginCommand<RcRPGMain> {
                     }
                     case "admin" -> {
                         if (!sender.isPlayer()) {
-                            sender.sendMessage(TextFormat.RED+"本命令必须是玩家执行");
+                            sender.sendMessage(TextFormat.RED + "本命令必须是玩家执行");
                             return false;
                         }
                         new SendStoneAdminWin((Player) sender);
@@ -649,7 +650,7 @@ public class Commands extends PluginCommand<RcRPGMain> {
                         String playerName = args[2];
                         String stoneName = args[3];
                         int count = args.length > 4 ? Integer.parseInt(args[4]) : 1;
-                        Player player = RcRPGMain.instance.getServer().getPlayer(playerName);
+                        Player player = RcRPGMain.getInstance().getServer().getPlayer(playerName);
                         if (!player.isOnline()) {
                             sender.sendMessage("玩家不在线");
                             return false;
@@ -665,7 +666,7 @@ public class Commands extends PluginCommand<RcRPGMain> {
             }
             case "magic": {
                 if (args.length < 2) {
-                    sender.sendMessage(TextFormat.RED+"缺少第2个参数");
+                    sender.sendMessage(TextFormat.RED + "缺少第2个参数");
                     return false;
                 }
                 switch (args[1]) {
@@ -714,7 +715,7 @@ public class Commands extends PluginCommand<RcRPGMain> {
                         String playerName = args[2];
                         String magicName = args[3];
                         int count = args.length > 4 ? Integer.parseInt(args[4]) : 1;
-                        Player player = RcRPGMain.instance.getServer().getPlayer(playerName);
+                        Player player = RcRPGMain.getInstance().getServer().getPlayer(playerName);
                         if (!player.isOnline()) {
                             sender.sendMessage("玩家不在线");
                             return false;
@@ -730,7 +731,7 @@ public class Commands extends PluginCommand<RcRPGMain> {
             }
             case "box": {
                 if (args.length < 2) {
-                    sender.sendMessage(TextFormat.RED+"缺少第2个参数");
+                    sender.sendMessage(TextFormat.RED + "缺少第2个参数");
                     return false;
                 }
                 switch (args[1]) {
@@ -778,7 +779,7 @@ public class Commands extends PluginCommand<RcRPGMain> {
                         String playerName = args[2];
                         String boxName = args[3];
                         int count = args.length > 4 ? Integer.parseInt(args[4]) : 1;
-                        Player player = RcRPGMain.instance.getServer().getPlayer(playerName);
+                        Player player = RcRPGMain.getInstance().getServer().getPlayer(playerName);
                         if (!player.isOnline()) {
                             sender.sendMessage("玩家不在线");
                             return false;
@@ -794,7 +795,7 @@ public class Commands extends PluginCommand<RcRPGMain> {
             }
             case "ornament": {
                 if (args.length < 2) {
-                    sender.sendMessage(TextFormat.RED+"缺少第2个参数");
+                    sender.sendMessage(TextFormat.RED + "缺少第2个参数");
                     return false;
                 }
                 switch (args[1]) {
@@ -806,7 +807,7 @@ public class Commands extends PluginCommand<RcRPGMain> {
                     }
                     case "admin" -> {
                         if (!sender.isPlayer()) {
-                            sender.sendMessage(TextFormat.RED+"本命令必须是玩家执行");
+                            sender.sendMessage(TextFormat.RED + "本命令必须是玩家执行");
                             return false;
                         }
                         new SendOrnamentAdminWin((Player) sender);
@@ -833,9 +834,9 @@ public class Commands extends PluginCommand<RcRPGMain> {
                         }
                         String ornamentName = args[2];
                         Config config;
-                        if ((config = Ornament.addOrnamentConfig(ornamentName,id)) != null) {
-                            Ornament ornament = Ornament.loadOrnament(ornamentName,config);
-                            RcRPGMain.loadOrnament.put(ornamentName,ornament);
+                        if ((config = Ornament.addOrnamentConfig(ornamentName, id)) != null) {
+                            Ornament ornament = Ornament.loadOrnament(ornamentName, config);
+                            RcRPGMain.loadOrnament.put(ornamentName, ornament);
                             sender.sendMessage("添加成功");
                         } else {
                             sender.sendMessage("添加失败");
@@ -858,7 +859,7 @@ public class Commands extends PluginCommand<RcRPGMain> {
                         String playerName = args[2];
                         String ornamentName = args[3];
                         int count = args.length > 4 ? Integer.parseInt(args[4]) : 1;
-                        Player player = RcRPGMain.instance.getServer().getPlayer(playerName);
+                        Player player = RcRPGMain.getInstance().getServer().getPlayer(playerName);
                         if (!player.isOnline()) {
                             sender.sendMessage("玩家不在线");
                             return false;

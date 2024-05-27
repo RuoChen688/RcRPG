@@ -6,7 +6,7 @@ import RcRPG.RPG.Box;
 import cn.nukkit.Player;
 import cn.nukkit.scheduler.PluginTask;
 
-public class BoxTimeTask extends PluginTask {
+public class BoxTimeTask extends PluginTask<RcRPGMain> {
     public BoxTimeTask(RcRPGMain rcRPGMain){
         super(rcRPGMain);
     }

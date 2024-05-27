@@ -72,13 +72,13 @@ public class Magic {
 
             return magic;
         }catch(Exception e){
-            RcRPGMain.instance.getLogger().error("加载魔法物品"+name+"配置文件失败");
+            RcRPGMain.getInstance().getLogger().error("加载魔法物品"+name+"配置文件失败");
             return null;
         }
     }
 
     public static Config getMagicConfig(String name){
-        File file = new File(RcRPGMain.instance.getDataFolder()+"/Magic/"+name+".yml");
+        File file = new File(RcRPGMain.getInstance().getDataFolder()+"/Magic/"+name+".yml");
         Config config;
         if(file.exists()){
             config = new Config(file,Config.YAML);
@@ -90,8 +90,8 @@ public class Magic {
 
     public static Config addMagicConfig(String name,String id){
         if(getMagicConfig(name) == null){
-            RcRPGMain.instance.saveResource("Magic.yml","/Magic/"+name+".yml",false);
-            Config config = new Config(RcRPGMain.instance.getMagicFile()+"/"+name+".yml");
+            RcRPGMain.getInstance().saveResource("Magic.yml","/Magic/"+name+".yml",false);
+            Config config = new Config(RcRPGMain.getInstance().getMagicFile()+"/"+name+".yml");
             config.set("物品ID",id);
             config.save();
             return config;
@@ -101,7 +101,7 @@ public class Magic {
 
     public static boolean delMagicConfig(String name){
         if(getMagicConfig(name) != null){
-            File file = new File(RcRPGMain.instance.getMagicFile(),"/"+name+".yml");
+            File file = new File(RcRPGMain.getInstance().getMagicFile(),"/"+name+".yml");
             file.delete();
             return true;
         }
@@ -134,7 +134,7 @@ public class Magic {
                 String text = magic.getServerMessage();
                 if(text.contains("@player")) text = text.replace("@player", player.getName());
                 if(text.contains("@item")) text = text.replace("@item", magic.getLabel());
-                RcRPGMain.instance.getServer().broadcastMessage(text);
+                RcRPGMain.getInstance().getServer().broadcastMessage(text);
             }
             return true;
         }

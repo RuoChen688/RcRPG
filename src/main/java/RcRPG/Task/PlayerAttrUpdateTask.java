@@ -10,14 +10,14 @@ import healthapi.PlayerHealth;
 
 import java.util.Objects;
 
-public class PlayerAttrUpdateTask extends PluginTask {
+public class PlayerAttrUpdateTask extends PluginTask<RcRPGMain> {
     public PlayerAttrUpdateTask(RcRPGMain rcRPGMain){
         super(rcRPGMain);
     }
 
     @Override
     public void onRun(int i) {
-        for (Player player : RcRPGMain.instance.getServer().getOnlinePlayers().values()) {
+        for (Player player : RcRPGMain.getInstance().getServer().getOnlinePlayers().values()) {
             if (!player.isAlive()) continue;
             int addHealth = 0;
             if (!PlayerAttr.playerlist.containsKey(player)) continue;

@@ -10,7 +10,7 @@ import cn.nukkit.item.Item;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.scheduler.PluginTask;
 
-public class Tip extends PluginTask {
+public class Tip extends PluginTask<RcRPGMain> {
 
     public Tip(RcRPGMain rcRPGMain){
         super(rcRPGMain);
@@ -18,10 +18,10 @@ public class Tip extends PluginTask {
 
     @Override
     public void onRun(int i) {
-        for (Player player : RcRPGMain.instance.getServer().getOnlinePlayers().values()) {
+        for (Player player : RcRPGMain.getInstance().getServer().getOnlinePlayers().values()) {
             if(Handle.getPlayerConfig(player.getName()) == null) return;
             if(player.getInventory().getItemInHand().isNull() || player.getInventory().getItemInHand().getNamedTag() == null){
-                String text = RcRPGMain.instance.config.getString("底部显示");
+                String text = RcRPGMain.getInstance().config.getString("底部显示");
                 if(text.contains("@name")) text = text.replace("@name", player.getName());
                 if(text.contains("@hp")) text = text.replace("@hp",String.valueOf(player.getHealth()));
                 if(text.contains("@maxhp")) text = text.replace("@maxhp",String.valueOf(player.getMaxHealth()));

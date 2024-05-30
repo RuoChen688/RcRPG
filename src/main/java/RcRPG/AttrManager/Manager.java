@@ -73,6 +73,7 @@ public class Manager implements AttrInterface {
     public AttrComp getComp() {
         return null;
     }
+
     /**
      * 返回 [最小值, 最大值] 的随机值
      * @param array

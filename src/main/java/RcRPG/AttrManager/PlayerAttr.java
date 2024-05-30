@@ -360,6 +360,7 @@ public class PlayerAttr extends Manager {
 
         return result.toString();
     }
+
     protected static String lessZero(float value) {
         String strValue = Float.toString(value);
         if (strValue.endsWith(".0")) {
@@ -374,16 +375,17 @@ public class PlayerAttr extends Manager {
     public static String valueToString(float[] data, String attribute) {
         List<String> attrDisplayPercent = RcRPGMain.getInstance().attrDisplayPercentConfig;
         String back = "";
-        if (data.length == 2 && data[0] == data[1]) {
-            data = new float[]{data[0]};
-        } else if (data.length == 1) {
-            data = new float[]{data[0]};
-        } else {
-            return lessZero(data[0]) + " - " + lessZero(data[1]);
+        if (data.length == 2) {
+            if (data[0] == data[1]) {
+                data = new float[]{data[0]};
+            } else {
+                return lessZero(data[0]) + " - " + lessZero(data[1]);
+            }
         }
         if (attrDisplayPercent.contains(attribute)) {
             // 百分比的值
             DecimalFormat decimalFormat = new DecimalFormat("#.00");
+            decimalFormat.setMinimumIntegerDigits(1); // 确保整数部分至少有一位数字
             String formattedData = decimalFormat.format(data[0] * 100);
             if (formattedData.endsWith(".00")) {
                 back = (int) (data[0] * 100) + "%%";

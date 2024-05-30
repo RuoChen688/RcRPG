@@ -18,6 +18,7 @@ import cn.nukkit.block.Block;
 import cn.nukkit.block.BlockSignPost;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.event.EventHandler;
+import cn.nukkit.event.EventPriority;
 import cn.nukkit.event.Listener;
 import cn.nukkit.event.block.BlockBreakEvent;
 import cn.nukkit.event.entity.EntityDamageByEntityEvent;
@@ -265,7 +266,7 @@ public class Events implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void damageEvent(EntityDamageByEntityEvent event){
         Entity damager = event.getDamager();
         Entity wounded = event.getEntity();
@@ -296,6 +297,9 @@ public class Events implements Listener {
         Manager DAttr = new Manager();
         Manager WAttr = new Manager();
 
+        boolean DAttrIsNull = false;
+        boolean WAttrIsNull = false;
+
         if (damagerIsPlayer) {
             DAttr = PlayerAttr.getPlayerAttr((Player) damager);
         } else if (hasLittleMonster && damager instanceof IEntity) {
@@ -312,6 +316,8 @@ public class Events implements Listener {
 //            }
         } else if (hasRcNPC && damager instanceof RcNPC) {
             DAttr = new RcNPCAttr(((RcNPC) damager).getConfig());
+        } else {
+            DAttrIsNull = true;
         }
 
         if (woundedIsPlayer) {
@@ -330,10 +336,20 @@ public class Events implements Listener {
 //            }
         } else if (hasRcNPC && wounded instanceof RcNPC) {
             WAttr = new RcNPCAttr(((RcNPC) wounded).getConfig());
+        } else {
+            WAttrIsNull = true;
         }
+
 
         DAttr.updateComp();
         WAttr.updateComp();
+
+        if (DAttrIsNull || WAttrIsNull) {
+            if (!DAttrIsNull) {
+                event.setDamage(DAttr.pveAttackPower);
+            }
+            return;
+        }
 
         // 实体名字格式化
         if (damagerIsPlayer) {
@@ -536,11 +552,12 @@ public class Events implements Listener {
         //    finalDamage = 0;
         //}
 
-        event.setDamage(finalDamage);
-        for(EntityDamageEvent.DamageModifier key : EntityDamageEvent.DamageModifier.values()){
-            if(key == EntityDamageEvent.DamageModifier.BASE) continue;
-            if(event.isApplicable(key)) event.setDamage(0,key);
+        event.setDamage(0, EntityDamageEvent.DamageModifier.ARMOR);// 防具
+        event.setDamage(0, EntityDamageEvent.DamageModifier.ARMOR_ENCHANTMENTS);// 防具附魔
+        if (woundedIsPlayer) {
+            event.setDamage(-Math.min(wounded.getAbsorption(), finalDamage), EntityDamageEvent.DamageModifier.ABSORPTION);
         }
+        event.setDamage(finalDamage, EntityDamageEvent.DamageModifier.BASE);
 
         if (damager instanceof Player) {
             // 燃烧、冰冻、雷击 效果处理
@@ -556,7 +573,7 @@ public class Events implements Listener {
                 Item item = ((Player) damager).getInventory().getItemInHand();
                 if (!item.isNull() && Weapon.isWeapon(item)) {
                     Weapon weapon = RcRPGMain.loadWeapon.get(item.getNamedTag().getString("name"));
-                    if (!weapon.getKillMessage().equals("")) {
+                    if (!weapon.getKillMessage().isEmpty()) {
                         String text = weapon.getKillMessage();
                         if(text.contains("@damager"))  text = text.replace("@damager", damagerName);
                         if(text.contains("@player"))  text = text.replace("@player", woundedName);
@@ -568,7 +585,8 @@ public class Events implements Listener {
 
             // 伤害 浮空字
             //Vector3 go = Damage.go(damager.yaw, damager.pitch,2);
-            TextEntity floatingText = TextEntity.send(wounded, "§c-"+finalDamage);
+            //TextEntity floatingText =
+            TextEntity.send(wounded, "§c-"+finalDamage);
             //RcRPGMain.getInstance().getServer().getScheduler().scheduleDelayedTask(new removeFloatingText(RcRPGMain.getInstance(), floatingText),15);
         }
     }

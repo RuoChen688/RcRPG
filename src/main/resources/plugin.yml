@@ -8,3 +8,7 @@ load: POSTWORLD
 website: https://github.com/RuoChen688/RcRPG
 depend: ["EconomyAPI"]
 softdepend: ["RcNPC", "RsNPC", "PlayerPoint", "LittleMonster", "HealthAPI", "Tips"]
+permissions:
+  rcrpg.command.check:
+    description: "查询信息"
+    default: true

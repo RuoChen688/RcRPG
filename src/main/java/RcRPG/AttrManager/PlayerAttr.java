@@ -1,7 +1,7 @@
 package RcRPG.AttrManager;
 
-import RcRPG.RcRPGMain;
 import RcRPG.RPG.*;
+import RcRPG.RcRPGMain;
 import RcRPG.panel.ornament.OrnamentPanel;
 import cn.nukkit.Player;
 import cn.nukkit.form.element.Element;
@@ -20,6 +20,10 @@ public class PlayerAttr extends Manager {
     public PlayerAttr(Player player) {
         this.player = player;
         myAttr.put("Main", new HashMap<>());
+        myAttr.put("Base", new HashMap<>() {{
+            put("SP", new float[]{10f, 3f});// 最大蓝量、蓝量
+            put("Absorption", new float[]{8f, 3f});// 随机值、盾量
+        }});
     }
 
     public static LinkedHashMap<Player, PlayerAttr> playerlist = new LinkedHashMap<>();
@@ -33,6 +37,20 @@ public class PlayerAttr extends Manager {
 
     public static void setPlayerAttr(Player player) {
         playerlist.put(player, new PlayerAttr(player));
+    }
+
+    /**
+     * 获取 Base 属性的值，仅支持 SP、Absorption 两项
+     *
+     * @param attrName 属性名，用于检索特定属性值数组。
+     * @return 浮点数数组，表示与指定属性名相关联的属性值。
+     */
+    public float[] getBaseAttr(String attrName) {
+        return myAttr.get("Base").getOrDefault(attrName, new float[]{0f, 0f});
+    }
+
+    public void setBaseAttr(String attrName, float[] value) {
+        myAttr.get("Base").put(attrName, value);
     }
 
     public void update() {
@@ -188,8 +206,7 @@ public class PlayerAttr extends Manager {
         for (Map.Entry<String, Object> entry : attr.entrySet()) {
             String key = entry.getKey();
             Object value = entry.getValue();
-            if (value instanceof List) {
-                List<?> values = (List<?>) value;
+            if (value instanceof List<?> values) {
                 float[] floatValue = new float[values.size()];
                 for (int i = 0; i < values.size(); i++) {
                     if (values.get(i) instanceof Double) {
@@ -202,8 +219,7 @@ public class PlayerAttr extends Manager {
                     floatValue = new float[]{floatValue[0], floatValue[0]};
                 }
                 attrMap.put(key, floatValue);
-            } else if (value instanceof float[]) {
-                float[] floatValue = (float[]) value;
+            } else if (value instanceof float[] floatValue) {
                 if (floatValue.length < 2) {
                     floatValue = new float[]{floatValue[0], floatValue[0]};
                 }
@@ -264,7 +280,7 @@ public class PlayerAttr extends Manager {
      *
      * @param attrName 属性名
      * @param index    索引，0为min，1为max。内部可能传入-1
-     * @return
+     * @return 属性值
      */
     public float getItemAttr(String attrName, int index) {
         return getItemAttr("Main", attrName, index);
@@ -277,7 +293,7 @@ public class PlayerAttr extends Manager {
             player.sendMessage("[NWeapon] 没有玩家§8" + p.getName() + "§f的数据");
             return;
         }
-        String str = "";
+        StringBuilder str = new StringBuilder();
         Map<String, Map<String, float[]>> data = pAttr.myAttr;
 
         ArrayList<Element> list = new ArrayList<>();
@@ -290,17 +306,16 @@ public class PlayerAttr extends Manager {
                 continue;
             }
 
-            str += " " + i + ": " + valueString + "\n";
+            str.append(" ").append(i).append(": ").append(valueString).append("\n");
         }
-
         list.add(new ElementLabel("§l§a### 总属性§r\n" + str));
 
         for (String i : data.keySet()) {
-            if (i.equals("Effect") || i.equals("EffectSuit") || i.equals("Main")) {
+            if (i.equals("Main") || i.equals("Base") || i.startsWith("Effect-")) {
                 continue;
             }
 
-            str = "";
+            str = new StringBuilder();
 
             for (String n : data.get(i).keySet()) {
                 float[] value = data.get(i).get(n);
@@ -310,15 +325,15 @@ public class PlayerAttr extends Manager {
                     continue;
                 }
 
-                str += "  " + n + ": " + valueString + "\n";
+                str.append("  ").append(n).append(": ").append(valueString).append("\n");
             }
 
-            if (!str.equals("")) {// 如果没有属性就不显示了
+            if (!str.toString().isEmpty()) {// 如果没有属性就不显示了
                 list.add(new ElementLabel(" §a# " + i + "§r\n" + str));
             }
         }
 
-        /**
+        /*
          str = "";
          long nowTime = (System.currentTimeMillis() / 1000);
          for (String i : data.get("Effect").keySet()) {
@@ -345,13 +360,13 @@ public class PlayerAttr extends Manager {
             String outerKey = entry.getKey();
             Map<String, float[]> innerMapValue = entry.getValue();
 
-            result.append("    \"" + outerKey + "\": {\n");
+            result.append("    \"").append(outerKey).append("\": {\n");
 
             for (Map.Entry<String, float[]> innerEntry : innerMapValue.entrySet()) {
                 String innerKey = innerEntry.getKey();
                 float[] innerArray = innerEntry.getValue();
 
-                result.append("        \"" + innerKey + "\": " + "[" + innerArray[0] + ", " + innerArray[1] + "]\n");
+                result.append("        \"").append(innerKey).append("\": ").append("[").append(innerArray[0]).append(", ").append(innerArray[1]).append("]\n");
             }
 
             result.append("    }\n");
@@ -409,7 +424,7 @@ public class PlayerAttr extends Manager {
      * @param label    标签名
      * @param attrName 属性名
      * @param index    索引，0为min，1为max。内部可能传入-1
-     * @return
+     * @return 属性值
      */
     public float getItemAttr(String label, String attrName, int index) {
         if (index == -1) {

@@ -584,10 +584,7 @@ public class Events implements Listener {
             }
 
             // 伤害 浮空字
-            //Vector3 go = Damage.go(damager.yaw, damager.pitch,2);
-            //TextEntity floatingText =
             TextEntity.send(wounded, "§c-"+finalDamage);
-            //RcRPGMain.getInstance().getServer().getScheduler().scheduleDelayedTask(new removeFloatingText(RcRPGMain.getInstance(), floatingText),15);
         }
     }
     @EventHandler
@@ -633,7 +630,7 @@ public class Events implements Listener {
         Server.getInstance().broadcastMessage(text);
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void joinEvent(PlayerPreLoginEvent event){
         Player player = event.getPlayer();
         String name = player.getName();
@@ -641,7 +638,7 @@ public class Events implements Listener {
         PlayerAttr.setPlayerAttr(player);
 
         File file = new File(RcRPGMain.getInstance().getDataFolder()+"/Players/"+name+".yml");
-        if(!file.exists()){
+        if(!file.exists()) {
             RcRPGMain.getInstance().saveResource("Player.yml","/Players/"+name+".yml",false);
             Config config = new Config(RcRPGMain.getInstance().getPlayerFile()+"/"+name+".yml");
             config.set("名称",name);
@@ -652,7 +649,7 @@ public class Events implements Listener {
             config.set("称号列表",list);
             config.save();
         }
-        if (RcRPGMain.getInstance().config.exists("顶部显示") && !RcRPGMain.getInstance().config.getString("顶部显示").equals("")) {
+        if (!RcRPGMain.getInstance().config.getString("顶部显示", "").isEmpty()) {
             String text = RcRPGMain.getInstance().config.getString("顶部显示");
             if (text.contains("@name")) text = text.replace("@name", player.getName());
             if (text.contains("@hp")) text = text.replace("@hp", String.valueOf(player.getHealth()));

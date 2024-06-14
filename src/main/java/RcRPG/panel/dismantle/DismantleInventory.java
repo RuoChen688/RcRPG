@@ -43,7 +43,7 @@ public class DismantleInventory extends FakeInventory {
         super.onClose(who);
         Map<Integer, Item> content = this.getContents();
         List<Item> invItemList = content.values().stream().toList();
-        // TODO: 处理物品分解
+
         ArrayList<String> tipPopup = new ArrayList<>();
         for (int i = 1; i < invItemList.size(); i++) {
             String dismantlePlan = "";

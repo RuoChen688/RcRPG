@@ -74,7 +74,7 @@ public class TextEntity extends Entity {
             this.updateMovement();
         }
 
-        if (this.age > 60 || this.isCollided){
+        if (this.age > 180 || this.isCollided){
             this.kill();
             hasUpdate = false;
             close = true;
@@ -85,7 +85,7 @@ public class TextEntity extends Entity {
         return hasUpdate;
     }
 
-    public static TextEntity send(Entity target, String text){
+    public static void send(Entity target, String text){
         int yaw = new Random().nextInt(360) + 1;
         double r = (double) yaw / 180;
         int pitch = new Random().nextInt(90) + 85;
@@ -93,7 +93,7 @@ public class TextEntity extends Entity {
         CompoundTag tag = new CompoundTag();
         tag.putList(new ListTag<DoubleTag>("Pos")
                 .add(new DoubleTag("",target.x))
-                .add(new DoubleTag("",target.y + 1.5))
+                .add(new DoubleTag("",target.y + 0.5))
                 .add(new DoubleTag("",target.z)));
         tag.putList(new ListTag<DoubleTag>("Motion")
                 .add(new DoubleTag("", -Math.sin(r * Math.PI) * Math.cos(g * Math.PI)))
@@ -105,6 +105,5 @@ public class TextEntity extends Entity {
         TextEntity entity = new TextEntity(target, tag);
         entity.setNameTag(text);
         entity.spawnToAll();
-        return entity;
     }
 }

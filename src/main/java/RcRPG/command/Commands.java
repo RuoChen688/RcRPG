@@ -1,10 +1,12 @@
-package RcRPG;
+package RcRPG.command;
 
 import RcRPG.AttrManager.PlayerAttr;
+import RcRPG.Events;
 import RcRPG.Form.guildForm;
 import RcRPG.Form.inlayForm;
 import RcRPG.Form.prefixForm;
 import RcRPG.RPG.*;
+import RcRPG.RcRPGMain;
 import RcRPG.Society.Money;
 import RcRPG.Society.Points;
 import RcRPG.Society.Prefix;
@@ -18,6 +20,7 @@ import cn.nukkit.command.PluginCommand;
 import cn.nukkit.command.data.CommandParamType;
 import cn.nukkit.command.data.CommandParameter;
 import cn.nukkit.item.Item;
+import cn.nukkit.lang.LangCode;
 import cn.nukkit.lang.PluginI18n;
 import cn.nukkit.utils.Config;
 import cn.nukkit.utils.TextFormat;
@@ -25,6 +28,7 @@ import cn.nukkit.utils.TextFormat;
 import java.util.ArrayList;
 
 import static RcRPG.RcRPGMain.disablePrefix;
+import static RcRPG.RcRPGMain.serverLangCode;
 
 public class Commands extends PluginCommand<RcRPGMain> {
     protected RcRPGMain api;
@@ -51,6 +55,14 @@ public class Commands extends PluginCommand<RcRPGMain> {
         this.addCommandParameters("help", new CommandParameter[]{
                 CommandParameter.newEnum("help", new String[]{"help"})
         });
+        this.addCommandParameters("effect", new CommandParameter[]{
+                CommandParameter.newEnum("effect", new String[]{"effect"}),
+                CommandParameter.newType("flag", CommandParamType.STRING),
+                CommandParameter.newType("player", CommandParamType.TARGET),
+                CommandParameter.newEnum("attrName", RcRPGMain.getInstance().attrDisplayPercentConfig.toArray(new String[0])),
+                CommandParameter.newType("value", CommandParamType.FLOAT),
+                CommandParameter.newType("duration", true, CommandParamType.INT)
+        });
         this.addCommandParameters("admin", new CommandParameter[]{
                 CommandParameter.newEnum("admin", new String[]{"admin"})
         });
@@ -74,7 +86,7 @@ public class Commands extends PluginCommand<RcRPGMain> {
         this.addCommandParameters("exp", new CommandParameter[]{
                 CommandParameter.newEnum("exp", new String[]{"exp"}),
                 CommandParameter.newEnum("give", new String[]{"give"}),
-                CommandParameter.newType("PlayerName", CommandParamType.STRING),
+                CommandParameter.newType("playerName", CommandParamType.STRING),
                 CommandParameter.newType("Exp", CommandParamType.INT)
         });
         this.addCommandParameters("shop", new CommandParameter[]{
@@ -107,10 +119,10 @@ public class Commands extends PluginCommand<RcRPGMain> {
                         CommandParameter.newEnum(name, new String[]{name}),
                         CommandParameter.newEnum("help", new String[]{"help"})
                 });
-                this.addCommandParameters(name + "_give", new CommandParameter[]{
+                this.addCommandParameters(name + "_giveOrDrop", new CommandParameter[]{
                         CommandParameter.newEnum(name, new String[]{name}),
-                        CommandParameter.newEnum("give", new String[]{"give", "drop"}),
-                        CommandParameter.newType("PlayerName", CommandParamType.STRING),
+                        CommandParameter.newEnum("giveOrDrop", new String[]{"give", "drop"}),
+                        CommandParameter.newType("playerName", CommandParamType.STRING),
                         CommandParameter.newType(name.toLowerCase(), CommandParamType.STRING),
                         CommandParameter.newType("Count", true, CommandParamType.INT)
                 });
@@ -145,7 +157,7 @@ public class Commands extends PluginCommand<RcRPGMain> {
                 this.addCommandParameters(name + "_del", new CommandParameter[]{
                         CommandParameter.newEnum(name, new String[]{name}),
                         CommandParameter.newEnum("del", new String[]{"del"}),
-                        CommandParameter.newType("PlayerName", CommandParamType.STRING),
+                        CommandParameter.newType("playerName", CommandParamType.STRING),
                         CommandParameter.newType(name.toLowerCase(), CommandParamType.INT)
                 });
                 this.addCommandParameters(name + "_help", new CommandParameter[]{
@@ -164,10 +176,7 @@ public class Commands extends PluginCommand<RcRPGMain> {
 
     @Override
     public boolean execute(CommandSender sender, String label, String[] args) {
-        if (!sender.isOp()) {
-            sender.sendMessage(TextFormat.RED + "权限不足");
-            return false;
-        }
+        LangCode langCode = sender instanceof Player ? ((Player) sender).getLanguageCode() : serverLangCode;
 
         if (args.length < 1) {
             sender.sendMessage(TextFormat.RED + "缺少参数");
@@ -175,23 +184,31 @@ public class Commands extends PluginCommand<RcRPGMain> {
         }
         switch (args[0]) {
             case "help":
-                sender.sendMessage("/rpg check attr [playerName]   查询属性命令");
-                sender.sendMessage("/rpg inlay   镶嵌宝石的命令 (GUI)");
-                sender.sendMessage("/rpg dismantle   分解装备的命令 (GUI)");
-                sender.sendMessage("/rpg weapon help   武器指令");
-                sender.sendMessage("/rpg armour help   盔甲指令");
-                sender.sendMessage("/rpg stone help   宝石指令");
-                sender.sendMessage("/rpg magic help   魔法物品指令");
-                sender.sendMessage("/rpg box help   箱子指令");
-                sender.sendMessage("/rpg ornament help   饰品指令");
-                sender.sendMessage("/rpg prefix help   称号指令");
-                sender.sendMessage("/rpg guild   公会指令");
-                sender.sendMessage("/rpg exp help   经验指令");
-                sender.sendMessage("/rpg money help   金币指令");
-                sender.sendMessage("/rpg point help   点券指令");
-                sender.sendMessage("/rpg shop help   商店指令");
+                sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.help"));
+                sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.check.help"));
+                sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.inlay.help"));
+                sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.dismantle.help"));
+                if (sender.isOp()) {
+                    sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.effect.help"));
+                    sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.weapon.help"));
+                    sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.armour.help"));
+                    sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.stone.help"));
+                    sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.magic.help"));
+                    sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.box.help"));
+                    sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.ornament.help"));
+                    sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.prefix.help"));
+                    sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.guild.help"));
+                    sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.exp.help"));
+                    sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.money.help"));
+                    sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.point.help"));
+                    sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.shop.help"));
+                }
                 break;
             case "admin": {
+                if (!sender.isOp()) {
+                    sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.message.noPermission"));
+                    return false;
+                }
                 if (!sender.isPlayer()) {
                     sender.sendMessage(TextFormat.RED + "本命令必须是玩家执行");
                     return false;
@@ -200,8 +217,37 @@ public class Commands extends PluginCommand<RcRPGMain> {
                 return true;
             }
             case "reload": {
+                if (!sender.isOp()) {
+                    sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.message.noPermission"));
+                    return false;
+                }
                 RcRPGMain.getInstance().init();
-                sender.sendMessage(TextFormat.GREEN + "rpg.commands.reloaded");
+                sender.sendMessage(TextFormat.GREEN + i18n.tr(langCode, "rcrpg.commands.reloaded"));
+                return true;
+            }
+            case "effect": {
+                if (!sender.isOp()) {
+                    sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.message.noPermission"));
+                    return false;
+                }
+                String flag = args[1];
+                Player player = api.getServer().getPlayer(args[2]);
+                if (player == null) {
+                    sender.sendMessage(TextFormat.RED + "玩家不存在");
+                    return false;
+                }
+                String attrName = args[3];
+                float value = Float.parseFloat(args[4]);
+                int duration = args.length > 5 ? Integer.parseInt(args[5]) : 30;
+                PlayerAttr playerAttr = PlayerAttr.getPlayerAttr(player);// TODO: 实现 Effect
+                if (attrName.equals("SP")) {
+                    float[] before = playerAttr.getBaseAttr(attrName);
+                    playerAttr.setBaseAttr(attrName, new float[]{before[0], before[1] + value});
+                } else if (attrName.equals("Absorption")) {
+                    float[] before = playerAttr.getBaseAttr(attrName);
+                    playerAttr.setBaseAttr(attrName, new float[]{duration, value});
+                    player.setAbsorption(value);
+                }
                 return true;
             }
             case "dismantle": {
@@ -248,7 +294,7 @@ public class Commands extends PluginCommand<RcRPGMain> {
                     }
                     Player player = api.getServer().getPlayer(args[2]);
                     if (!player.isValid()) {
-                        sender.sendMessage("没有匹配的目标");
+                        sender.sendMessage(i18n.get(langCode, "rcrpg.commands.message.noTarget"));
                         return false;
                     }
                     PlayerAttr pAttr = PlayerAttr.getPlayerAttr((Player) sender);
@@ -262,6 +308,10 @@ public class Commands extends PluginCommand<RcRPGMain> {
                 guildForm.make_one((Player) sender);
                 break;
             case "shop":
+                if (!sender.isOp()) {
+                    sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.message.noPermission"));
+                    return false;
+                }
                 if (args.length < 2) {
                     sender.sendMessage(TextFormat.RED + "缺少第2个参数");
                     return false;
@@ -274,6 +324,10 @@ public class Commands extends PluginCommand<RcRPGMain> {
                 sender.sendMessage("点击一个木牌");
                 break;
             case "exp":
+                if (!sender.isOp()) {
+                    sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.message.noPermission"));
+                    return false;
+                }
                 switch (args[1]) {
                     case "help" -> {
                         sender.sendMessage("/rpg exp give [Player] [Exp] 给予玩家经验");
@@ -296,13 +350,17 @@ public class Commands extends PluginCommand<RcRPGMain> {
                 sender.sendMessage(TextFormat.RED + "错误的命令，请使用：/rpg help");
                 return false;
             case "money": {
+                if (!sender.isOp()) {
+                    sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.message.noPermission"));
+                    return false;
+                }
                 if (args.length < 2) {
                     sender.sendMessage(TextFormat.RED + "缺少第2个参数");
                     return false;
                 }
                 Player player = api.getServer().getPlayer(args[2]);
                 if (!player.isValid()) {
-                    sender.sendMessage("没有匹配的目标");
+                    sender.sendMessage(i18n.get(langCode, "rcrpg.commands.message.noTarget"));
                     return false;
                 }
                 int money = 0;
@@ -335,6 +393,10 @@ public class Commands extends PluginCommand<RcRPGMain> {
                 break;
             }
             case "point": {
+                if (!sender.isOp()) {
+                    sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.message.noPermission"));
+                    return false;
+                }
                 if (args.length < 2) {
                     sender.sendMessage(TextFormat.RED + "缺少第2个参数");
                     return false;
@@ -343,7 +405,7 @@ public class Commands extends PluginCommand<RcRPGMain> {
                 if (args.length > 2) {
                     player = api.getServer().getPlayer(args[2]);
                     if (!player.isValid()) {
-                        sender.sendMessage("没有匹配的目标");
+                        sender.sendMessage(i18n.get(langCode, "rcrpg.commands.message.noTarget"));
                         return false;
                     }
                 }
@@ -376,6 +438,10 @@ public class Commands extends PluginCommand<RcRPGMain> {
                 break;
             }
             case "prefix": {
+                if (!sender.isOp()) {
+                    sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.message.noPermission"));
+                    return false;
+                }
                 if (args.length < 2) {
                     sender.sendMessage(TextFormat.RED + "缺少第2个参数");
                     return false;
@@ -388,7 +454,7 @@ public class Commands extends PluginCommand<RcRPGMain> {
                 if (args.length > 2) {
                     player = api.getServer().getPlayer(args[2]);
                     if (!player.isValid()) {
-                        sender.sendMessage("没有匹配的目标");
+                        sender.sendMessage(i18n.get(langCode, "rcrpg.commands.message.noTarget"));
                         return false;
                     }
                 }
@@ -429,6 +495,10 @@ public class Commands extends PluginCommand<RcRPGMain> {
                 break;
             }
             case "weapon": {
+                if (!sender.isOp()) {
+                    sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.message.noPermission"));
+                    return false;
+                }
                 if (args.length < 2) {
                     sender.sendMessage(TextFormat.RED + "缺少第2个参数");
                     return false;
@@ -511,6 +581,10 @@ public class Commands extends PluginCommand<RcRPGMain> {
                 break;
             }
             case "armour": {
+                if (!sender.isOp()) {
+                    sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.message.noPermission"));
+                    return false;
+                }
                 if (args.length < 2) {
                     sender.sendMessage(TextFormat.RED + "缺少第2个参数");
                     return false;
@@ -593,6 +667,10 @@ public class Commands extends PluginCommand<RcRPGMain> {
                 break;
             }
             case "stone": {
+                if (!sender.isOp()) {
+                    sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.message.noPermission"));
+                    return false;
+                }
                 if (args.length < 2) {
                     sender.sendMessage(TextFormat.RED + "缺少第2个参数");
                     return false;
@@ -665,6 +743,10 @@ public class Commands extends PluginCommand<RcRPGMain> {
                 break;
             }
             case "magic": {
+                if (!sender.isOp()) {
+                    sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.message.noPermission"));
+                    return false;
+                }
                 if (args.length < 2) {
                     sender.sendMessage(TextFormat.RED + "缺少第2个参数");
                     return false;
@@ -730,6 +812,10 @@ public class Commands extends PluginCommand<RcRPGMain> {
                 break;
             }
             case "box": {
+                if (!sender.isOp()) {
+                    sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.message.noPermission"));
+                    return false;
+                }
                 if (args.length < 2) {
                     sender.sendMessage(TextFormat.RED + "缺少第2个参数");
                     return false;
@@ -794,6 +880,10 @@ public class Commands extends PluginCommand<RcRPGMain> {
                 break;
             }
             case "ornament": {
+                if (!sender.isOp()) {
+                    sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.message.noPermission"));
+                    return false;
+                }
                 if (args.length < 2) {
                     sender.sendMessage(TextFormat.RED + "缺少第2个参数");
                     return false;

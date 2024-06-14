@@ -5,11 +5,13 @@ import RcRPG.Society.Shop;
 import RcRPG.Task.BoxTimeTask;
 import RcRPG.Task.PlayerAttrUpdateTask;
 import RcRPG.Task.Tip;
+import RcRPG.command.Commands;
 import RcRPG.floatingtext.TextEntity;
 import RcRPG.tips.TipsVariables;
 import cn.nukkit.Server;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.event.Listener;
+import cn.nukkit.lang.LangCode;
 import cn.nukkit.lang.PluginI18n;
 import cn.nukkit.lang.PluginI18nManager;
 import cn.nukkit.permission.Permission;
@@ -30,6 +32,8 @@ public class RcRPGMain extends PluginBase implements Listener {
 
     @Getter
     public static PluginI18n i18n;
+
+    public static LangCode serverLangCode;
 
     public boolean disableChatStyle;
     public static boolean disablePrefix = false;
@@ -62,6 +66,7 @@ public class RcRPGMain extends PluginBase implements Listener {
         instance = this;
         //register the plugin i18n
         i18n = PluginI18nManager.register(this);
+        initServerLangCode();
     }
 
     public void onEnable(){
@@ -294,6 +299,30 @@ public class RcRPGMain extends PluginBase implements Listener {
         File ornamentFile = this.getOrnamentFile();
         if (!ornamentFile.exists() && !ornamentFile.mkdirs()) {
             this.getLogger().info("/Ornament文件夹创建失败");
+        }
+    }
+
+    public void initServerLangCode() {
+        switch (Server.getInstance().getLanguage().getLang()) {
+            case "eng" -> {
+                serverLangCode = LangCode.en_US;
+            }
+            case "chs" -> {
+                serverLangCode = LangCode.zh_CN;
+            }
+            case "deu" -> {
+                serverLangCode = LangCode.de_DE;
+            }
+            case "rus" -> {
+                serverLangCode = LangCode.ru_RU;
+            }
+            default -> {
+                try {
+                    serverLangCode = LangCode.valueOf(Server.getInstance().getLanguage().getLang());
+                } catch (IllegalArgumentException e) {
+                    serverLangCode = LangCode.en_US;
+                }
+            }
         }
     }
 

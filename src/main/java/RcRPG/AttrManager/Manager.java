@@ -76,8 +76,8 @@ public class Manager implements AttrInterface {
 
     /**
      * 返回 [最小值, 最大值] 的随机值
-     * @param array
-     * @return
+     * @param array 数组
+     * @return 随机值
      */
     public static float getRandomNum(float[] array) {
         int length = 0;
@@ -112,8 +112,8 @@ public class Manager implements AttrInterface {
 
     /**
      * 检查 float[] 是否为空
-     * @param array
-     * @return
+     * @param array float[]
+     * @return boolean
      */
     @Override
     public boolean checkFloatArray(float[] array) {

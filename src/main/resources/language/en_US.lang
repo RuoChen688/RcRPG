@@ -1,4 +1,23 @@
-rpg.commands.reloaded=§aConfiguration reload successful
+rcrpg.commands.message.noPermission=§cNo permissions!
+rcrpg.commands.message.noTarget=§cNo matching target found.
+rcrpg.commands.reloaded=§aConfiguration reload successful!
+rcrpg.commands.help=§7------ RcRPG Help ------
+rcrpg.commands.effect.help=§2/rpg effect <flag> <player> <attrName> <value> [duration]:§f Add attribute effect command
+rcrpg.commands.check.help=§2/rpg check attr [playerName]:§f Check attribute command
+rcrpg.commands.inlay.help=§2/rpg inlay:§f Command for inlaying gems (GUI)
+rcrpg.commands.dismantle.help=§2/rpg dismantle:§f Command for dismantling equipment (GUI)
+rcrpg.commands.weapon.help=§2/rpg weapon help:§f Weapon command
+rcrpg.commands.armour.help=§2/rpg armour help:§f Armor command
+rcrpg.commands.stone.help=§2/rpg stone help:§f Gem command
+rcrpg.commands.magic.help=§2/rpg magic help:§f Magic item command
+rcrpg.commands.box.help=§2/rpg box help:§f Box command
+rcrpg.commands.ornament.help=§2/rpg ornament help:§f Ornament command
+rcrpg.commands.prefix.help=§2/rpg prefix help:§f Prefix command
+rcrpg.commands.guild.help=§2/rpg guild:§f Guild command
+rcrpg.commands.exp.help=§2/rpg exp help:§f Experience command
+rcrpg.commands.money.help=§2/rpg money help:§f Gold coin command
+rcrpg.commands.point.help=§2/rpg point help:§f Point ticket command
+rcrpg.commands.shop.help=§2/rpg shop help:§f Shop command
 
 rcrpg.events.insufficient_level_for_weapon=Insufficient level, unable to use this weapon
 rcrpg.events.life_steal_message=You have drained §c§l{%0}§r health from the opponent

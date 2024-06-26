@@ -78,7 +78,7 @@ public class Shop {
 
     public static Config addShopConfig(String name,String pos){
         if(getShopConfig(name) == null){
-            RcRPGMain.getInstance().saveResource("Shop.yml","/Shop/"+name+".yml",false);
+            RcRPGMain.getInstance().saveResource("Shop/Shop.yml","/Shop/"+name+".yml",false);
             Config config = new Config(RcRPGMain.getInstance().getShopFile()+"/"+name+".yml");
             config.set("位置",pos);
             config.save();

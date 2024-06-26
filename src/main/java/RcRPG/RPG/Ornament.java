@@ -121,7 +121,7 @@ public class Ornament extends ItemAttr {
 
     public static Config addOrnamentConfig(String name,String id){
         if(getOrnamentConfig(name) == null){
-            RcRPGMain.getInstance().saveResource("Ornament.yml","/Ornament/"+name+".yml",false);
+            RcRPGMain.getInstance().saveResource("Ornament/Ornament.yml","/Ornament/"+name+".yml",false);
             Config config = new Config(RcRPGMain.getInstance().getOrnamentFile()+"/"+name+".yml");
             config.set("物品ID",id);
             config.save();

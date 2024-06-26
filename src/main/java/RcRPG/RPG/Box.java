@@ -7,7 +7,6 @@ import RcRPG.Society.Points;
 import RcRPG.Society.Prefix;
 import cn.nukkit.Player;
 import cn.nukkit.item.Item;
-import cn.nukkit.item.RuntimeItems;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.utils.Config;
 import lombok.Getter;
@@ -83,7 +82,7 @@ public class Box {
 
     public static Config addBoxConfig(String name,String id){
         if(getBoxConfig(name) == null){
-            RcRPGMain.getInstance().saveResource("Box.yml","/Box/"+name+".yml",false);
+            RcRPGMain.getInstance().saveResource("Box/Box.yml","/Box/"+name+".yml",false);
             Config config = new Config(RcRPGMain.getInstance().getBoxFile()+"/"+name+".yml");
             config.set("物品ID",id);
             config.save();

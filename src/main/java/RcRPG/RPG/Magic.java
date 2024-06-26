@@ -5,7 +5,6 @@ import cn.nukkit.Player;
 import cn.nukkit.Server;
 import cn.nukkit.command.ConsoleCommandSender;
 import cn.nukkit.item.Item;
-import cn.nukkit.item.RuntimeItems;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.potion.Effect;
 import cn.nukkit.utils.Config;
@@ -90,7 +89,7 @@ public class Magic {
 
     public static Config addMagicConfig(String name,String id){
         if(getMagicConfig(name) == null){
-            RcRPGMain.getInstance().saveResource("Magic.yml","/Magic/"+name+".yml",false);
+            RcRPGMain.getInstance().saveResource("Magic/Magic.yml","/Magic/"+name+".yml",false);
             Config config = new Config(RcRPGMain.getInstance().getMagicFile()+"/"+name+".yml");
             config.set("物品ID",id);
             config.save();

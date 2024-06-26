@@ -170,7 +170,7 @@ public class Weapon extends ItemAttr {
 
     public static Config addWeaponConfig(String name,String id){
         if(getWeaponConfig(name) == null){
-            RcRPGMain.getInstance().saveResource("Weapon.yml","/Weapon/"+name+".yml",false);
+            RcRPGMain.getInstance().saveResource("Weapon/Weapon.yml","/Weapon/"+name+".yml",false);
             Config config = new Config(RcRPGMain.getInstance().getWeaponFile()+"/"+name+".yml");
             config.set("物品ID",id);
             config.save();

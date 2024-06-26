@@ -639,7 +639,7 @@ public class Events implements Listener {
 
         File file = new File(RcRPGMain.getInstance().getDataFolder()+"/Players/"+name+".yml");
         if(!file.exists()) {
-            RcRPGMain.getInstance().saveResource("Player.yml","/Players/"+name+".yml",false);
+            RcRPGMain.getInstance().saveResource("Players/Player.yml","/Players/"+name+".yml",false);
             Config config = new Config(RcRPGMain.getInstance().getPlayerFile()+"/"+name+".yml");
             config.set("名称",name);
             config.set("公会", RcRPGMain.getInstance().config.getString("初始公会"));

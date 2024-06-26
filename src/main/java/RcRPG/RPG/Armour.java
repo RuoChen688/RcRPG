@@ -178,7 +178,7 @@ public class Armour extends ItemAttr {
 
     public static Config addArmourConfig(String name,String id){
         if(getArmourConfig(name) == null){
-            RcRPGMain.getInstance().saveResource("Armour.yml","/Armour/"+name+".yml",false);
+            RcRPGMain.getInstance().saveResource("Armour/Armour.yml","/Armour/"+name+".yml",false);
             Config config = new Config(RcRPGMain.getInstance().getArmourFile()+"/"+name+".yml");
             config.set("物品ID",id);
             config.save();

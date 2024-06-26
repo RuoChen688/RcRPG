@@ -73,8 +73,8 @@ public class RcRPGMain extends PluginBase implements Listener {
         Entity.registerEntity("TextEntity", TextEntity.class);
 
         this.getNewFile();
-        this.saveResource("Config.yml","/Config.yml",false);
-        config = new Config(this.getDataFolder() + "/Config.yml");
+        this.saveResource("config.yml","/config.yml",false);
+        config = new Config(this.getDataFolder() + "/config.yml");
 
         init();
 
@@ -116,7 +116,7 @@ public class RcRPGMain extends PluginBase implements Listener {
     }
 
     public void init() {
-        this.saveResource("PlayerOrnament.yml","/OrnamentConfig.yml",false);
+        this.saveResource("OrnamentConfig.yml","/OrnamentConfig.yml",false);
         ornamentConfig = new Config(this.getDataFolder() + "/OrnamentConfig.yml");
 
         this.saveResource("DismantlePlan.yml","/DismantlePlan.yml",false);

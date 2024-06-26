@@ -95,7 +95,7 @@ public class Stone extends ItemAttr {
 
     public static Config addStoneConfig(String name,String id){
         if(getStoneConfig(name) == null){
-            RcRPGMain.getInstance().saveResource("Stone.yml","/Stone/"+name+".yml",false);
+            RcRPGMain.getInstance().saveResource("Stone/Stone.yml","/Stone/"+name+".yml",false);
             Config config = new Config(RcRPGMain.getInstance().getStoneFile()+"/"+name+".yml");
             config.set("物品ID",id);
             config.save();

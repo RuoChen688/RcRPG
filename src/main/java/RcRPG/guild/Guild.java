@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public class Guild {
 
     public static void addGuild(Player player, String guild){
-        RcRPGMain.getInstance().saveResource("Guild.yml","/Guild/"+guild+".yml",false);
+        RcRPGMain.getInstance().saveResource("Guild/Guild.yml","/Guild/"+guild+".yml",false);
         Config config = new Config(RcRPGMain.getInstance().getGuildFile()+"/"+guild+".yml");
         config.set("名称",guild);
         config.set("公会资金", RcRPGMain.getInstance().config.getInt("公会创建初始资金"));

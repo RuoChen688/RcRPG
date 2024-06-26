@@ -4,6 +4,7 @@ import RcRPG.RcRPGMain;
 import cn.nukkit.Player;
 import cn.nukkit.event.Listener;
 import cn.nukkit.form.element.ElementButton;
+import cn.nukkit.form.element.ElementButtonImageData;
 import cn.nukkit.form.handler.FormResponseHandler;
 import cn.nukkit.form.response.FormResponseSimple;
 import cn.nukkit.form.window.FormWindowSimple;
@@ -14,10 +15,10 @@ public class RcRPGAdminWin implements Listener {
     public RcRPGAdminWin(Player player) {
         LangCode langCode = player.getLanguageCode();
         FormWindowSimple form = new FormWindowSimple(RcRPGMain.getI18n().tr(langCode, "rcrpg.window.main.title"), RcRPGMain.getI18n().tr(langCode, "rcrpg.window.select_config_manage"));
-        form.addButton(new ElementButton(RcRPGMain.getI18n().tr(langCode, "rcrpg.window.main.button1")));
-        form.addButton(new ElementButton(RcRPGMain.getI18n().tr(langCode, "rcrpg.window.main.button2")));
-        form.addButton(new ElementButton(RcRPGMain.getI18n().tr(langCode, "rcrpg.window.main.button3")));
-        form.addButton(new ElementButton(RcRPGMain.getI18n().tr(langCode, "rcrpg.window.main.button4")));
+        form.addButton(new ElementButton(RcRPGMain.getI18n().tr(langCode, "rcrpg.window.main.button1"), new ElementButtonImageData("path", "textures/items/iron_sword")));
+        form.addButton(new ElementButton(RcRPGMain.getI18n().tr(langCode, "rcrpg.window.main.button2"), new ElementButtonImageData("path", "textures/items/chainmail_chestplate")));
+        form.addButton(new ElementButton(RcRPGMain.getI18n().tr(langCode, "rcrpg.window.main.button3"), new ElementButtonImageData("path", "textures/items/amethyst_shard")));
+        form.addButton(new ElementButton(RcRPGMain.getI18n().tr(langCode, "rcrpg.window.main.button4"), new ElementButtonImageData("path", "textures/items/ender_eye")));
 
         form.addHandler(FormResponseHandler.withoutPlayer(ignored -> {
             if (form.wasClosed()) {

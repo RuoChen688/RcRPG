@@ -15,7 +15,9 @@ import lombok.Setter;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -60,7 +62,7 @@ public class Weapon extends ItemAttr {
     /**
      * 套装方案
      */
-    private String suit;
+    private List<String> suit = new ArrayList<>();
 
     private ArrayList<Effect> damagerEffect = new ArrayList<>();
 
@@ -132,7 +134,18 @@ public class Weapon extends ItemAttr {
             weapon.setStoneList(list5);
 
             weapon.setDismantle(config.getString("分解", ""));
-            weapon.setSuit(config.getString("套装", ""));
+
+            if (config.exists("套装")) {
+                String suitStr = config.getString("套装", "");
+                List<String> suitList;
+                if (suitStr.isEmpty()) {
+                    suitList = config.getStringList("套装");
+                } else {
+                    suitList = new ArrayList<>(Arrays.asList(suitStr.split(",")));
+                }
+                weapon.setSuit(suitList);
+            }
+
             weapon.setKillMessage(config.getString("击杀提示"));
             weapon.setTipText(config.getString("底部显示"));
             weapon.setMyMessage(config.getString("个人通知"));
@@ -201,14 +214,18 @@ public class Weapon extends ItemAttr {
             return false;
         }
         Weapon weapon = RcRPGMain.loadWeapon.get(name);
-        player.getInventory().addItem(getItem(name, count));
+        Item item = getItem(name, count);
+        if (item.isNull()) {
+            return false;
+        }
+        player.getInventory().addItem(item);
         if(!weapon.getMyMessage().equals("")){
             String text = weapon.getMyMessage();
             if(text.contains("@player")) text = text.replace("@player", player.getName());
             if(text.contains("@item")) text = text.replace("@item", weapon.getLabel());
             player.sendMessage(text);
         }
-        if(!weapon.getServerMessage().equals("")){
+        if(!weapon.getServerMessage().isEmpty()){
             String text = weapon.getServerMessage();
             if(text.contains("@player")) text = text.replace("@player", player.getName());
             if(text.contains("@item")) text = text.replace("@item", weapon.getLabel());

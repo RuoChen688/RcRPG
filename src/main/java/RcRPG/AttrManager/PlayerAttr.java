@@ -21,8 +21,8 @@ public class PlayerAttr extends Manager {
         this.player = player;
         myAttr.put("Main", new HashMap<>());
         myAttr.put("Base", new HashMap<>() {{
-            put("SP", new float[]{10f, 3f});// 最大蓝量、蓝量
-            put("Absorption", new float[]{8f, 3f});// 随机值、盾量
+            put("SP", new float[]{0f, 0f});// 最大蓝量、蓝量
+            put("Absorption", new float[]{0f, 0f});// 持续时间、盾量
         }});
     }
 
@@ -40,17 +40,63 @@ public class PlayerAttr extends Manager {
     }
 
     /**
-     * 获取 Base 属性的值，仅支持 SP、Absorption 两项
+     * 用来存效果的持续时间
+     */
+    public HashMap<String, Long> effectDuration = new LinkedHashMap<>() {{
+        put("Absorption", 0L);
+    }};
+
+    /**
+     * 获取 Base SP 的值
      *
-     * @param attrName 属性名，用于检索特定属性值数组。
      * @return 浮点数数组，表示与指定属性名相关联的属性值。
      */
-    public float[] getBaseAttr(String attrName) {
-        return myAttr.get("Base").getOrDefault(attrName, new float[]{0f, 0f});
+    public float[] getBaseSPAttr() {
+        return myAttr.get("Base").getOrDefault("Absorption", new float[]{0f, 0f});
     }
 
-    public void setBaseAttr(String attrName, float[] value) {
-        myAttr.get("Base").put(attrName, value);
+    /**
+     * 设置 Base SP 的值
+     * @param value 浮点数数组，属性值。
+     * @param max 整数，生效时间（秒）
+     */
+    public void setBaseSPAttr(float value, int max) {
+        myAttr.get("Base").put("SP", new float[]{max, value});
+    }
+
+    /**
+     * 获取 Base Absorption 的值
+     * @return 浮点数数组，表示与指定属性名相关联的属性值。
+     */
+    public float[] getBaseAbsorptionAttr() {
+        return myAttr.get("Base").getOrDefault("SP", new float[]{0f, 0f});
+    }
+
+    /**
+     * 设置 Base Absorption 的值
+     * @param value 浮点数数组，属性值。
+     * @param duration 整数，生效时间（秒）
+     */
+    public void setBaseAbsorptionAttr(float value, int duration) {
+        myAttr.get("Base").put("Absorption", new float[]{duration, value});
+        player.setAbsorption(value);
+        long currentTimestampInSeconds = System.currentTimeMillis() / 1000;
+        effectDuration.put("Absorption", currentTimestampInSeconds + duration);
+    }
+
+    public void setEffectAttr(String flag, String attrName, float value, int duration) {
+        String keyId = "Effect-"+flag;
+        if (myAttr.containsKey(keyId)) {
+            Map<String, float[]> attr = deepCopyMap(myAttr.get(keyId));
+            attr.put(attrName, new float[]{value, value});
+            setItemAttrConfig(keyId, attr);
+        } else {
+            Map<String, float[]> attr = new HashMap<>();
+            attr.put(attrName, new float[]{value, value});
+            setItemAttrConfig(keyId, attr);
+        }
+        long currentTimestampInSeconds = System.currentTimeMillis() / 1000;
+        effectDuration.put(flag, currentTimestampInSeconds + duration);
     }
 
     public void update() {
@@ -88,9 +134,11 @@ public class PlayerAttr extends Manager {
             Weapon weapon = RcRPGMain.loadWeapon.get(rcItem.getNamedTag().getString("name"));
             if (weapon == null) continue;
 
-            if (!weapon.getSuit().isEmpty()) {
-                int count = suitMap.getOrDefault(weapon.getSuit(), 0) + 1;
-                suitMap.put(weapon.getSuit(), count);
+            if (!weapon.getSuit().isEmpty()) {// 套装
+                weapon.getSuit().forEach(v -> {
+                    int count = suitMap.getOrDefault(v, 0) + 1;
+                    suitMap.put(v, count);
+                });
             }
 
             setItemAttrConfig(weapon.getLabel(), weapon.getMainAttr());
@@ -107,9 +155,11 @@ public class PlayerAttr extends Manager {
             setItemAttrConfig(armour.getLabel(), armour.getMainAttr());
             checkItemStoneAttr(armour.getLabel(), Armour.getStones(rcItem), beforeLabel, labelList);
 
-            if (!armour.getSuit().isEmpty()) {
-                int count = suitMap.getOrDefault(armour.getSuit(), 0) + 1;
-                suitMap.put(armour.getSuit(), count);
+            if (!armour.getSuit().isEmpty()) {// 套装
+                armour.getSuit().forEach(v -> {
+                    int count = suitMap.getOrDefault(v, 0) + 1;
+                    suitMap.put(v, count);
+                });
             }
 
             beforeLabel.remove(armour.getLabel());
@@ -127,9 +177,11 @@ public class PlayerAttr extends Manager {
                 OverAttr(attr, ornament.getMainAttr());
                 setItemAttrConfig(ornament.getLabel(), attr);
 
-                if (!ornament.getSuit().isEmpty()) {
-                    int count = suitMap.getOrDefault(ornament.getSuit(), 0) + 1;
-                    suitMap.put(ornament.getSuit(), count);
+                if (!ornament.getSuit().isEmpty()) {// 套装
+                    ornament.getSuit().forEach(v -> {
+                        int count = suitMap.getOrDefault(v, 0) + 1;
+                        suitMap.put(v, count);
+                    });
                 }
 
                 beforeLabel.remove(ornament.getLabel());
@@ -251,7 +303,7 @@ public class PlayerAttr extends Manager {
         }
 
         // 副作用回收
-        // 处理oldAttr有但是newAttr没有的属性
+        // 处理 oldAttr 有但是 newAttr 没有的属性
         for (Map.Entry<String, float[]> entry : oldAttrMap.entrySet()) {
             String key = entry.getKey();
             if (!attrMap.containsKey(key)) {
@@ -308,10 +360,10 @@ public class PlayerAttr extends Manager {
 
             str.append(" ").append(i).append(": ").append(valueString).append("\n");
         }
-        list.add(new ElementLabel("§l§a### 总属性§r\n" + str));
+        list.add(new ElementLabel("§l§a### "+RcRPGMain.getI18n().tr(player.getLanguageCode(), "rcrpg.attrshow.window.text.totalAttr")+"§r\n" + str));
 
         for (String i : data.keySet()) {
-            if (i.equals("Main") || i.equals("Base") || i.startsWith("Effect-")) {
+            if (i.equals("Main") || i.equals("Base")) {
                 continue;
             }
 
@@ -347,7 +399,8 @@ public class PlayerAttr extends Manager {
          list.add(new ElementLabel(" §a# 临时效果§r\n" + str));
          }
          */
-        FormWindowCustom win = new FormWindowCustom("玩家属性 - " + p.getName(), list);
+
+        FormWindowCustom win = new FormWindowCustom(RcRPGMain.getI18n().tr(player.getLanguageCode(), "rcrpg.attrshow.window.title", p.getName()), list);
         player.showFormWindow(win);
     }
 

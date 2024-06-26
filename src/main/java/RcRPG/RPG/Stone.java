@@ -129,33 +129,33 @@ public class Stone extends ItemAttr {
         return item;
     }
     public static Item getItem(String name, int count) {
-        if(RcRPGMain.loadStone.containsKey(name)) {
-            Stone stone = RcRPGMain.loadStone.get(name);
-            Item item = RcRPGMain.loadStone.get(name).getItem();
-            item.setCount(count);
-            CompoundTag tag = item.getNamedTag();
-            if (tag == null) {
-                tag = new CompoundTag();
-            }
-            tag.putString("type", "stone");
-            tag.putString("name", name);
-            tag.putByte("Unbreakable", 1);
-            item.setNamedTag(tag);
-            item.setCustomName(stone.getShowName());
-            Stone.setStoneLore(item);
-            return item;
+        if(!RcRPGMain.loadStone.containsKey(name)) {
+            return Item.AIR_ITEM;
         }
-        return null;
+        Stone stone = RcRPGMain.loadStone.get(name);
+        Item item = stone.getItem();
+        item.setCount(count);
+        CompoundTag tag = item.getNamedTag();
+        if (tag == null) {
+            tag = new CompoundTag();
+        }
+        tag.putString("type", "stone");
+        tag.putString("name", name);
+        tag.putByte("Unbreakable", 1);
+        item.setNamedTag(tag);
+        item.setCustomName(stone.getShowName());
+        Stone.setStoneLore(item);
+        return item;
     }
     public static boolean giveStone(Player player, String name, int count){
         if (!RcRPGMain.loadStone.containsKey(name)) {
             return false;
         }
+        Stone stone = RcRPGMain.loadStone.get(name);
         Item item = getItem(name, count);
-        if (item == null) {
+        if (item.isNull()) {
             return false;
         }
-        Stone stone = RcRPGMain.loadStone.get(name);
         player.getInventory().addItem(item);
         if(!stone.getMyMessage().equals("")){
             String text = stone.getMyMessage();

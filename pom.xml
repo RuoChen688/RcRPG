@@ -55,7 +55,7 @@
                         <fileset>
                             <directory>${nukkitPluginsPath}</directory>
                             <includes>
-                                <include>${artifactId}*.jar</include>
+                                <include>${project.artifactId}*.jar</include>
                             </includes>
                         </fileset>
                     </filesets>

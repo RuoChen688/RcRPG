@@ -17,7 +17,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -69,7 +71,7 @@ public class Armour extends ItemAttr {
     /**
      * 套装方案
      */
-    private String suit;
+    private List<String> suit = new ArrayList<>();
 
     private String tipText;
 
@@ -103,7 +105,18 @@ public class Armour extends ItemAttr {
             armour.setColor(loadColorFromConfig(config));
 
             armour.setDismantle(config.getString("分解", ""));
-            armour.setSuit(config.getString("套装", ""));
+
+            if (config.exists("套装")) {
+                String suitStr = config.getString("套装", "");
+                List<String> suitList;
+                if (suitStr.isEmpty()) {
+                    suitList = config.getStringList("套装");
+                } else {
+                    suitList = new ArrayList<>(Arrays.asList(suitStr.split(",")));
+                }
+                armour.setSuit(suitList);
+            }
+
             armour.setTipText(config.getString("底部显示"));
             armour.setMyMessage(config.getString("个人通知"));
             armour.setServerMessage(config.getString("全服通知"));
@@ -205,7 +218,11 @@ public class Armour extends ItemAttr {
             return false;
         }
         Armour armour = RcRPGMain.loadArmour.get(name);
-        player.getInventory().addItem(getItem(name, count));
+        Item item = getItem(name, count);
+        if (item.isNull()) {
+            return false;
+        }
+        player.getInventory().addItem(item);
         if(!armour.getMyMessage().isEmpty()){
             String text = armour.getMyMessage();
             if(text.contains("@player")) text = text.replace("@player", player.getName());

@@ -8,6 +8,8 @@ import cn.nukkit.potion.Effect;
 import cn.nukkit.scheduler.PluginTask;
 import healthapi.PlayerHealth;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 public class PlayerAttrUpdateTask extends PluginTask<RcRPGMain> {
@@ -40,7 +42,16 @@ public class PlayerAttrUpdateTask extends PluginTask<RcRPGMain> {
 
             addHealth += pAttr.hpPerSecond;
 
-            // TODO: 这是依赖于 AttrManager 的 Effect 实现
+            // 这是依赖于 AttrManager 的 Effect 实现
+            long currentTimestampInSeconds = System.currentTimeMillis() / 1000;
+            pAttr.effectDuration.forEach((flag, aLong) -> {
+                if (aLong != 0 && aLong < currentTimestampInSeconds) {
+                    Map<String, float[]> attr = new HashMap<>();
+                    pAttr.setItemAttrConfig("Effect-"+flag, attr);
+                    pAttr.effectDuration.put(flag, 0L);
+                }
+            });
+
             /*
             effect = GetPlayerAttr(player, 1).Effect;
             const nowTime =  Number((new Date().getTime()/1000).toFixed(0))+0.5;

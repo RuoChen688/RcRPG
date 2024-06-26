@@ -174,35 +174,41 @@ public class Commands extends PluginCommand<RcRPGMain> {
         i18n = RcRPGMain.getI18n();
     }
 
+    public void sendHelp(CommandSender sender, LangCode langCode) {
+        sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.help"));
+        sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.check.help"));
+        sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.inlay.help"));
+        sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.dismantle.help"));
+        if (sender.isOp()) {
+            sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.effect.help"));
+            sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.weapon.help"));
+            sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.armour.help"));
+            sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.stone.help"));
+            sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.magic.help"));
+            sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.box.help"));
+            sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.ornament.help"));
+            sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.prefix.help"));
+            sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.guild.help"));
+            sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.exp.help"));
+            sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.money.help"));
+            sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.point.help"));
+            sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.shop.help"));
+        }
+    }
+
     @Override
     public boolean execute(CommandSender sender, String label, String[] args) {
         LangCode langCode = sender instanceof Player ? ((Player) sender).getLanguageCode() : serverLangCode;
 
         if (args.length < 1) {
             sender.sendMessage(TextFormat.RED + "缺少参数");
+            sendHelp(sender, langCode);
             return false;
         }
+
         switch (args[0]) {
             case "help":
-                sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.help"));
-                sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.check.help"));
-                sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.inlay.help"));
-                sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.dismantle.help"));
-                if (sender.isOp()) {
-                    sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.effect.help"));
-                    sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.weapon.help"));
-                    sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.armour.help"));
-                    sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.stone.help"));
-                    sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.magic.help"));
-                    sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.box.help"));
-                    sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.ornament.help"));
-                    sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.prefix.help"));
-                    sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.guild.help"));
-                    sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.exp.help"));
-                    sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.money.help"));
-                    sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.point.help"));
-                    sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.shop.help"));
-                }
+                sendHelp(sender, langCode);
                 break;
             case "admin": {
                 if (!sender.isOp()) {
@@ -240,13 +246,18 @@ public class Commands extends PluginCommand<RcRPGMain> {
                 float value = Float.parseFloat(args[4]);
                 int duration = args.length > 5 ? Integer.parseInt(args[5]) : 30;
                 PlayerAttr playerAttr = PlayerAttr.getPlayerAttr(player);// TODO: 实现 Effect
+                if (playerAttr == null) {
+                    sender.sendMessage(TextFormat.RED + "玩家未注册属性");
+                    return false;
+                }
                 if (attrName.equals("SP")) {
-                    float[] before = playerAttr.getBaseAttr(attrName);
-                    playerAttr.setBaseAttr(attrName, new float[]{before[0], before[1] + value});
+                    float[] before = playerAttr.getBaseSPAttr();
+                    playerAttr.setBaseSPAttr(before[1] + value, (int) before[0]);
                 } else if (attrName.equals("Absorption")) {
-                    float[] before = playerAttr.getBaseAttr(attrName);
-                    playerAttr.setBaseAttr(attrName, new float[]{duration, value});
-                    player.setAbsorption(value);
+                    //float[] before = playerAttr.getBaseAbsorptionAttr();
+                    playerAttr.setBaseAbsorptionAttr(value, duration);
+                } else {
+                    playerAttr.setEffectAttr(flag, attrName, value, duration);
                 }
                 return true;
             }
@@ -283,13 +294,13 @@ public class Commands extends PluginCommand<RcRPGMain> {
                 }
 
                 if (args.length < 2) {
-                    sender.sendMessage(TextFormat.RED + "缺少第2个参数");
+                    sender.sendMessage(TextFormat.RED + "缺少第 2 个参数");
                     return false;
                 }
                 if (args[1].equals("attr")) {
 
                     if (args.length < 3) {
-                        sender.sendMessage(TextFormat.RED + "缺少第3个参数");
+                        sender.sendMessage(TextFormat.RED + "缺少第 3 个参数");
                         return false;
                     }
                     Player player = api.getServer().getPlayer(args[2]);
@@ -313,7 +324,7 @@ public class Commands extends PluginCommand<RcRPGMain> {
                     return false;
                 }
                 if (args.length < 2) {
-                    sender.sendMessage(TextFormat.RED + "缺少第2个参数");
+                    sender.sendMessage(TextFormat.RED + "缺少第 2 个参数");
                     return false;
                 }
                 if (args[1].equals("help")) {
@@ -334,7 +345,7 @@ public class Commands extends PluginCommand<RcRPGMain> {
                     }
                     case "give" -> {
                         if (args.length < 4) {
-                            sender.sendMessage(TextFormat.RED + "缺少第4个参数");
+                            sender.sendMessage(TextFormat.RED + "缺少第 4 个参数");
                             return false;
                         }
                         Player player = Server.getInstance().getPlayer(args[2]);
@@ -354,8 +365,18 @@ public class Commands extends PluginCommand<RcRPGMain> {
                     sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.message.noPermission"));
                     return false;
                 }
-                if (args.length < 2) {
-                    sender.sendMessage(TextFormat.RED + "缺少第2个参数");
+
+                switch (args[1]) {
+                    case "my" -> sender.sendMessage(String.valueOf(Money.getMoney((Player) sender)));
+                    default -> {
+                        sender.sendMessage("/rpg money add [Player] [Money] 给予玩家金币");
+                        sender.sendMessage("/rpg money del [Player] [Money] 扣除玩家金币");
+                        sender.sendMessage("/rpg money my 查看自身金币");
+                    }
+                }
+
+                if (args.length < 3) {
+                    sender.sendMessage(TextFormat.RED + "缺少第 3 个参数");
                     return false;
                 }
                 Player player = api.getServer().getPlayer(args[2]);
@@ -363,10 +384,12 @@ public class Commands extends PluginCommand<RcRPGMain> {
                     sender.sendMessage(i18n.get(langCode, "rcrpg.commands.message.noTarget"));
                     return false;
                 }
-                int money = 0;
-                if (args.length > 3) {
-                    money = Integer.parseInt(args[3]);
+                if (args.length < 4) {
+                    sender.sendMessage(TextFormat.RED + "缺少第 4 个参数");
+                    return false;
                 }
+                int money = Integer.parseInt(args[3]);
+                
                 switch (args[1]) {
                     case "help" -> {
                         sender.sendMessage("/rpg money add [Player] [Money] 给予玩家金币");
@@ -374,7 +397,6 @@ public class Commands extends PluginCommand<RcRPGMain> {
                         sender.sendMessage("/rpg money my 查看自身金币");
                     }
                     case "add" -> {
-                        if (player == null) return false;
                         if (Money.addMoney(player, money)) {
                             if (sender.isPlayer()) sender.sendMessage("给予成功");
                         } else {
@@ -398,7 +420,7 @@ public class Commands extends PluginCommand<RcRPGMain> {
                     return false;
                 }
                 if (args.length < 2) {
-                    sender.sendMessage(TextFormat.RED + "缺少第2个参数");
+                    sender.sendMessage(TextFormat.RED + "缺少第 2 个参数");
                     return false;
                 }
                 Player player = null;
@@ -443,7 +465,7 @@ public class Commands extends PluginCommand<RcRPGMain> {
                     return false;
                 }
                 if (args.length < 2) {
-                    sender.sendMessage(TextFormat.RED + "缺少第2个参数");
+                    sender.sendMessage(TextFormat.RED + "缺少第 2 个参数");
                     return false;
                 }
                 if (disablePrefix) {
@@ -500,7 +522,7 @@ public class Commands extends PluginCommand<RcRPGMain> {
                     return false;
                 }
                 if (args.length < 2) {
-                    sender.sendMessage(TextFormat.RED + "缺少第2个参数");
+                    sender.sendMessage(TextFormat.RED + "缺少第 2 个参数");
                     return false;
                 }
                 switch (args[1]) {
@@ -586,7 +608,7 @@ public class Commands extends PluginCommand<RcRPGMain> {
                     return false;
                 }
                 if (args.length < 2) {
-                    sender.sendMessage(TextFormat.RED + "缺少第2个参数");
+                    sender.sendMessage(TextFormat.RED + "缺少第 2 个参数");
                     return false;
                 }
                 switch (args[1]) {
@@ -672,7 +694,7 @@ public class Commands extends PluginCommand<RcRPGMain> {
                     return false;
                 }
                 if (args.length < 2) {
-                    sender.sendMessage(TextFormat.RED + "缺少第2个参数");
+                    sender.sendMessage(TextFormat.RED + "缺少第 2 个参数");
                     return false;
                 }
                 switch (args[1]) {
@@ -748,7 +770,7 @@ public class Commands extends PluginCommand<RcRPGMain> {
                     return false;
                 }
                 if (args.length < 2) {
-                    sender.sendMessage(TextFormat.RED + "缺少第2个参数");
+                    sender.sendMessage(TextFormat.RED + "缺少第 2 个参数");
                     return false;
                 }
                 switch (args[1]) {
@@ -817,7 +839,7 @@ public class Commands extends PluginCommand<RcRPGMain> {
                     return false;
                 }
                 if (args.length < 2) {
-                    sender.sendMessage(TextFormat.RED + "缺少第2个参数");
+                    sender.sendMessage(TextFormat.RED + "缺少第 2 个参数");
                     return false;
                 }
                 switch (args[1]) {
@@ -885,7 +907,7 @@ public class Commands extends PluginCommand<RcRPGMain> {
                     return false;
                 }
                 if (args.length < 2) {
-                    sender.sendMessage(TextFormat.RED + "缺少第2个参数");
+                    sender.sendMessage(TextFormat.RED + "缺少第 2 个参数");
                     return false;
                 }
                 switch (args[1]) {
@@ -903,10 +925,6 @@ public class Commands extends PluginCommand<RcRPGMain> {
                         new SendOrnamentAdminWin((Player) sender);
                     }
                     case "my" -> {
-                        if (args.length < 2) {
-                            sender.sendMessage("参数错误");
-                            return false;
-                        }
                         OrnamentPanel panel = new OrnamentPanel();
                         panel.sendPanel((Player) sender);
                     }

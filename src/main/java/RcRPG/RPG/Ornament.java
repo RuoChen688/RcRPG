@@ -11,6 +11,8 @@ import lombok.Setter;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @Getter
 @Setter
@@ -59,7 +61,7 @@ public class Ornament extends ItemAttr {
     /**
      * 套装方案
      */
-    private String suit;
+    private List<String> suit = new ArrayList<>();
 
     public Ornament(String name,Config config){
         this.name = name;
@@ -82,13 +84,19 @@ public class Ornament extends ItemAttr {
             ornament.setMessage(config.getString("介绍"));
             ornament.setShowName(config.getString("显示名称"));
 
-            ArrayList<String> list = new ArrayList<>();
-            for(String lore : config.getStringList("显示")){
-                list.add(lore);
-            }
-            ornament.setLoreList(list);
+            ornament.setLoreList(new ArrayList<>(config.getStringList("显示")));
 
-            ornament.setSuit(config.getString("套装", ""));
+            if (config.exists("套装")) {
+                String suitStr = config.getString("套装", "");
+                List<String> suitList;
+                if (suitStr.isEmpty()) {
+                    suitList = config.getStringList("套装");
+                } else {
+                    suitList = new ArrayList<>(Arrays.asList(suitStr.split(",")));
+                }
+                ornament.setSuit(suitList);
+            }
+
             ornament.setTipText(config.getString("底部显示"));
             ornament.setMyMessage(config.getString("个人通知"));
             ornament.setServerMessage(config.getString("全服通知"));
@@ -155,7 +163,11 @@ public class Ornament extends ItemAttr {
             return false;
         }
         Ornament ornament = RcRPGMain.loadOrnament.get(name);
-        player.getInventory().addItem(getItem(name, count));
+        Item item = getItem(name, count);
+        if (item.isNull()) {
+            return false;
+        }
+        player.getInventory().addItem(item);
         if(!ornament.getMyMessage().equals("")){
             String text = ornament.getMyMessage();
             if(text.contains("@player")) text = text.replace("@player", player.getName());

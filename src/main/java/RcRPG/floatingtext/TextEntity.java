@@ -18,8 +18,6 @@ public class TextEntity extends Entity {
 
     public boolean close = false;
 
-
-
     public TextEntity(Entity entity, CompoundTag nbt) {
         super(entity.chunk, nbt);
         this.motionX = entity.motionX;
@@ -28,7 +26,6 @@ public class TextEntity extends Entity {
         this.onGround = true;
 
     }
-
 
     @Override
     protected void initEntity() {
@@ -39,7 +36,6 @@ public class TextEntity extends Entity {
         this.setNameTagVisible(true);
         this.setNameTagAlwaysVisible(true);
     }
-
 
     @Override
     public boolean onUpdate(int currentTick) {

@@ -12,6 +12,7 @@ import lombok.Setter;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -61,7 +62,7 @@ public class Stone extends ItemAttr {
             stone.setItem(Item.fromString(config.getString("物品ID")));
             stone.setType(config.getString("宝石类型"));
             if (config.exists("属性")) {
-                stone.setAttr(config.get("属性"));
+                stone.setAttr((Map<String, Object>) config.get("属性"));
             }
 
             stone.setMessage(config.getString("介绍"));
@@ -207,7 +208,7 @@ public class Stone extends ItemAttr {
     public Object getAttr() {
         return attr;
     }
-    public void setAttr(Object attr) {
+    public void setAttr(Map<String, Object> attr) {
         this.attr = attr;
         setItemAttrConfig(attr);
     }

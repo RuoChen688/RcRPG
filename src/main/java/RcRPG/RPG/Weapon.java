@@ -14,10 +14,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 @Getter
 @Setter
@@ -101,7 +98,7 @@ public class Weapon extends ItemAttr {
             weapon.setLevel(config.getInt("最低使用等级"));
 
             if (config.exists("属性")) {
-                weapon.setAttr(config.get("属性"));
+                weapon.setAttr((Map<String, Object>) config.get("属性"));
             }
             weapon.setFire(config.getInt("燃烧时间"));
             weapon.setFireRound(config.getInt("燃烧概率"));
@@ -353,7 +350,7 @@ public class Weapon extends ItemAttr {
     public Object getAttr() {
         return attr;
     }
-    public void setAttr(Object attr) {
+    public void setAttr(Map<String, Object> attr) {
         this.attr = attr;
         setItemAttrConfig(attr);
     }

@@ -24,7 +24,7 @@ public class ItemAttr extends Manager {
     public Map<String, float[]> getMainAttr() {
         return mainAttr;
     }
-    public void setItemAttrConfig(Object newAttr) {
+    public void setItemAttrConfig(Map<String, Object> newAttr) {
         Map<String, float[]> attrMap = new HashMap<>();
         Map<String, Object> attr = (Map<String, Object>) newAttr;
         for (Map.Entry<String, Object> entry : attr.entrySet()) {

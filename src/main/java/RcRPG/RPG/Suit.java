@@ -41,7 +41,7 @@ public class Suit {
             cfg.forEach((quantity, effects) -> {
                 compList.add(Integer.parseInt(quantity));
                 ItemAttr attr = new ItemAttr();
-                attr.setItemAttrConfig(effects);
+                attr.setItemAttrConfig((Map<String, Object>) effects);
                 attrList.add(attr);
             });
         }

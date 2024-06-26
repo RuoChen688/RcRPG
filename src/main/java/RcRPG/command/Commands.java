@@ -78,7 +78,7 @@ public class Commands extends PluginCommand<RcRPGMain> {
         this.addCommandParameters("check", new CommandParameter[]{
                 CommandParameter.newEnum("check", new String[]{"check"}),
                 CommandParameter.newEnum("type", new String[]{"attr"}),
-                CommandParameter.newType("player", CommandParamType.TARGET),
+                CommandParameter.newType("player", true, CommandParamType.TARGET),
         });
         this.addCommandParameters("guild", new CommandParameter[]{
                 CommandParameter.newEnum("guild", new String[]{"guild"})
@@ -289,7 +289,7 @@ public class Commands extends PluginCommand<RcRPGMain> {
             }
             case "check":
                 if (!(sender instanceof Player)) {
-                    sender.sendMessage(TextFormat.RED + "仅允许玩家执行");
+                    sender.sendMessage(TextFormat.RED + "本命令必须是玩家执行");
                     return false;
                 }
 
@@ -298,24 +298,28 @@ public class Commands extends PluginCommand<RcRPGMain> {
                     return false;
                 }
                 if (args[1].equals("attr")) {
-
+                    Player player;
                     if (args.length < 3) {
-                        sender.sendMessage(TextFormat.RED + "缺少第 3 个参数");
-                        return false;
+                        player = (Player) sender;
+                    } else {
+                        player = api.getServer().getPlayer(args[2]);
+                        if (player == null) {
+                            sender.sendMessage(i18n.get(langCode, "rcrpg.commands.message.noTarget"));
+                            return false;
+                        }
                     }
-                    Player player = api.getServer().getPlayer(args[2]);
-                    if (!player.isValid()) {
-                        sender.sendMessage(i18n.get(langCode, "rcrpg.commands.message.noTarget"));
-                        return false;
-                    }
-                    PlayerAttr pAttr = PlayerAttr.getPlayerAttr((Player) sender);
+                    PlayerAttr pAttr = PlayerAttr.getPlayerAttr(player);
                     if (pAttr == null) {
                         return false;
                     }
-                    pAttr.showAttrWindow(player);
+                    pAttr.showAttrWindow((Player) sender);
                     return true;
                 }
             case "guild":
+                if (!(sender instanceof Player)) {
+                    sender.sendMessage(TextFormat.RED + "本命令必须是玩家执行");
+                    return false;
+                }
                 guildForm.make_one((Player) sender);
                 break;
             case "shop":
@@ -380,7 +384,7 @@ public class Commands extends PluginCommand<RcRPGMain> {
                     return false;
                 }
                 Player player = api.getServer().getPlayer(args[2]);
-                if (!player.isValid()) {
+                if (player == null) {
                     sender.sendMessage(i18n.get(langCode, "rcrpg.commands.message.noTarget"));
                     return false;
                 }
@@ -426,7 +430,7 @@ public class Commands extends PluginCommand<RcRPGMain> {
                 Player player = null;
                 if (args.length > 2) {
                     player = api.getServer().getPlayer(args[2]);
-                    if (!player.isValid()) {
+                    if (player == null) {
                         sender.sendMessage(i18n.get(langCode, "rcrpg.commands.message.noTarget"));
                         return false;
                     }
@@ -475,7 +479,7 @@ public class Commands extends PluginCommand<RcRPGMain> {
                 Player player = null;
                 if (args.length > 2) {
                     player = api.getServer().getPlayer(args[2]);
-                    if (!player.isValid()) {
+                    if (player == null) {
                         sender.sendMessage(i18n.get(langCode, "rcrpg.commands.message.noTarget"));
                         return false;
                     }

@@ -13,6 +13,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -78,7 +79,7 @@ public class Ornament extends ItemAttr {
             ornament.setLevel(config.getInt("最低使用等级"));
 
             if (config.exists("属性")) {
-                ornament.setAttr(config.get("属性"));
+                ornament.setAttr((Map<String, Object>) config.get("属性"));
             }
 
             ornament.setMessage(config.getString("介绍"));
@@ -209,7 +210,7 @@ public class Ornament extends ItemAttr {
         return item;
     }
 
-    public void setAttr(Object attr) {
+    public void setAttr(Map<String, Object> attr) {
         this.attr = attr;
         setItemAttrConfig(attr);
     }

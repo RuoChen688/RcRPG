@@ -16,10 +16,7 @@ import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 @Getter
 @Setter
@@ -98,7 +95,7 @@ public class Armour extends ItemAttr {
             armour.setShowName(config.getString("显示名称"));
             armour.setItem(Item.fromString(config.getString("物品ID")));
             if (config.exists("属性")) {
-                armour.setAttr(config.get("属性"));
+                armour.setAttr((Map<String, Object>) config.get("属性"));
             }
             armour.setMessage(config.getString("介绍"));
 
@@ -350,7 +347,7 @@ public class Armour extends ItemAttr {
         return item;
     }
 
-    public void setAttr(Object attr) {
+    public void setAttr(Map<String, Object> attr) {
         this.attr = attr;
         setItemAttrConfig(attr);
     }

@@ -1,7 +1,6 @@
 package RcRPG;
 
 import RcRPG.RPG.*;
-import RcRPG.Society.Shop;
 import RcRPG.Task.BoxTimeTask;
 import RcRPG.Task.PlayerAttrUpdateTask;
 import RcRPG.Task.Tip;
@@ -38,12 +37,22 @@ public class RcRPGMain extends PluginBase implements Listener {
     public boolean disableChatStyle;
     public static boolean disablePrefix = false;
 
+    /**
+     * 插件主配置
+     */
     public Config config;
 
     public Config ornamentConfig;
+
+    /**
+     * 装备分解配置
+     */
     public Config dismantleConfig;
 
-    public List<String> attrDisplayPercentConfig;
+    /**
+     * 以百分比显示的属性列表
+     */
+    public List<String> attrDisplayPercentList;
     public static boolean money;
 
     public static boolean point;
@@ -52,8 +61,6 @@ public class RcRPGMain extends PluginBase implements Listener {
     public static LinkedHashMap<String, Weapon> loadWeapon = new LinkedHashMap<>();
     public static LinkedHashMap<String, Armour> loadArmour = new LinkedHashMap<>();
     public static LinkedHashMap<String, Stone> loadStone = new LinkedHashMap<>();
-    public static LinkedHashMap<String, Magic> loadMagic = new LinkedHashMap<>();
-    public static LinkedHashMap<String, Shop> loadShop = new LinkedHashMap<>();
 
     public static LinkedHashMap<String, Box> loadBox = new LinkedHashMap<>();
 
@@ -171,36 +178,6 @@ public class RcRPGMain extends PluginBase implements Listener {
                 this.getLogger().info(name+".yml 宝石数据读取成功");
             }else{
                 this.getLogger().warning(name+".yml 宝石数据读取失败");
-            }
-        }
-        this.getLogger().info("开始读取魔法物品信息");
-        for(String name: Handle.getDefaultFiles("Magic")){
-            Magic magic = null;
-            try {
-                magic = Magic.loadMagic(name,new Config(this.getDataFolder()+"/Magic/"+name+".yml",Config.YAML));
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-            if(magic != null){
-                loadMagic.put(name,magic);
-                this.getLogger().info(name+".yml 魔法物品数据读取成功");
-            }else{
-                this.getLogger().warning(name+".yml 魔法物品数据读取失败");
-            }
-        }
-        this.getLogger().info("开始读取商店信息");
-        for(String name: Handle.getDefaultFiles("Shop")){
-            Shop shop = null;
-            try {
-                shop = Shop.loadShop(name,new Config(this.getDataFolder()+"/Shop/"+name+".yml",Config.YAML));
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-            if(shop != null){
-                loadShop.put(name,shop);
-                this.getLogger().info(name+".yml 商店数据读取成功");
-            }else{
-                this.getLogger().warning(name+".yml 商店数据读取失败");
             }
         }
         this.getLogger().info("开始读取箱子信息");
@@ -362,9 +339,9 @@ public class RcRPGMain extends PluginBase implements Listener {
         attrDisplayPercent.add("雷击概率");
         attrDisplayPercent.add("冰冻概率");
         if (RcRPGMain.getInstance().config.exists("AttrDisplayPercent")) {
-            attrDisplayPercentConfig = RcRPGMain.getInstance().config.getStringList("AttrDisplayPercent");
+            attrDisplayPercentList = RcRPGMain.getInstance().config.getStringList("AttrDisplayPercent");
         } else {
-            attrDisplayPercentConfig = attrDisplayPercent;
+            attrDisplayPercentList = attrDisplayPercent;
         }
     }
 

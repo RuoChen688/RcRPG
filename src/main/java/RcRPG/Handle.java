@@ -1,10 +1,8 @@
 package RcRPG;
 
 import RcRPG.RPG.Stone;
-import RcRPG.Society.Shop;
 import cn.nukkit.Player;
 import cn.nukkit.item.Item;
-import cn.nukkit.level.Position;
 import cn.nukkit.potion.Effect;
 import cn.nukkit.utils.Config;
 
@@ -79,13 +77,6 @@ public class Handle {
                 }
             }
         }
-    }
-
-    public static Shop getShopByPos(Position pos){
-        for(Shop shop : RcRPGMain.loadShop.values()){
-            if(shop.getPosition().equals(pos)) return shop;
-        }
-        return null;
     }
 
     public static boolean canRemove(Player player,String[] s){

@@ -1,7 +1,6 @@
 package RcRPG.command;
 
 import RcRPG.AttrManager.PlayerAttr;
-import RcRPG.Events;
 import RcRPG.Form.guildForm;
 import RcRPG.Form.inlayForm;
 import RcRPG.Form.prefixForm;
@@ -59,7 +58,7 @@ public class Commands extends PluginCommand<RcRPGMain> {
                 CommandParameter.newEnum("effect", new String[]{"effect"}),
                 CommandParameter.newType("flag", CommandParamType.STRING),
                 CommandParameter.newType("player", CommandParamType.TARGET),
-                CommandParameter.newEnum("attrName", RcRPGMain.getInstance().attrDisplayPercentConfig.toArray(new String[0])),
+                CommandParameter.newEnum("attrName", RcRPGMain.getInstance().attrDisplayPercentList.toArray(new String[0])),
                 CommandParameter.newType("value", CommandParamType.FLOAT),
                 CommandParameter.newType("duration", true, CommandParamType.INT)
         });
@@ -310,6 +309,7 @@ public class Commands extends PluginCommand<RcRPGMain> {
                     }
                     PlayerAttr pAttr = PlayerAttr.getPlayerAttr(player);
                     if (pAttr == null) {
+                        sender.sendMessage(TextFormat.RED + "没有玩家§8" + player.getName() + "§f的数据");
                         return false;
                     }
                     pAttr.showAttrWindow((Player) sender);
@@ -321,22 +321,6 @@ public class Commands extends PluginCommand<RcRPGMain> {
                     return false;
                 }
                 guildForm.make_one((Player) sender);
-                break;
-            case "shop":
-                if (!sender.isOp()) {
-                    sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.message.noPermission"));
-                    return false;
-                }
-                if (args.length < 2) {
-                    sender.sendMessage(TextFormat.RED + "缺少第 2 个参数");
-                    return false;
-                }
-                if (args[1].equals("help")) {
-                    sender.sendMessage("/rpg shop [Name]   创建一个名为Name的商店");
-                    return true;
-                }
-                Events.playerShop.put((Player) sender, args[1]);
-                sender.sendMessage("点击一个木牌");
                 break;
             case "exp":
                 if (!sender.isOp()) {
@@ -760,75 +744,6 @@ public class Commands extends PluginCommand<RcRPGMain> {
                             return false;
                         }
                         if (Stone.giveStone(player, stoneName, count)) {
-                            if (sender.isPlayer()) sender.sendMessage("给予成功");
-                        } else {
-                            if (sender.isPlayer()) sender.sendMessage("给予失败");
-                        }
-                    }
-                }
-                break;
-            }
-            case "magic": {
-                if (!sender.isOp()) {
-                    sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.message.noPermission"));
-                    return false;
-                }
-                if (args.length < 2) {
-                    sender.sendMessage(TextFormat.RED + "缺少第 2 个参数");
-                    return false;
-                }
-                switch (args[1]) {
-                    case "help" -> {
-                        sender.sendMessage("/rpg magic admin 管理魔法物品");
-                        sender.sendMessage("/rpg magic add [Name] 创建一个名为Name的魔法物品配置");
-                        sender.sendMessage("/rpg magic del [Name] 删除一个名为Name的魔法物品配置");
-                        sender.sendMessage("/rpg magic give [Player] [Name] [Count] 给予玩家一定数量的魔法物品");
-                    }
-                    case "add" -> {
-                        if (args.length < 3) {
-                            sender.sendMessage("参数错误");
-                            return false;
-                        }
-                        Item item = ((Player) sender).getInventory().getItemInHand();
-                        String id;
-                        if (item.isNull()) {
-                            id = "minecraft:apple";
-                        } else {
-                            id = item.getNamespaceId();
-                        }
-                        String magicName = args[2];
-                        Config config;
-                        if ((config = Magic.addMagicConfig(magicName, id)) != null) {
-                            Magic magic = Magic.loadMagic(magicName, config);
-                            RcRPGMain.loadMagic.put(magicName, magic);
-                            sender.sendMessage("添加成功");
-                        } else {
-                            sender.sendMessage("添加失败");
-                        }
-                    }
-                    case "del" -> {
-                        if (args.length < 3) {
-                            sender.sendMessage("参数错误");
-                            return false;
-                        }
-                        String magicName = args[2];
-                        if (Magic.delMagicConfig(magicName)) {
-                            RcRPGMain.loadMagic.remove(magicName);
-                            sender.sendMessage("删除成功");
-                        } else {
-                            sender.sendMessage("删除失败");
-                        }
-                    }
-                    case "give" -> {
-                        String playerName = args[2];
-                        String magicName = args[3];
-                        int count = args.length > 4 ? Integer.parseInt(args[4]) : 1;
-                        Player player = RcRPGMain.getInstance().getServer().getPlayer(playerName);
-                        if (!player.isOnline()) {
-                            sender.sendMessage("玩家不在线");
-                            return false;
-                        }
-                        if (Magic.giveMagic(player, magicName, count)) {
                             if (sender.isPlayer()) sender.sendMessage("给予成功");
                         } else {
                             if (sender.isPlayer()) sender.sendMessage("给予失败");

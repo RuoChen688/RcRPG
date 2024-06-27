@@ -354,7 +354,7 @@ public class ItemAttr extends Manager {
 
     @Override
     public String toString(){
-        String str = "";
+        StringBuilder str = new StringBuilder();
         for (String i : mainAttr.keySet()) {
             float[] value = mainAttr.get(i);
             String valueString = valueToString(value, i);
@@ -363,9 +363,9 @@ public class ItemAttr extends Manager {
                 continue;
             }
 
-            str += " " + i + ": " + valueString + "\n";
+            str.append(" ").append(i).append(": ").append(valueString).append("\n");
         }
-        return str;
+        return str.toString();
     }
 
 }

@@ -338,15 +338,13 @@ public class PlayerAttr extends Manager {
         return getItemAttr("Main", attrName, index);
     }
 
+    /**
+     * 向 p 显示本属性窗口
+     * @param p
+     */
     public void showAttrWindow(Player p) {
-        PlayerAttr pAttr = PlayerAttr.getPlayerAttr(p);
-
-        if (pAttr == null) {
-            player.sendMessage("[NWeapon] 没有玩家§8" + p.getName() + "§f的数据");
-            return;
-        }
         StringBuilder str = new StringBuilder();
-        Map<String, Map<String, float[]>> data = pAttr.myAttr;
+        Map<String, Map<String, float[]>> data = this.myAttr;
 
         ArrayList<Element> list = new ArrayList<>();
 
@@ -360,7 +358,7 @@ public class PlayerAttr extends Manager {
 
             str.append(" ").append(i).append(": ").append(valueString).append("\n");
         }
-        list.add(new ElementLabel("§l§a### "+RcRPGMain.getI18n().tr(player.getLanguageCode(), "rcrpg.attrshow.window.text.totalAttr")+"§r\n" + str));
+        list.add(new ElementLabel("§l§a### "+RcRPGMain.getI18n().tr(p.getLanguageCode(), "rcrpg.attrshow.window.text.totalAttr")+"§r\n" + str));
 
         for (String i : data.keySet()) {
             if (i.equals("Main") || i.equals("Base")) {
@@ -400,8 +398,8 @@ public class PlayerAttr extends Manager {
          }
          */
 
-        FormWindowCustom win = new FormWindowCustom(RcRPGMain.getI18n().tr(player.getLanguageCode(), "rcrpg.attrshow.window.title", p.getName()), list);
-        player.showFormWindow(win);
+        FormWindowCustom win = new FormWindowCustom(RcRPGMain.getI18n().tr(p.getLanguageCode(), "rcrpg.attrshow.window.title", p.getName()), list);
+        p.showFormWindow(win);
     }
 
     public String toString() {
@@ -441,7 +439,7 @@ public class PlayerAttr extends Manager {
      * 将数据可视化，输入data,属性输出min-max或x%
      */
     public static String valueToString(float[] data, String attribute) {
-        List<String> attrDisplayPercent = RcRPGMain.getInstance().attrDisplayPercentConfig;
+        List<String> attrDisplayPercent = RcRPGMain.getInstance().attrDisplayPercentList;
         String back = "";
         if (data.length == 2) {
             if (data[0] == data[1]) {

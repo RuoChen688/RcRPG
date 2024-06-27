@@ -9,18 +9,15 @@ import RcRPG.Form.guildForm;
 import RcRPG.RPG.*;
 import RcRPG.Society.Money;
 import RcRPG.Society.Prefix;
-import RcRPG.Society.Shop;
 import RcRPG.floatingtext.TextEntity;
 import RcRPG.guild.Guild;
 import cn.nukkit.Player;
 import cn.nukkit.Server;
 import cn.nukkit.block.Block;
-import cn.nukkit.block.BlockSignPost;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.EventPriority;
 import cn.nukkit.event.Listener;
-import cn.nukkit.event.block.BlockBreakEvent;
 import cn.nukkit.event.entity.EntityDamageByEntityEvent;
 import cn.nukkit.event.entity.EntityDamageEvent;
 import cn.nukkit.event.entity.EntityRegainHealthEvent;
@@ -49,8 +46,6 @@ public class Events implements Listener {
 
     public static LinkedHashMap<Player,String> playerShop = new LinkedHashMap<>();
 
-    public static LinkedHashMap<Player,Boolean> playerMessage = new LinkedHashMap<>();
-
     public static final boolean hasHealthAPI = Server.getInstance().getPluginManager().getPlugin("HealthAPI") != null;
     public static final boolean hasRsNPC = Server.getInstance().getPluginManager().getPlugin("RsNPC") != null;
     public static final boolean hasLittleMonster = Server.getInstance().getPluginManager().getPlugin("LittleMonster") != null;
@@ -72,46 +67,8 @@ public class Events implements Listener {
         }
 
         Block block = event.getBlock();
-        if (item != null && !item.isNull() && Handle.getShopByPos(block) == null) {
-            if (Magic.isMagic(item)) Magic.useMagic(player, item);
-            else if (Box.isBox(item)) Box.useBox(player, item);
-        }
-        if(block instanceof BlockSignPost && Events.playerShop.containsKey(player)){
-            Config config = Shop.addShopConfig(Events.playerShop.get(player),block.x + ":" + block.y + ":" + block.z + ":" +block.level.getName());
-            Shop.loadShop(Events.playerShop.get(player),config);
-            Events.playerShop.remove(player);
-            player.sendMessage("创建成功");
-        }
-        if (Handle.getShopByPos(block) != null) {
-            Shop shop = Handle.getShopByPos(block);
-            if(Events.playerMessage.containsKey(player)){
-                if(Shop.costPlayer(player,shop)) {
-                    Shop.gainPlayer(player, shop);
-                    player.sendMessage(shop.getsMessage());
-                }else{
-                    player.sendMessage(shop.getNoMessage());
-                }
-                Events.playerMessage.remove(player);
-            }else{
-                Events.playerMessage.put(player,true);
-                player.sendMessage(shop.getMessage());
-            }
-        }
-    }
-
-    @EventHandler
-    public void blockBreak(BlockBreakEvent event){
-        Block block = event.getBlock();
-        Player player = event.getPlayer();
-        if(block instanceof BlockSignPost && Handle.getShopByPos(block) != null){
-            if(!player.isOp()) {
-                event.setCancelled();
-                return;
-            }
-            Shop shop = Handle.getShopByPos(block);
-            Shop.delShopConfig(shop.getName());
-            RcRPGMain.loadShop.remove(shop.getName());
-            player.sendMessage("拆除成功");
+        if (item != null && !item.isNull()) {
+            if (Box.isBox(item)) Box.useBox(player, item);
         }
     }
 

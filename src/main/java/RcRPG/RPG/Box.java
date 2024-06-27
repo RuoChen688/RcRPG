@@ -201,9 +201,6 @@ public class Box {
                 case "stone":
                     Stone.giveStone(player,s[1],Integer.parseInt(s[2]));
                     break;
-                case "magic":
-                    Magic.giveMagic(player,s[1],Integer.parseInt(s[2]));
-                    break;
                 case "money":
                     Money.addMoney(player,Integer.parseInt(s[1]));
                     break;

@@ -58,11 +58,6 @@ public class Tip extends PluginTask<RcRPGMain> {
                         text = stone.getTipText();
                         if(text.contains("@n")) text = text.replace("@n","\n");
                         break;
-                    case "magic":
-                        Magic magic = RcRPGMain.loadMagic.get(item.getNamedTag().getString("name"));
-                        text = magic.getTipText();
-                        if(text.contains("@n")) text = text.replace("@n","\n");
-                        break;    
                 }
                 player.sendTip(text);
             }

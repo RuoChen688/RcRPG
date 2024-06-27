@@ -19,19 +19,17 @@ public class ItemAttr extends Manager {
      *     }
      * }
      * */
-    private Map<String, float[]> mainAttr;
+    protected Map<String, float[]> mainAttr;
 
     public Map<String, float[]> getMainAttr() {
         return mainAttr;
     }
     public void setItemAttrConfig(Map<String, Object> newAttr) {
         Map<String, float[]> attrMap = new HashMap<>();
-        Map<String, Object> attr = (Map<String, Object>) newAttr;
-        for (Map.Entry<String, Object> entry : attr.entrySet()) {
+        for (Map.Entry<String, Object> entry : newAttr.entrySet()) {
             String key = entry.getKey();
             Object value = entry.getValue();
-            if (value instanceof List) {
-                List<?> values = (List<?>) value;
+            if (value instanceof List<?> values) {
                 float[] floatValues = new float[values.size()];
                 for (int i = 0; i < values.size(); i++) {
                     if (values.get(i) instanceof Double) {
@@ -41,8 +39,7 @@ public class ItemAttr extends Manager {
                     }
                 }
                 attrMap.put(key, floatValues);
-            } else if (value instanceof float[]){
-                float[] floatValue = (float[]) value;
+            } else if (value instanceof float[] floatValue){
                 if (floatValue.length == 1) {
                     float[] newValue = { floatValue[0], floatValue[0] };
                     attrMap.put(key, newValue);
@@ -50,7 +47,7 @@ public class ItemAttr extends Manager {
                     attrMap.put(key, floatValue);
                 }
             } else {
-                RcRPGMain.getInstance().getLogger().warning(key + " ItemAttr中不知道是啥类型");
+                RcRPGMain.getInstance().getLogger().warning(key + " ItemAttr 中不知道是啥类型");
             }
         }
         mainAttr = attrMap;

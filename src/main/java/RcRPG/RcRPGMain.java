@@ -221,17 +221,11 @@ public class RcRPGMain extends PluginBase implements Listener {
     public File getArmourFile() {
         return new File(this.getDataFolder() + "/Armour");
     }
-    public File getMagicFile() {
-        return new File(this.getDataFolder() + "/Magic");
-    }
     public File getStoneFile() {
         return new File(this.getDataFolder() + "/Stone");
     }
     public File getGuildFile() {
         return new File(this.getDataFolder() + "/Guild");
-    }
-    public File getShopFile() {
-        return new File(this.getDataFolder() + "/Shop");
     }
     public File getBoxFile() {
         return new File(this.getDataFolder() + "/Box");
@@ -243,39 +237,31 @@ public class RcRPGMain extends PluginBase implements Listener {
     public void getNewFile(){
         File playerFile = this.getPlayerFile();
         if (!playerFile.exists() && !playerFile.mkdirs()) {
-            this.getLogger().info("/Players文件夹创建失败");
+            this.getLogger().info("/Players 文件夹创建失败");
         }
         File weaponFile = this.getWeaponFile();
         if (!weaponFile.exists() && !weaponFile.mkdirs()) {
-            this.getLogger().info("/Weapon文件夹创建失败");
+            this.getLogger().info("/Weapon 文件夹创建失败");
         }
         File armourFile = this.getArmourFile();
         if (!armourFile.exists() && !armourFile.mkdirs()) {
-            this.getLogger().info("/Armour文件夹创建失败");
-        }
-        File magicFile = this.getMagicFile();
-        if (!magicFile.exists() && !magicFile.mkdirs()) {
-            this.getLogger().info("/Magic文件夹创建失败");
+            this.getLogger().info("/Armour 文件夹创建失败");
         }
         File stoneFile = this.getStoneFile();
         if (!stoneFile.exists() && !stoneFile.mkdirs()) {
-            this.getLogger().info("/Stone文件夹创建失败");
+            this.getLogger().info("/Stone 文件夹创建失败");
         }
         File guildFile = this.getGuildFile();
         if (!guildFile.exists() && !guildFile.mkdirs()) {
-            this.getLogger().info("/Guild文件夹创建失败");
-        }
-        File shopFile = this.getShopFile();
-        if (!shopFile.exists() && !shopFile.mkdirs()) {
-            this.getLogger().info("/Shop文件夹创建失败");
+            this.getLogger().info("/Guild 文件夹创建失败");
         }
         File boxFile = this.getBoxFile();
         if (!boxFile.exists() && !boxFile.mkdirs()) {
-            this.getLogger().info("/Box文件夹创建失败");
+            this.getLogger().info("/Box 文件夹创建失败");
         }
         File ornamentFile = this.getOrnamentFile();
         if (!ornamentFile.exists() && !ornamentFile.mkdirs()) {
-            this.getLogger().info("/Ornament文件夹创建失败");
+            this.getLogger().info("/Ornament 文件夹创建失败");
         }
     }
 

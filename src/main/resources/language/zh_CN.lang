@@ -9,7 +9,6 @@ rcrpg.commands.dismantle.help=§2/rpg dismantle:§f 分解装备的命令 (GUI)
 rcrpg.commands.weapon.help=§2/rpg weapon help:§f 武器指令
 rcrpg.commands.armour.help=§2/rpg armour help:§f 盔甲指令
 rcrpg.commands.stone.help=§2/rpg stone help:§f 宝石指令
-rcrpg.commands.magic.help=§2/rpg magic help:§f 魔法物品指令
 rcrpg.commands.box.help=§2/rpg box help:§f 箱子指令
 rcrpg.commands.ornament.help=§2/rpg ornament help:§f 饰品指令
 rcrpg.commands.prefix.help=§2/rpg prefix help:§f 称号指令
@@ -17,7 +16,6 @@ rcrpg.commands.guild.help=§2/rpg guild:§f 公会指令
 rcrpg.commands.exp.help=§2/rpg exp help:§f 经验指令
 rcrpg.commands.money.help=§2/rpg money help:§f 金币指令
 rcrpg.commands.point.help=§2/rpg point help:§f 点券指令
-rcrpg.commands.shop.help=§2/rpg shop help:§f 商店指令
 
 rcrpg.events.insufficient_level_for_weapon=等级不足，无法使用此武器
 rcrpg.events.life_steal_message=你已汲取对方 §c§l{%0}§r 血量值

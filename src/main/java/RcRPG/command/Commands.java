@@ -45,12 +45,11 @@ public class Commands extends PluginCommand<RcRPGMain> {
         ArrayList<String> item = new ArrayList<>() {{
             add("weapon");
             add("armour");
-            add("magic");
             add("stone");
             add("box");
             add("ornament");
         }};
-        String[] list = new String[]{"weapon", "armour", "magic", "stone", "box", "ornament", "guild", "prefix", "money", "point", "exp", "shop"};
+        String[] list = new String[]{"weapon", "armour", "stone", "box", "ornament", "guild", "prefix", "money", "point", "exp"};
         this.addCommandParameters("help", new CommandParameter[]{
                 CommandParameter.newEnum("help", new String[]{"help"})
         });
@@ -87,10 +86,6 @@ public class Commands extends PluginCommand<RcRPGMain> {
                 CommandParameter.newEnum("give", new String[]{"give"}),
                 CommandParameter.newType("playerName", CommandParamType.STRING),
                 CommandParameter.newType("Exp", CommandParamType.INT)
-        });
-        this.addCommandParameters("shop", new CommandParameter[]{
-                CommandParameter.newEnum("shop", new String[]{"shop"}),
-                CommandParameter.newType("ShopName", CommandParamType.STRING)
         });
         for (String name : list) {
             if (item.contains(name)) {
@@ -183,7 +178,6 @@ public class Commands extends PluginCommand<RcRPGMain> {
             sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.weapon.help"));
             sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.armour.help"));
             sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.stone.help"));
-            sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.magic.help"));
             sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.box.help"));
             sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.ornament.help"));
             sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.prefix.help"));
@@ -191,7 +185,6 @@ public class Commands extends PluginCommand<RcRPGMain> {
             sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.exp.help"));
             sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.money.help"));
             sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.point.help"));
-            sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.shop.help"));
         }
     }
 

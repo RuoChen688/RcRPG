@@ -76,7 +76,7 @@ public class inlayForm {
         }
         this.originStones = stones;
         return new FormWindowSimple(
-                label + "宝石列表",
+                "§f"+label + "宝石列表",
                 stoneCount > 0 ? "装备拥有 " + stoneCount + " 个宝石槽：\n"+slotShow : "本装备没有宝石槽",
                 stones.stream()
                         .map(stone -> new ElementButton(stone == null ? NO_STONE : stone.getShowName()))

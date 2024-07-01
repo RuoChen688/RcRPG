@@ -278,7 +278,7 @@ public class Weapon extends ItemAttr {
         ListTag<StringTag> stoneList = new ListTag<>("stone");
         for(Stone stone : list){
             if(stone == null) continue;
-            stoneList.add(new StringTag(stone.getLabel(),stone.getLabel()));
+            stoneList.add(new StringTag(stone.getName(), stone.getName()));
         }
         CompoundTag tag = item.getNamedTag();
         tag.putList(stoneList);

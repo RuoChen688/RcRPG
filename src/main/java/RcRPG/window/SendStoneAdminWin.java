@@ -14,7 +14,7 @@ public class SendStoneAdminWin implements Listener { //一般实际开发中不�
 
     public SendStoneAdminWin(Player player) {
         LangCode langCode = player.getLanguageCode();
-        FormWindowSimple form = new FormWindowSimple(RcRPGMain.getI18n().tr(langCode, "rcrpg.window.stone.title"), RcRPGMain.getI18n().tr(langCode, "rcrpg.window.select_config_manage"));
+        FormWindowSimple form = new FormWindowSimple(RcRPGMain.getI18n().tr(langCode, "rcrpg.manage.window.stone.title"), RcRPGMain.getI18n().tr(langCode, "rcrpg.manage.window.select_config_manage"));
         for (String key : RcRPGMain.loadStone.keySet()) {
             form.addButton(new ElementButton(key));
         }

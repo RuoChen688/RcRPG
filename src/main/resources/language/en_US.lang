@@ -11,6 +11,7 @@ rcrpg.commands.armour.help=§2/rpg armour help:§f Armor command
 rcrpg.commands.stone.help=§2/rpg stone help:§f Gem command
 rcrpg.commands.box.help=§2/rpg box help:§f Box command
 rcrpg.commands.ornament.help=§2/rpg ornament help:§f Ornament command
+rcrpg.commands.forging.help=§2/rpg forging help:§f Equipment Forging command
 rcrpg.commands.prefix.help=§2/rpg prefix help:§f Prefix command
 rcrpg.commands.guild.help=§2/rpg guild:§f Guild command
 rcrpg.commands.exp.help=§2/rpg exp help:§f Experience command
@@ -28,21 +29,18 @@ rcrpg.playerattr.suit.label={%0} {%1} Set
 rcrpg.playerattr.set_suit_message=You feel the effects of §l{%0} ({%1})§r's §dSet§f!
 rcrpg.event.item_consume=§l§cOrnament§r are non-consumable! Please put them in your §l§eOrnament backpack§r to use them.
 
-rcrpg.attrshow.window.title=§fPlayer Attribute - {%0}
-rcrpg.attrshow.window.text.totalAttr=Total attribute
+rcrpg.window.attr.info.title=§fPlayer Attribute - {%0}
+rcrpg.window.attr.info.text.totalAttr=Total attribute
 
-rcrpg.window.select_config_manage=Please select the configuration you want to manage
-rcrpg.window.main.title=§fRcRPG Management - please choose
-rcrpg.window.main.button1=Weapon
-rcrpg.window.main.button2=Armour
-rcrpg.window.main.button3=Stone (Gems)
-rcrpg.window.main.button4=Ornament
+rcrpg.window.forging.info.title=§fEquipment blacksmith - {%0}
 
-rcrpg.window.armour.title=§fRcRPG Management - Armor List
-
-rcrpg.window.ornament.title=§fRcRPG Management - Ornament List
-
-rcrpg.window.stone.title=§fRcRPG Management - Gem List
-
-rcrpg.window.weapon.title=§fRcRPG Management - Weapon List
-
+rcrpg.manage.window.select_config_manage=Please select the configuration you want to manage
+rcrpg.manage.window.main.title=§fRcRPG Management - please choose
+rcrpg.manage.window.main.button1=Weapon
+rcrpg.manage.window.main.button2=Armour
+rcrpg.manage.window.main.button3=Stone (Gems)
+rcrpg.manage.window.main.button4=Ornament
+rcrpg.manage.window.armour.title=§fRcRPG Management - Armor List
+rcrpg.manage.window.ornament.title=§fRcRPG Management - Ornament List
+rcrpg.manage.window.stone.title=§fRcRPG Management - Gem List
+rcrpg.manage.window.weapon.title=§fRcRPG Management - Weapon List

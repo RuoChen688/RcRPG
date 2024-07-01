@@ -358,7 +358,7 @@ public class PlayerAttr extends Manager {
 
             str.append(" ").append(i).append(": ").append(valueString).append("\n");
         }
-        list.add(new ElementLabel("§l§a### "+RcRPGMain.getI18n().tr(p.getLanguageCode(), "rcrpg.attrshow.window.text.totalAttr")+"§r\n" + str));
+        list.add(new ElementLabel("§l§a### "+RcRPGMain.getI18n().tr(p.getLanguageCode(), "rcrpg.window.attr.info.text.totalAttr")+"§r\n" + str));
 
         for (String i : data.keySet()) {
             if (i.equals("Main") || i.equals("Base")) {
@@ -398,7 +398,7 @@ public class PlayerAttr extends Manager {
          }
          */
 
-        FormWindowCustom win = new FormWindowCustom(RcRPGMain.getI18n().tr(p.getLanguageCode(), "rcrpg.attrshow.window.title", p.getName()), list);
+        FormWindowCustom win = new FormWindowCustom(RcRPGMain.getI18n().tr(p.getLanguageCode(), "rcrpg.window.attr.info.title", p.getName()), list);
         p.showFormWindow(win);
     }
 

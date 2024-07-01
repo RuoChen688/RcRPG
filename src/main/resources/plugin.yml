@@ -10,5 +10,5 @@ depend: ["EconomyAPI"]
 softdepend: ["RcNPC", "RsNPC", "PlayerPoint", "LittleMonster", "HealthAPI", "Tips"]
 permissions:
   rcrpg.command.check:
-    description: "查询信息"
+    description: "查询玩家信息"
     default: true

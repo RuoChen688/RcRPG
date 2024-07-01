@@ -10,6 +10,7 @@ import RcRPG.Society.Money;
 import RcRPG.Society.Points;
 import RcRPG.Society.Prefix;
 import RcRPG.panel.dismantle.DismantlePanel;
+import RcRPG.panel.forging.ForgingPanel;
 import RcRPG.panel.ornament.OrnamentPanel;
 import RcRPG.window.*;
 import cn.nukkit.Player;
@@ -142,16 +143,10 @@ public class Commands extends PluginCommand<RcRPGMain> {
                         CommandParameter.newEnum("my", new String[]{"my"})
                 });
             } else if (society.contains(name)) {// money, point
-                this.addCommandParameters(name + "_add", new CommandParameter[]{
+                this.addCommandParameters(name + "_change", new CommandParameter[]{
                         CommandParameter.newEnum(name, new String[]{name}),
-                        CommandParameter.newEnum("add", new String[]{"add"}),
+                        CommandParameter.newEnum("change", new String[]{"add", "del"}),
                         CommandParameter.newType("player", CommandParamType.TARGET),
-                        CommandParameter.newType(name.toLowerCase(), CommandParamType.INT)
-                });
-                this.addCommandParameters(name + "_del", new CommandParameter[]{
-                        CommandParameter.newEnum(name, new String[]{name}),
-                        CommandParameter.newEnum("del", new String[]{"del"}),
-                        CommandParameter.newType("playerName", CommandParamType.STRING),
                         CommandParameter.newType(name.toLowerCase(), CommandParamType.INT)
                 });
                 this.addCommandParameters(name + "_help", new CommandParameter[]{
@@ -164,6 +159,16 @@ public class Commands extends PluginCommand<RcRPGMain> {
                 });
             }
         }
+
+        this.addCommandParameters("forging", new CommandParameter[]{
+                CommandParameter.newEnum("forging", new String[]{"forging"}),
+                CommandParameter.newEnum("admin", true, new String[]{"admin"})
+        });
+        this.addCommandParameters("forging_help", new CommandParameter[]{
+                CommandParameter.newEnum("forging", new String[]{"forging"}),
+                CommandParameter.newEnum("help", true, new String[]{"help"})
+        });
+
         api = RcRPGMain.getInstance();
         i18n = RcRPGMain.getI18n();
     }
@@ -180,6 +185,7 @@ public class Commands extends PluginCommand<RcRPGMain> {
             sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.stone.help"));
             sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.box.help"));
             sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.ornament.help"));
+            sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.forging.help"));
             sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.prefix.help"));
             sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.guild.help"));
             sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.exp.help"));
@@ -892,6 +898,15 @@ public class Commands extends PluginCommand<RcRPGMain> {
                     }
                 }
                 break;
+            }
+            case "forging": {
+                if (!sender.isPlayer()) {
+                    sender.sendMessage(TextFormat.RED + "本命令必须是玩家执行");
+                    return false;
+                }
+                ForgingPanel panel = new ForgingPanel();
+                panel.sendPanel((Player) sender);
+                return true;
             }
         }
         return false;

@@ -14,7 +14,7 @@ public class SendWeaponAdminWin implements Listener { //一般实际开发中不
 
     public SendWeaponAdminWin(Player player) {
         LangCode langCode = player.getLanguageCode();
-        FormWindowSimple form = new FormWindowSimple(RcRPGMain.getI18n().tr(langCode, "rcrpg.window.weapon.title"), RcRPGMain.getI18n().tr(langCode, "rcrpg.window.select_config_manage"));
+        FormWindowSimple form = new FormWindowSimple(RcRPGMain.getI18n().tr(langCode, "rcrpg.manage.window.weapon.title"), RcRPGMain.getI18n().tr(langCode, "rcrpg.manage.window.select_config_manage"));
         for (String key : RcRPGMain.loadWeapon.keySet()) {
             form.addButton(new ElementButton(key));
         }

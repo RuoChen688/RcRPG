@@ -14,7 +14,7 @@ public class SendOrnamentAdminWin implements Listener {
 
     public SendOrnamentAdminWin(Player player) {
         LangCode langCode = player.getLanguageCode();
-        FormWindowSimple form = new FormWindowSimple(RcRPGMain.getI18n().tr(langCode, "rcrpg.window.ornament.title"), RcRPGMain.getI18n().tr(langCode, "rcrpg.window.select_config_manage"));
+        FormWindowSimple form = new FormWindowSimple(RcRPGMain.getI18n().tr(langCode, "rcrpg.manage.window.ornament.title"), RcRPGMain.getI18n().tr(langCode, "rcrpg.manage.window.select_config_manage"));
         for (String key : RcRPGMain.loadOrnament.keySet()) {
             form.addButton(new ElementButton(key));
         }

@@ -22,7 +22,7 @@ public class ForgingPanel implements InventoryHolder {
     public static Map<Integer, Item> getPanel(Player player) {
         Map<Integer, Item> panel = new LinkedHashMap<>();
         Item tipItem = Item.fromString("minecraft:oak_sign");
-        tipItem.setCustomName("提示");
+        tipItem.setCustomName(titleStateOne);
         tipItem.setLore(
                 "将武器、防具放入`分解炉`中关闭即可",
                 "请确保背包空闲空间充足"
@@ -40,7 +40,7 @@ public class ForgingPanel implements InventoryHolder {
                 Item targetItem = action.getTargetItem();
                 if (action instanceof SlotChangeAction slotChange) {
                     if (slotChange.getInventory() instanceof FakeInventory) {
-                        if (slotChange.getSlot() == 0) {// 放图纸至炉子
+                        if (slotChange.getSlot() == 1) {// 放图纸至炉子
                             if (targetItem.isNull()) {
                                 event.setCancelled();
                                 return;

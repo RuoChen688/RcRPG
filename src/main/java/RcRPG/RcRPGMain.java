@@ -1,6 +1,8 @@
 package RcRPG;
 
 import RcRPG.RPG.*;
+import RcRPG.RPG.Forging.ForgingPaper;
+import RcRPG.RPG.Forging.ForgingStone;
 import RcRPG.Task.BoxTimeTask;
 import RcRPG.Task.PlayerAttrUpdateTask;
 import RcRPG.Task.Tip;
@@ -66,9 +68,13 @@ public class RcRPGMain extends PluginBase implements Listener {
 
     public static LinkedHashMap<String, Ornament> loadOrnament = new LinkedHashMap<>();
 
-    public RcRPGMain(){}
+    public static LinkedHashMap<String, ForgingPaper> loadForgingPaper = new LinkedHashMap<>();
+    public static LinkedHashMap<String, ForgingStone> loadForgingStone = new LinkedHashMap<>();
 
-    public void onLoad(){
+    public RcRPGMain() {
+    }
+
+    public void onLoad() {
         //save Plugin Instance
         instance = this;
         //register the plugin i18n
@@ -76,11 +82,11 @@ public class RcRPGMain extends PluginBase implements Listener {
         initServerLangCode();
     }
 
-    public void onEnable(){
+    public void onEnable() {
         Entity.registerEntity("TextEntity", TextEntity.class);
 
         this.getNewFile();
-        this.saveResource("config.yml","/config.yml",false);
+        this.saveResource("config.yml", "/config.yml", false);
         config = new Config(this.getDataFolder() + "/config.yml");
 
         init();
@@ -92,122 +98,152 @@ public class RcRPGMain extends PluginBase implements Listener {
             Level.enable = false;
         }
 
-        this.getServer().getPluginManager().registerEvents(new Events(),this);
+        this.getServer().getPluginManager().registerEvents(new Events(), this);
         if (config.exists("底部显示") && !config.getString("底部显示").isEmpty()) {
             this.getServer().getScheduler().scheduleRepeatingTask(new Tip(this), 20);
         }
-        this.getServer().getScheduler().scheduleRepeatingTask(new BoxTimeTask(this),20);
+        this.getServer().getScheduler().scheduleRepeatingTask(new BoxTimeTask(this), 20);
         //this.getServer().getScheduler().scheduleRepeatingTask(new loadHealth(this), 10);
-        this.getServer().getScheduler().scheduleRepeatingTask(new PlayerAttrUpdateTask(this),20);
+        this.getServer().getScheduler().scheduleRepeatingTask(new PlayerAttrUpdateTask(this), 20);
 
         this.getServer().getPluginManager().addPermission(new Permission("plugin.rcrpg", "rcrpg 命令权限", "true"));
         this.getServer().getPluginManager().addPermission(new Permission("plugin.rcrpg.admin", "rcrpg 管理员命令权限", "op"));
         this.getServer().getCommandMap().register("rpg", new Commands("rpg"));
 
-        if(Server.getInstance().getPluginManager().getPlugin("EconomyAPI") == null){
+        if (Server.getInstance().getPluginManager().getPlugin("EconomyAPI") == null) {
             this.getLogger().info("检测到未安装核心，将使用默认的经济核心");
             money = false;
-        }else{
+        } else {
             money = true;
         }
-        if(Server.getInstance().getPluginManager().getPlugin("playerPoints") == null){
+        if (Server.getInstance().getPluginManager().getPlugin("playerPoints") == null) {
             this.getLogger().info("检测到未安装点券插件，将使用默认的点券核心");
             point = false;
-        }else{
+        } else {
             point = true;
         }
-        if(Server.getInstance().getPluginManager().getPlugin("Tips") != null){
+        if (Server.getInstance().getPluginManager().getPlugin("Tips") != null) {
             Api.registerVariables("AyearTipsApi", TipsVariables.class);
         }
         this.getLogger().info("插件加载成功，作者：若尘");
     }
 
     public void init() {
-        this.saveResource("OrnamentConfig.yml","/OrnamentConfig.yml",false);
+        this.saveResource("OrnamentConfig.yml", "/OrnamentConfig.yml", false);
         ornamentConfig = new Config(this.getDataFolder() + "/OrnamentConfig.yml");
 
-        this.saveResource("DismantlePlan.yml","/DismantlePlan.yml",false);
+        this.saveResource("DismantlePlan.yml", "/DismantlePlan.yml", false);
         dismantleConfig = new Config(this.getDataFolder() + "/DismantlePlan.yml");
 
-        this.saveResource("SuitPlan.yml","/SuitPlan.yml",false);
+        this.saveResource("SuitPlan.yml", "/SuitPlan.yml", false);
         Suit.init();
 
         initAttrDisplayPercent();
         disableChatStyle = !config.exists("底部显示") || config.getString("底部显示").isEmpty();
 
         this.getLogger().info("开始读取武器信息");
-        for(String name : Handle.getDefaultFiles("Weapon")){
+        for (String name : Handle.getDefaultFiles("Weapon")) {
             Weapon weapon = null;
             try {
-                weapon = Weapon.loadWeapon(name,new Config(this.getDataFolder()+"/Weapon/"+name+".yml",Config.YAML));
+                weapon = Weapon.loadWeapon(name, new Config(this.getDataFolder() + "/Weapon/" + name + ".yml", Config.YAML));
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
-            if(weapon != null) {
-                loadWeapon.put(name,weapon);
-                this.getLogger().info(name+".yml 武器数据读取成功");
+            if (weapon != null) {
+                loadWeapon.put(name, weapon);
+                this.getLogger().info(name + ".yml 武器数据读取成功");
             } else {
-                this.getLogger().warning(name+".yml 武器数据读取失败");
+                this.getLogger().warning(name + ".yml 武器数据读取失败");
             }
         }
         this.getLogger().info("开始读取盔甲信息");
-        for(String name: Handle.getDefaultFiles("Armour")){
+        for (String name : Handle.getDefaultFiles("Armour")) {
             Armour armour = null;
             try {
-                armour = Armour.loadArmour(name,new Config(this.getDataFolder()+"/Armour/"+name+".yml",Config.YAML));
+                armour = Armour.loadArmour(name, new Config(this.getDataFolder() + "/Armour/" + name + ".yml", Config.YAML));
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
-            if(armour != null){
-                loadArmour.put(name,armour);
-                this.getLogger().info(name+".yml 盔甲数据读取成功");
-            }else{
-                this.getLogger().warning(name+".yml 盔甲数据读取失败");
+            if (armour != null) {
+                loadArmour.put(name, armour);
+                this.getLogger().info(name + ".yml 盔甲数据读取成功");
+            } else {
+                this.getLogger().warning(name + ".yml 盔甲数据读取失败");
             }
         }
         this.getLogger().info("开始读取宝石信息");
-        for(String name: Handle.getDefaultFiles("Stone")){
+        for (String name : Handle.getDefaultFiles("Stone")) {
             Stone stone = null;
             try {
-                stone = Stone.loadStone(name,new Config(this.getDataFolder()+"/Stone/"+name+".yml",Config.YAML));
+                stone = Stone.loadStone(name, new Config(this.getDataFolder() + "/Stone/" + name + ".yml", Config.YAML));
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
-            if(stone != null){
-                loadStone.put(name,stone);
-                this.getLogger().info(name+".yml 宝石数据读取成功");
-            }else{
-                this.getLogger().warning(name+".yml 宝石数据读取失败");
+            if (stone != null) {
+                loadStone.put(name, stone);
+                this.getLogger().info(name + ".yml 宝石数据读取成功");
+            } else {
+                this.getLogger().warning(name + ".yml 宝石数据读取失败");
             }
         }
         this.getLogger().info("开始读取箱子信息");
-        for(String name: Handle.getDefaultFiles("Box")){
+        for (String name : Handle.getDefaultFiles("Box")) {
             Box box = null;
             try {
-                box = Box.loadBox(name,new Config(this.getDataFolder()+"/Box/"+name+".yml",Config.YAML));
+                box = Box.loadBox(name, new Config(this.getDataFolder() + "/Box/" + name + ".yml", Config.YAML));
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
-            if(box != null){
-                loadBox.put(name,box);
-                this.getLogger().info(name+".yml 箱子数据读取成功");
-            }else{
-                this.getLogger().warning(name+".yml 箱子数据读取失败");
+            if (box != null) {
+                loadBox.put(name, box);
+                this.getLogger().info(name + ".yml 箱子数据读取成功");
+            } else {
+                this.getLogger().warning(name + ".yml 箱子数据读取失败");
             }
         }
         this.getLogger().info("开始读取饰品信息");
-        for(String name: Handle.getDefaultFiles("Ornament")){
+        for (String name : Handle.getDefaultFiles("Ornament")) {
             Ornament ornament = null;
             try {
-                ornament = Ornament.loadOrnament(name,new Config(this.getDataFolder()+"/Ornament/"+name+".yml",Config.YAML));
+                ornament = Ornament.loadOrnament(name, new Config(this.getDataFolder() + "/Ornament/" + name + ".yml", Config.YAML));
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
-            if(ornament != null){
-                loadOrnament.put(name,ornament);
-                this.getLogger().info(name+".yml 饰品数据读取成功");
-            }else{
-                this.getLogger().warning(name+".yml 饰品数据读取失败");
+            if (ornament != null) {
+                loadOrnament.put(name, ornament);
+                this.getLogger().info(name + ".yml 饰品数据读取成功");
+            } else {
+                this.getLogger().warning(name + ".yml 饰品数据读取失败");
+            }
+        }
+        this.getLogger().info("开始读取锻造图信息");
+        for (String name : Handle.getDefaultFiles("Forging")) {
+            ForgingPaper forgingPaper = null;
+            try {
+                forgingPaper = ForgingPaper.loadForgingPaper(name, new Config(this.getDataFolder() + File.separator + "Forging" + File.separator + "Paper" + File.separator + name + ".yml", Config.YAML));
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            if (forgingPaper != null) {
+                loadForgingPaper.put(name, forgingPaper);
+                this.getLogger().info(name + ".yml 锻造图数据读取成功");
+            } else {
+                this.getLogger().warning(name + ".yml 锻造图数据读取成功");
+            }
+        }
+        this.getLogger().info("开始读取锻造石信息");
+        for (String name : Handle.getDefaultFiles("Forging" + File.separator + "Stone")) {
+            ForgingPaper forgingPaper = null;
+            try {
+                forgingPaper = ForgingPaper.loadForgingPaper(name, new Config(this.getDataFolder() + File.separator + "Forging" + File.separator + "Stone" + File.separator + name + ".yml", Config.YAML));
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            if (forgingPaper != null) {
+                loadForgingPaper.put(name, forgingPaper);
+                this.getLogger().info(name + ".yml 锻造石数据读取成功");
+            } else {
+                this.getLogger().warning(name + ".yml 锻造石数据读取成功");
             }
         }
     }
@@ -215,26 +251,32 @@ public class RcRPGMain extends PluginBase implements Listener {
     public File getPlayerFile() {
         return new File(this.getDataFolder() + "/Players");
     }
+
     public File getWeaponFile() {
         return new File(this.getDataFolder() + "/Weapon");
     }
+
     public File getArmourFile() {
         return new File(this.getDataFolder() + "/Armour");
     }
+
     public File getStoneFile() {
         return new File(this.getDataFolder() + "/Stone");
     }
+
     public File getGuildFile() {
         return new File(this.getDataFolder() + "/Guild");
     }
+
     public File getBoxFile() {
         return new File(this.getDataFolder() + "/Box");
     }
+
     public File getOrnamentFile() {
         return new File(this.getDataFolder() + "/Ornament");
     }
 
-    public void getNewFile(){
+    public void getNewFile() {
         File playerFile = this.getPlayerFile();
         if (!playerFile.exists() && !playerFile.mkdirs()) {
             this.getLogger().info("/Players 文件夹创建失败");
@@ -289,7 +331,7 @@ public class RcRPGMain extends PluginBase implements Listener {
         }
     }
 
-    public void initAttrDisplayPercent () {
+    public void initAttrDisplayPercent() {
         List<String> attrDisplayPercent = new ArrayList<>();
 
         // 添加激进向 (12)的百分比属性

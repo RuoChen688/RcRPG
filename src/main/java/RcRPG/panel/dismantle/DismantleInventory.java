@@ -7,7 +7,6 @@ import RcRPG.Utils;
 import cn.nukkit.Player;
 import cn.nukkit.inventory.InventoryType;
 import cn.nukkit.item.Item;
-import cn.nukkit.network.protocol.ContainerOpenPacket;
 import cn.nukkit.network.protocol.RemoveEntityPacket;
 import cn.nukkit.utils.ConfigSection;
 import me.iwareq.fakeinventories.FakeInventory;
@@ -23,16 +22,6 @@ public class DismantleInventory extends FakeInventory {
 
     public DismantleInventory(String name) {
         super(InventoryType.CHEST, name);
-    }
-
-    @Override
-    public void onOpen(Player who) {
-        super.onOpen(who);
-        ContainerOpenPacket pk = new ContainerOpenPacket();
-        pk.windowId = who.getWindowId(this);
-        pk.entityId = id;
-        pk.type = InventoryType.CHEST.getNetworkType();
-        who.dataPacket(pk);
     }
 
     @Override

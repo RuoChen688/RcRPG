@@ -1,4 +1,4 @@
-package RcRPG.Form;
+package RcRPG.form;
 
 import RcRPG.Handle;
 import RcRPG.Society.Prefix;

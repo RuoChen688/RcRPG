@@ -5,7 +5,7 @@ import RcRPG.AttrManager.LittleMonsterAttr;
 import RcRPG.AttrManager.Manager;
 import RcRPG.AttrManager.PlayerAttr;
 import RcRPG.AttrManager.RcNPCAttr;
-import RcRPG.Form.guildForm;
+import RcRPG.form.guildForm;
 import RcRPG.RPG.*;
 import RcRPG.Society.Money;
 import RcRPG.Society.Prefix;

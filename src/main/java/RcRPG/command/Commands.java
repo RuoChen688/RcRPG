@@ -1,9 +1,9 @@
 package RcRPG.command;
 
 import RcRPG.AttrManager.PlayerAttr;
-import RcRPG.Form.guildForm;
-import RcRPG.Form.inlayForm;
-import RcRPG.Form.prefixForm;
+import RcRPG.form.guildForm;
+import RcRPG.form.inlayForm;
+import RcRPG.form.prefixForm;
 import RcRPG.RPG.*;
 import RcRPG.RcRPGMain;
 import RcRPG.Society.Money;

@@ -14,9 +14,9 @@ import java.util.Random;
 
 public class Handle {
 
-    public static Config getPlayerConfig(String name){
-        File file = new File(RcRPGMain.getInstance().getDataFolder()+"/Players/"+name+".yml");
-        if(file.exists()){
+    public static Config getPlayerConfig(String name) {
+        File file = new File(RcRPGMain.getInstance().getDataFolder() + "/Players/" + name + ".yml");
+        if (file.exists()) {
             return new Config(file, Config.YAML);
         }
         return null;
@@ -24,10 +24,10 @@ public class Handle {
 
     public static String[] getDefaultFiles(String fileName) {
         List<String> names = new ArrayList<>();
-        File files = new File(RcRPGMain.getInstance().getDataFolder()+ "/"+fileName);
-        if(files.isDirectory()){
+        File files = new File(RcRPGMain.getInstance().getDataFolder() + File.separator + fileName);
+        if (files.isDirectory()) {
             File[] filesArray = files.listFiles();
-            if(filesArray != null){
+            if (filesArray != null) {
                 for (File file : filesArray) {
                     names.add(file.getName().substring(0, file.getName().lastIndexOf(".")));
                 }
@@ -36,12 +36,12 @@ public class Handle {
         return names.toArray(new String[0]);
     }
 
-    public static List<String> getGuilds(){
+    public static List<String> getGuilds() {
         List<String> names = new ArrayList<>();
-        File files = new File(RcRPGMain.getInstance().getDataFolder()+ "/Guild");
-        if(files.isDirectory()){
+        File files = new File(RcRPGMain.getInstance().getDataFolder() + "/Guild");
+        if (files.isDirectory()) {
             File[] filesArray = files.listFiles();
-            if(filesArray != null){
+            if (filesArray != null) {
                 for (File file : filesArray) {
                     names.add(file.getName().substring(0, file.getName().lastIndexOf(".")));
                 }
@@ -50,28 +50,28 @@ public class Handle {
         return names;
     }
 
-    public static Effect StringToEffect(String s){
+    public static Effect StringToEffect(String s) {
         String[] ss = s.split(":");
-        return Effect.getEffect(Integer.parseInt(ss[0])).setAmplifier(Integer.parseInt(ss[1])-1).setDuration(Integer.parseInt(ss[2])*20);
+        return Effect.getEffect(Integer.parseInt(ss[0])).setAmplifier(Integer.parseInt(ss[1]) - 1).setDuration(Integer.parseInt(ss[2]) * 20);
     }
 
-    public static Stone getStoneViaName(String yamlName){
+    public static Stone getStoneViaName(String yamlName) {
         if (RcRPGMain.loadStone.containsKey(yamlName)) {
             return RcRPGMain.loadStone.get(yamlName);
         }
         return null;
     }
 
-    public static void removeStoneViaName(Player player,String yamlName){
-        for(int i =0;i < player.getInventory().getSize();i++){
+    public static void removeStoneViaName(Player player, String yamlName) {
+        for (int i = 0; i < player.getInventory().getSize(); i++) {
             Item item = player.getInventory().getItem(i);
-            if(Stone.isStone(item)){
-                if(item.getNamedTag().getString("name").equals(yamlName)){
-                    if(item.getCount() == 1){
+            if (Stone.isStone(item)) {
+                if (item.getNamedTag().getString("name").equals(yamlName)) {
+                    if (item.getCount() == 1) {
                         player.getInventory().remove(item);
-                    }else{
-                        item.setCount(item.getCount()-1);
-                        player.getInventory().setItem(i,item);
+                    } else {
+                        item.setCount(item.getCount() - 1);
+                        player.getInventory().setItem(i, item);
                     }
                     break;
                 }
@@ -79,21 +79,21 @@ public class Handle {
         }
     }
 
-    public static boolean canRemove(Player player,String[] s){
+    public static boolean canRemove(Player player, String[] s) {
         String type = s[0];
         String name = s[1];
         int count = Integer.parseInt(s[2]);
-        for(int i = 0;i < player.getInventory().getSize();i++){
+        for (int i = 0; i < player.getInventory().getSize(); i++) {
             Item item = player.getInventory().getItem(i);
-            if(item.getNamedTag() != null && item.getNamedTag().contains("name") && item.getNamedTag().contains("type")){
-                if(item.getNamedTag().getString("type").equals(type) && item.getNamedTag().getString("name").equals(name)){
-                    if(count != 0){
-                        if(item.getCount() >= count){
+            if (item.getNamedTag() != null && item.getNamedTag().contains("name") && item.getNamedTag().contains("type")) {
+                if (item.getNamedTag().getString("type").equals(type) && item.getNamedTag().getString("name").equals(name)) {
+                    if (count != 0) {
+                        if (item.getCount() >= count) {
                             return true;
-                        }else{
+                        } else {
                             count -= item.getCount();
                         }
-                    }else {
+                    } else {
                         break;
                     }
                 }
@@ -102,24 +102,24 @@ public class Handle {
         return count == 0;
     }
 
-    public static void remove(Player player,String[] s){
+    public static void remove(Player player, String[] s) {
         String type = s[0];
         String name = s[1];
         int count = Integer.parseInt(s[2]);
-        for(int i = 0;i < player.getInventory().getSize();i++){
+        for (int i = 0; i < player.getInventory().getSize(); i++) {
             Item item = player.getInventory().getItem(i);
-            if(item.getNamedTag() != null && item.getNamedTag().contains("name") && item.getNamedTag().contains("type")){
-                if(item.getNamedTag().getString("type").equals(type) && item.getNamedTag().getString("name").equals(name)){
-                    if(count != 0){
-                        if(item.getCount() >= count){
-                            item.setCount(item.getCount()-count);
-                            player.getInventory().setItem(i,item);
+            if (item.getNamedTag() != null && item.getNamedTag().contains("name") && item.getNamedTag().contains("type")) {
+                if (item.getNamedTag().getString("type").equals(type) && item.getNamedTag().getString("name").equals(name)) {
+                    if (count != 0) {
+                        if (item.getCount() >= count) {
+                            item.setCount(item.getCount() - count);
+                            player.getInventory().setItem(i, item);
                             break;
-                        }else{
+                        } else {
                             count -= item.getCount();
                             player.getInventory().remove(item);
                         }
-                    }else {
+                    } else {
                         break;
                     }
                 }
@@ -127,8 +127,8 @@ public class Handle {
         }
     }
 
-    public static int random(int a,int b) {
-        return new Random().nextInt(b-a+1)+a;
+    public static int random(int a, int b) {
+        return new Random().nextInt(b - a + 1) + a;
     }
 
     public static boolean getProbabilisticResults(double value) {

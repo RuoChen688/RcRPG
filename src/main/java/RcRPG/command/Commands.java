@@ -1,6 +1,8 @@
 package RcRPG.command;
 
 import RcRPG.AttrManager.PlayerAttr;
+import RcRPG.RPG.Forging.ForgingPaper;
+import RcRPG.RPG.Forging.ForgingStone;
 import RcRPG.form.guildForm;
 import RcRPG.form.inlayForm;
 import RcRPG.form.prefixForm;
@@ -36,7 +38,7 @@ public class Commands extends PluginCommand<RcRPGMain> {
 
     public Commands(String cmdName) {
         super(cmdName, RcRPGMain.getInstance());
-        this.setDescription("RcRPG指令");
+        this.setDescription("RcRPG 指令");
         this.setPermission("plugin.rcrpg");
         this.commandParameters.clear();
         ArrayList<String> society = new ArrayList<>() {{
@@ -162,11 +164,27 @@ public class Commands extends PluginCommand<RcRPGMain> {
 
         this.addCommandParameters("forging", new CommandParameter[]{
                 CommandParameter.newEnum("forging", new String[]{"forging"}),
-                CommandParameter.newEnum("admin", true, new String[]{"admin"})
+                CommandParameter.newEnum("admin", new String[]{"admin"})
+        });
+        this.addCommandParameters("forging_paper", new CommandParameter[]{
+                CommandParameter.newEnum("forging", new String[]{"forging"}),
+                CommandParameter.newEnum("paper", new String[]{"paper"}),
+                CommandParameter.newEnum("give", new String[]{"give"}),
+                CommandParameter.newType("player", CommandParamType.TARGET),
+                CommandParameter.newType("paperName", CommandParamType.STRING),
+                CommandParameter.newType("Count", true, CommandParamType.INT)
+        });
+        this.addCommandParameters("forging_stone", new CommandParameter[]{
+                CommandParameter.newEnum("forging", new String[]{"forging"}),
+                CommandParameter.newEnum("stone", new String[]{"stone"}),
+                CommandParameter.newEnum("give", new String[]{"give"}),
+                CommandParameter.newType("player", CommandParamType.TARGET),
+                CommandParameter.newType("stoneName", CommandParamType.STRING),
+                CommandParameter.newType("Count", true, CommandParamType.INT)
         });
         this.addCommandParameters("forging_help", new CommandParameter[]{
                 CommandParameter.newEnum("forging", new String[]{"forging"}),
-                CommandParameter.newEnum("help", true, new String[]{"help"})
+                CommandParameter.newEnum("help", new String[]{"help"})
         });
 
         api = RcRPGMain.getInstance();
@@ -376,7 +394,7 @@ public class Commands extends PluginCommand<RcRPGMain> {
                     return false;
                 }
                 int money = Integer.parseInt(args[3]);
-                
+
                 switch (args[1]) {
                     case "help" -> {
                         sender.sendMessage("/rpg money add [Player] [Money] 给予玩家金币");
@@ -903,6 +921,47 @@ public class Commands extends PluginCommand<RcRPGMain> {
                 if (!sender.isPlayer()) {
                     sender.sendMessage(TextFormat.RED + "本命令必须是玩家执行");
                     return false;
+                }
+                switch (args[1]) {
+                    case "stone" -> {
+                        if (args[2].equals("give")) {
+                            String playerName = args[3];
+                            String itemName = args[4];
+                            int count = args.length > 5 ? Integer.parseInt(args[5]) : 1;
+                            Player player = RcRPGMain.getInstance().getServer().getPlayer(playerName);
+                            if (!player.isOnline()) {
+                                sender.sendMessage("玩家不在线");
+                                return false;
+                            }
+                            if (ForgingStone.giveForgingStone(player, itemName, count)) {
+                                if (sender.isPlayer()) sender.sendMessage("给予成功");
+                            } else {
+                                if (sender.isPlayer()) sender.sendMessage("给予失败");
+                            }
+                        }
+                        return true;
+                    }
+                    case "paper" -> {
+                        if (args[2].equals("give")) {
+                            String playerName = args[3];
+                            String itemName = args[4];
+                            int count = args.length > 5 ? Integer.parseInt(args[5]) : 1;
+                            Player player = RcRPGMain.getInstance().getServer().getPlayer(playerName);
+                            if (!player.isOnline()) {
+                                sender.sendMessage("玩家不在线");
+                                return false;
+                            }
+                            if (ForgingPaper.giveForgingPaper(player, itemName, count)) {
+                                if (sender.isPlayer()) sender.sendMessage("给予成功");
+                            } else {
+                                if (sender.isPlayer()) sender.sendMessage("给予失败");
+                            }
+                        }
+                        return true;
+                    }
+                    case "help" -> {
+                        return true;
+                    }
                 }
                 ForgingPanel panel = new ForgingPanel();
                 panel.sendPanel((Player) sender);

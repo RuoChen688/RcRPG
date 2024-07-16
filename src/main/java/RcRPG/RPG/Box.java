@@ -57,7 +57,7 @@ public class Box {
             box.setTime(config.getInt("时间"));
             ArrayList<String> list = new ArrayList<>(config.getStringList("奖励"));
             box.setReward(list);
-            box.setMessage(config.getString("介绍"));
+            box.setMessage(config.getString("介绍", ""));
             box.setTipText(config.getString("底部显示"));
             box.setMyMessage(config.getString("个人通知"));
             box.setServerMessage(config.getString("全服通知"));
@@ -116,13 +116,13 @@ public class Box {
             item.setNamedTag(tag);
             item.setCustomName(box.getLabel());
             player.getInventory().addItem(item);
-            if(!box.getMyMessage().equals("")){
+            if(!box.getMyMessage().isEmpty()){
                 String text = box.getMyMessage();
                 if(text.contains("@player")) text = text.replace("@player", player.getName());
                 if(text.contains("@item")) text = text.replace("@item", box.getLabel());
                 player.sendMessage(text);
             }
-            if(!box.getServerMessage().equals("")){
+            if(!box.getServerMessage().isEmpty()){
                 String text = box.getServerMessage();
                 if(text.contains("@player")) text = text.replace("@player", player.getName());
                 if(text.contains("@item")) text = text.replace("@item", box.getLabel());

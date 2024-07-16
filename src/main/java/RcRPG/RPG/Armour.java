@@ -97,7 +97,7 @@ public class Armour extends ItemAttr {
             if (config.exists("属性")) {
                 armour.setAttr((Map<String, Object>) config.get("属性"));
             }
-            armour.setMessage(config.getString("介绍"));
+            armour.setMessage(config.getString("介绍", ""));
 
             armour.setColor(loadColorFromConfig(config));
 
@@ -121,10 +121,10 @@ public class Armour extends ItemAttr {
 
             armour.setEffects(loadEffectsFromConfig(config));
 
-            ArrayList<String> list2 = new ArrayList<>(config.getStringList("显示"));
-            armour.setLoreList(list2);
-            ArrayList<String> list3 = new ArrayList<>(config.getStringList("宝石槽"));
-            armour.setStoneList(list3);
+            ArrayList<String> loreList = new ArrayList<>(config.getStringList("显示"));
+            armour.setLoreList(loreList);
+            ArrayList<String> stoneList = new ArrayList<>(config.getStringList("宝石槽"));
+            armour.setStoneList(stoneList);
 
             return armour;
         }catch(Exception e){

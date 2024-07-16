@@ -154,17 +154,5 @@ public class Handle {
         return randomValue + 1 <= value;
     }
 
-    /**
-     * 检查类是否存在
-     */
-    public static boolean classExists(final String classPath) {
-        try {
-            Class.forName(classPath);
-            return true;
-        } catch (ClassNotFoundException e) {
-            return false;
-        }
-    }
-
 }
 

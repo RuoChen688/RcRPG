@@ -28,7 +28,7 @@ public class Points {
                 Config config = Handle.getPlayerConfig(name);
                 config.set("点券",config.getInt("点券") + point);
                 config.save();
-                if(!RcRPGMain.getInstance().config.getString("点券增加提示").equals("")){
+                if(!RcRPGMain.getInstance().config.getString("点券增加提示").isEmpty()){
                     String text = RcRPGMain.getInstance().config.getString("点券增加提示");
                     if(text.contains("@player")) text = text.replace("@player",name);
                     if(text.contains("@point")) text = text.replace("@point",String.valueOf(point));

@@ -1,6 +1,7 @@
 package RcRPG.RPG.Forging;
 
 import RcRPG.RcRPGMain;
+import cn.nukkit.Player;
 import cn.nukkit.item.Item;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.utils.Config;
@@ -17,8 +18,6 @@ public class ForgingStone {
 
     private String name;
 
-    private String label;
-
     private String showName;
 
     private Item item;
@@ -27,15 +26,25 @@ public class ForgingStone {
 
     private ArrayList<String> loreList = new ArrayList<>();
 
+    private int quality; // 锻造石品质
+    private int volume; // 素材容量
+
     public static ForgingStone loadForgingStone(String name, Config config) {
         try {
             ForgingStone forgingStone = new ForgingStone(name, config);
-            forgingStone.setLabel(config.getString("标签"));
             forgingStone.setShowName(config.getString("显示名称"));
             forgingStone.setItem(Item.fromString(config.getString("物品ID")));
+            forgingStone.setQuality(config.getInt("品质", 0));
+            // 素材容量
+            forgingStone.setVolume(config.getInt("素材容量", 3));
+
+            forgingStone.setMessage(config.getString("介绍", ""));
+            ArrayList<String> loreList = new ArrayList<>(config.getStringList("显示"));
+            forgingStone.setLoreList(loreList);
+
             return forgingStone;
         } catch (Exception e) {
-            RcRPGMain.getInstance().getLogger().error("加载锻造图 " + name + " 配置文件失败");
+            RcRPGMain.getInstance().getLogger().error("加载锻造图 " + name + " 配置文件失败"+e.getMessage());
             return null;
         }
     }
@@ -75,6 +84,19 @@ public class ForgingStone {
             item.setLore(lore.toArray(new String[0]));
         }
         return item;
+    }
+
+    public static boolean giveForgingStone(Player player, String name, int count) {
+        if (!RcRPGMain.loadForgingStone.containsKey(name)) {
+            return false;
+        }
+        // ForgingStone forgingStone = RcRPGMain.loadForgingStone.get(name);
+        Item item = getItem(name, count);
+        if (item.isNull()) {
+            return false;
+        }
+        player.getInventory().addItem(item);
+        return true;
     }
 
     public static boolean isForgingStone(Item item) {

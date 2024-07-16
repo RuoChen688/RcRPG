@@ -1,6 +1,7 @@
 package RcRPG.RPG.Forging;
 
 import RcRPG.RcRPGMain;
+import cn.nukkit.Player;
 import cn.nukkit.item.Item;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.utils.Config;
@@ -17,8 +18,6 @@ public class ForgingPaper {
 
     private String name;
 
-    private String label;
-
     private String showName;
 
     private Item item;
@@ -30,9 +29,12 @@ public class ForgingPaper {
     public static ForgingPaper loadForgingPaper(String name, Config config) {
         try {
             ForgingPaper forgingPaper = new ForgingPaper(name, config);
-            forgingPaper.setLabel(config.getString("标签"));
             forgingPaper.setShowName(config.getString("显示名称"));
             forgingPaper.setItem(Item.fromString(config.getString("物品ID")));
+
+            forgingPaper.setMessage(config.getString("介绍", ""));
+            ArrayList<String> loreList = new ArrayList<>(config.getStringList("显示"));
+            forgingPaper.setLoreList(loreList);
             return forgingPaper;
         } catch (Exception e) {
             RcRPGMain.getInstance().getLogger().error("加载锻造图 " + name + " 配置文件失败");
@@ -75,6 +77,19 @@ public class ForgingPaper {
             item.setLore(lore.toArray(new String[0]));
         }
         return item;
+    }
+
+    public static boolean giveForgingPaper(Player player, String name, int count) {
+        if (!RcRPGMain.loadForgingPaper.containsKey(name)) {
+            return false;
+        }
+        // ForgingStone forgingStone = RcRPGMain.loadForgingStone.get(name);
+        Item item = getItem(name, count);
+        if (item.isNull()) {
+            return false;
+        }
+        player.getInventory().addItem(item);
+        return true;
     }
 
     public static boolean isForgingPaper(Item item) {

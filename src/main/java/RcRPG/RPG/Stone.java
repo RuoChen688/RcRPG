@@ -65,16 +65,13 @@ public class Stone extends ItemAttr {
                 stone.setAttr((Map<String, Object>) config.get("属性"));
             }
 
-            stone.setMessage(config.getString("介绍"));
+            stone.setMessage(config.getString("介绍", ""));
             stone.setTipText(config.getString("底部显示"));
             stone.setMyMessage(config.getString("个人通知"));
             stone.setServerMessage(config.getString("全服通知"));
 
-            ArrayList<String> list4 = new ArrayList<>();
-            for(String lore : config.getStringList("显示")){
-                list4.add(lore);
-            }
-            stone.setLoreList(list4);
+            ArrayList<String> loreList = new ArrayList<>(config.getStringList("显示"));
+            stone.setLoreList(loreList);
 
             return stone;
         }catch(Exception e){
@@ -158,13 +155,13 @@ public class Stone extends ItemAttr {
             return false;
         }
         player.getInventory().addItem(item);
-        if(!stone.getMyMessage().equals("")){
+        if(!stone.getMyMessage().isEmpty()){
             String text = stone.getMyMessage();
             if(text.contains("@player")) text = text.replace("@player", player.getName());
             if(text.contains("@item")) text = text.replace("@item", stone.getLabel());
             player.sendMessage(text);
         }
-        if(!stone.getServerMessage().equals("")){
+        if(!stone.getServerMessage().isEmpty()){
             String text = stone.getServerMessage();
             if(text.contains("@player")) text = text.replace("@player", player.getName());
             if(text.contains("@item")) text = text.replace("@item", stone.getLabel());

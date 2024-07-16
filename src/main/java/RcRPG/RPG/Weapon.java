@@ -108,7 +108,7 @@ public class Weapon extends ItemAttr {
             weapon.setLightRound(config.getInt("雷击概率"));
 
             weapon.setStone(config.getInt("宝石孔数"));
-            weapon.setMessage(config.getString("介绍"));
+            weapon.setMessage(config.getString("介绍", ""));
 
             ArrayList<Effect> list1 = new ArrayList<>();
             for (String effect : config.getStringList("攻击者药水效果")) {
@@ -125,10 +125,10 @@ public class Weapon extends ItemAttr {
                 list3.add(Handle.StringToEffect(effect));
             }
             weapon.setGroupEffect(list3);
-            ArrayList<String> list4 = new ArrayList<>(config.getStringList("显示"));
-            weapon.setLoreList(list4);
-            ArrayList<String> list5 = new ArrayList<>(config.getStringList("宝石槽"));
-            weapon.setStoneList(list5);
+            ArrayList<String> loreList = new ArrayList<>(config.getStringList("显示"));
+            weapon.setLoreList(loreList);
+            ArrayList<String> stoneList = new ArrayList<>(config.getStringList("宝石槽"));
+            weapon.setStoneList(stoneList);
 
             weapon.setDismantle(config.getString("分解", ""));
 
@@ -216,7 +216,7 @@ public class Weapon extends ItemAttr {
             return false;
         }
         player.getInventory().addItem(item);
-        if (!weapon.getMyMessage().equals("")) {
+        if (!weapon.getMyMessage().isEmpty()) {
             String text = weapon.getMyMessage();
             if (text.contains("@player")) text = text.replace("@player", player.getName());
             if (text.contains("@item")) text = text.replace("@item", weapon.getLabel());

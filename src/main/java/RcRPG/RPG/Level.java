@@ -27,7 +27,7 @@ public class Level {
             }
             config.set("经验",newExp);
             String text = RcRPGMain.getInstance().config.getString("经验增加提示");
-            if(!text.equals("")){
+            if(!text.isEmpty()){
                 if(text.contains("@player")) text = text.replace("@player",name);
                 if(text.contains("@exp")) text = text.replace("@exp",String.valueOf(exp));
                 player.sendMessage(text);
@@ -44,7 +44,7 @@ public class Level {
         String name = player.getName();
         Config config = Handle.getPlayerConfig(name);
         int newLevel = config.getInt("等级") + level;
-        if(!RcRPGMain.getInstance().config.getString("等级增加提示").equals("")){
+        if(!RcRPGMain.getInstance().config.getString("等级增加提示").isEmpty()){
             String text = RcRPGMain.getInstance().config.getString("等级增加提示");
             if(text.contains("@player")) text = text.replace("@player",name);
             if(text.contains("@level")) text = text.replace("@level",String.valueOf(level));

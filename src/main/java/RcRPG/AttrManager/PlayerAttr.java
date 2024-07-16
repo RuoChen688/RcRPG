@@ -393,7 +393,7 @@ public class PlayerAttr extends Manager {
          str += "  " + i + " (" + (time - nowTime) + "s): " + level + "\n";
          }
 
-         if (!str.equals("")) {
+         if (!str.isEmpty()) {
          list.add(new ElementLabel(" §a# 临时效果§r\n" + str));
          }
          */

@@ -5,11 +5,11 @@ import cn.nukkit.inventory.InventoryType;
 import cn.nukkit.network.protocol.RemoveEntityPacket;
 import me.iwareq.fakeinventories.FakeInventory;
 
-public class ForgingInventory extends FakeInventory {
+public class ForgingSubInventory extends FakeInventory {
 
     public long id;
 
-    public ForgingInventory(String name) {
+    public ForgingSubInventory(String name) {
         super(InventoryType.CHEST, name);
     }
 

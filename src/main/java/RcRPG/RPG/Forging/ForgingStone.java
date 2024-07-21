@@ -44,7 +44,7 @@ public class ForgingStone {
 
             return forgingStone;
         } catch (Exception e) {
-            RcRPGMain.getInstance().getLogger().error("加载锻造图 " + name + " 配置文件失败"+e.getMessage());
+            RcRPGMain.getInstance().getLogger().error("加载锻造图 " + name + " 配置文件失败。"+e.getMessage());
             return null;
         }
     }

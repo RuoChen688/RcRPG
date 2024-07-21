@@ -71,7 +71,7 @@ public class DismantleInventory extends FakeInventory {
         if (!tipPopup.isEmpty()) {
             who.sendPopup(String.join("\n§r§f", tipPopup)+"\n§r§f共计 "+tipPopup.size()+" 件");
         } else {
-            who.sendPopup("所有装备均分解失败。");
+            if (invItemList.size() > 1) who.sendPopup("所有装备均分解失败。");
         }
     }
 

@@ -18,10 +18,10 @@ public class DismantlePanel implements InventoryHolder {
     public static Map<Integer, Item> getPanel(Player player) {
         Map<Integer, Item> panel = new LinkedHashMap<>();
         Item tipItem = Item.fromString("minecraft:oak_sign");
-        tipItem.setCustomName("提示");
+        tipItem.setCustomName("§r§e一一一 提示 一一一");
         tipItem.setLore(
-                "将武器、防具放入`分解炉`中关闭即可",
-                "请确保背包空闲空间充足"
+                "§r§f将武器、防具放入`分解炉`中关闭即可",
+                "§r§c请确保背包空闲空间充足"
         );
         panel.put(0, tipItem);
         return panel;

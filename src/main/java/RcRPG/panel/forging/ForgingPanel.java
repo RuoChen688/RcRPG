@@ -17,7 +17,7 @@ import java.util.Map;
 
 public class ForgingPanel implements InventoryHolder {
 
-    public static String titleStateOne = "锻造 - 请选择锻造方案";
+    public static String titleStateOne = "锻造 - 选择锻造方案";
 
     public static Map<Integer, Item> getPanel(Player player) {
         Map<Integer, Item> panel = new LinkedHashMap<>();

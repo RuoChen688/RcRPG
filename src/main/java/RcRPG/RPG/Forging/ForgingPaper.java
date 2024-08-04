@@ -1,6 +1,8 @@
 package RcRPG.RPG.Forging;
 
 import RcRPG.RcRPGMain;
+import cn.ankele.plugin.MagicItem;
+import cn.ankele.plugin.bean.ItemBean;
 import cn.nukkit.Player;
 import cn.nukkit.item.Item;
 import cn.nukkit.nbt.tag.CompoundTag;
@@ -26,6 +28,8 @@ public class ForgingPaper {
 
     private ArrayList<String> loreList = new ArrayList<>();
 
+    private ArrayList<ItemBean> mainFootage = new ArrayList<>();
+
     public static ForgingPaper loadForgingPaper(String name, Config config) {
         try {
             ForgingPaper forgingPaper = new ForgingPaper(name, config);
@@ -35,6 +39,9 @@ public class ForgingPaper {
             forgingPaper.setMessage(config.getString("介绍", ""));
             ArrayList<String> loreList = new ArrayList<>(config.getStringList("显示"));
             forgingPaper.setLoreList(loreList);
+            new ArrayList<>(config.getStringList("主素材")).forEach((key)->{
+                forgingPaper.mainFootage.add(MagicItem.getItemsMap().get(key));
+            });
             return forgingPaper;
         } catch (Exception e) {
             RcRPGMain.getInstance().getLogger().error("加载锻造图 " + name + " 配置文件失败");
@@ -45,6 +52,10 @@ public class ForgingPaper {
     public ForgingPaper(String name, Config config) {
         this.name = name;
         this.config = config;
+    }
+
+    public ItemBean getMainFootage() {
+        return mainFootage.get(0);
     }
 
     public static Item getItem(String name, int count) {

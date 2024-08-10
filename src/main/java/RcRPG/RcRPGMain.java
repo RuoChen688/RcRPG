@@ -23,9 +23,7 @@ import lombok.Getter;
 import tip.utils.Api;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.List;
 
 public class RcRPGMain extends PluginBase implements Listener {
 
@@ -43,11 +41,6 @@ public class RcRPGMain extends PluginBase implements Listener {
      * 装备分解配置
      */
     public Config dismantleConfig;
-
-    /**
-     * 以百分比显示的属性列表
-     */
-    public List<String> attrDisplayPercentList;
 
     public static LinkedHashMap<String, Weapon> loadWeapon = new LinkedHashMap<>();
     public static LinkedHashMap<String, Armour> loadArmour = new LinkedHashMap<>();
@@ -72,6 +65,11 @@ public class RcRPGMain extends PluginBase implements Listener {
     }
 
     public void onEnable() {
+        if (Server.getInstance().getPluginManager().getPlugin("FakeInventories") == null) {
+            this.getLogger().error("未检测到 FakeInventories 插件，插件无法启动");
+            throw new RuntimeException("前置插件 FakeInventories 下载地址：https://github.com/JkqzDev/FakeInventories-MOT/releases");
+        }
+
         Entity.registerEntity("TextEntity", TextEntity.class);
 
         this.createConfigDir();
@@ -118,8 +116,6 @@ public class RcRPGMain extends PluginBase implements Listener {
 
         this.saveResource("SuitPlan.yml", "/SuitPlan.yml", false);
         Suit.init();
-
-        initAttrDisplayPercent();// 初始化以百分比显示的属性列表
 
         this.getLogger().info("开始读取武器信息");
         for (String name : Handle.getDefaultFiles("Weapon")) {
@@ -324,48 +320,6 @@ public class RcRPGMain extends PluginBase implements Listener {
                     serverLangCode = LangCode.en_US;
                 }
             }
-        }
-    }
-
-    public void initAttrDisplayPercent() {
-        List<String> attrDisplayPercent = new ArrayList<>();
-
-        // 添加激进向 (12)的百分比属性
-        attrDisplayPercent.add("暴击率");
-        attrDisplayPercent.add("暴击倍率");
-        attrDisplayPercent.add("吸血率");
-        attrDisplayPercent.add("吸血倍率");
-        attrDisplayPercent.add("破防率");
-        attrDisplayPercent.add("破甲率");
-        attrDisplayPercent.add("破甲强度");
-        attrDisplayPercent.add("命中率");
-        attrDisplayPercent.add("伤害加成");
-        attrDisplayPercent.add("PVP攻击加成");
-        attrDisplayPercent.add("PVE攻击加成");
-
-        // 添加保守向 (10)的百分比属性
-        attrDisplayPercent.add("反伤率");
-        attrDisplayPercent.add("闪避率");
-        attrDisplayPercent.add("暴击闪避");
-        attrDisplayPercent.add("暴击抵抗");
-        attrDisplayPercent.add("吸血抵抗");
-        attrDisplayPercent.add("血量加成");
-        attrDisplayPercent.add("防御加成");
-        attrDisplayPercent.add("护甲强度");
-        attrDisplayPercent.add("生命加成");
-
-        // 添加辅助增益向 (4)的百分比属性
-        attrDisplayPercent.add("经验加成");
-        attrDisplayPercent.add("移速加成");
-
-        // 添加特殊效果 (6)的百分比属性
-        attrDisplayPercent.add("燃烧概率");
-        attrDisplayPercent.add("雷击概率");
-        attrDisplayPercent.add("冰冻概率");
-        if (MainConfig.getAttrDisplayPercent().isEmpty()) {
-            attrDisplayPercentList = attrDisplayPercent;
-        } else {
-            attrDisplayPercentList = MainConfig.getAttrDisplayPercent();
         }
     }
 

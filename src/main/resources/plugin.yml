@@ -1,13 +1,13 @@
 name: RcRPG
 main: RcRPG.RcRPGMain
-version: 1.0.7
+version: 1.0.8
 author: 若尘
 authors: ["若尘", "Mcayear"]
 api: 1.0.8
 load: POSTWORLD
 website: https://github.com/RuoChen688/RcRPG
-depend: ["EconomyAPI", "FakeInventories"]
-softdepend: ["RcNPC", "RsNPC", "PlayerPoint", "LittleMonster", "HealthAPI", "Tips"]
+depend: []
+softdepend: ["FakeInventories", "EconomyAPI", "RcNPC", "RsNPC", "PlayerPoint", "LittleMonster", "HealthAPI", "Tips"]
 permissions:
   rcrpg.command.check:
     description: "查询玩家信息"

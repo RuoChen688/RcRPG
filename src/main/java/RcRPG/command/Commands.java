@@ -57,7 +57,7 @@ public class Commands extends PluginCommand<RcRPGMain> {
                 CommandParameter.newEnum("effect", new String[]{"effect"}),
                 CommandParameter.newType("flag", CommandParamType.STRING),
                 CommandParameter.newType("player", CommandParamType.TARGET),
-                CommandParameter.newEnum("attrName", RcRPGMain.getInstance().attrDisplayPercentList.toArray(new String[0])),
+                CommandParameter.newEnum("attrName", MainConfig.getAttrDisplayPercent().toArray(new String[0])),
                 CommandParameter.newType("value", CommandParamType.FLOAT),
                 CommandParameter.newType("duration", true, CommandParamType.INT)
         });

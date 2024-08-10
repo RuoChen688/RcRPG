@@ -49,6 +49,10 @@ public class MainConfig {
     public static List<String> guildUpgradeCosts = new ArrayList<>();
     @Getter
     public static List<String> guildUpgradeMembers = new ArrayList<>();
+
+    /**
+     * 以百分比显示的属性列表
+     */
     @Getter
     public static List<String> attrDisplayPercent = new ArrayList<>();
 
@@ -78,7 +82,49 @@ public class MainConfig {
         initialGuildCreationFunds = config.getInt("公会创建初始资金");
         guildUpgradeCosts = config.getStringList("公会升级金币");
         guildUpgradeMembers = config.getStringList("公会升级人数");
-        attrDisplayPercent = config.getStringList("AttrDisplayPercent");
+        readAttrDisplayPercent();// 初始化以百分比显示的属性列表
 
+    }
+
+    public static void readAttrDisplayPercent() {
+        if (config.exists("AttrDisplayPercent")) {
+            attrDisplayPercent.clear();
+            attrDisplayPercent = config.getStringList("AttrDisplayPercent");
+        } else {
+            attrDisplayPercent.clear();
+
+            // 添加激进向 (12)的百分比属性
+            attrDisplayPercent.add("暴击率");
+            attrDisplayPercent.add("暴击倍率");
+            attrDisplayPercent.add("吸血率");
+            attrDisplayPercent.add("吸血倍率");
+            attrDisplayPercent.add("破防率");
+            attrDisplayPercent.add("破甲率");
+            attrDisplayPercent.add("破甲强度");
+            attrDisplayPercent.add("命中率");
+            attrDisplayPercent.add("伤害加成");
+            attrDisplayPercent.add("PVP攻击加成");
+            attrDisplayPercent.add("PVE攻击加成");
+
+            // 添加保守向 (10)的百分比属性
+            attrDisplayPercent.add("反伤率");
+            attrDisplayPercent.add("闪避率");
+            attrDisplayPercent.add("暴击闪避");
+            attrDisplayPercent.add("暴击抵抗");
+            attrDisplayPercent.add("吸血抵抗");
+            attrDisplayPercent.add("血量加成");
+            attrDisplayPercent.add("防御加成");
+            attrDisplayPercent.add("护甲强度");
+            attrDisplayPercent.add("生命加成");
+
+            // 添加辅助增益向 (4)的百分比属性
+            attrDisplayPercent.add("经验加成");
+            attrDisplayPercent.add("移速加成");
+
+            // 添加特殊效果 (6)的百分比属性
+            attrDisplayPercent.add("燃烧概率");
+            attrDisplayPercent.add("雷击概率");
+            attrDisplayPercent.add("冰冻概率");
+        }
     }
 }

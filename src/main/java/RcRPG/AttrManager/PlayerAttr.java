@@ -440,7 +440,7 @@ public class PlayerAttr extends Manager {
      * 将数据可视化，输入data,属性输出min-max或x%
      */
     public static String valueToString(float[] data, String attribute) {
-        List<String> attrDisplayPercent = RcRPGMain.getInstance().attrDisplayPercentList;
+        List<String> attrDisplayPercent = MainConfig.getAttrDisplayPercent();
         String back = "";
         if (data.length == 2) {
             if (data[0] == data[1]) {

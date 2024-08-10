@@ -1,7 +1,8 @@
-package RcRPG.panel.ornament;
+package RcRPG.panel.container.ornament;
 
 import RcRPG.RPG.Ornament;
 import RcRPG.RcRPGMain;
+import RcRPG.config.MainConfig;
 import cn.nukkit.Player;
 import cn.nukkit.inventory.Inventory;
 import cn.nukkit.inventory.InventoryHolder;
@@ -39,7 +40,7 @@ public class OrnamentPanel implements InventoryHolder {
         inv.setContents(getPanel(player));
         Item mask = Item.fromString("minecraft:black_stained_glass_pane");
         mask.setCustomName("§r§c饰品仅允许置于空槽位中");
-        for (int i = RcRPGMain.getInstance().config.getInt("饰品生效格数"); i < inv.getSize(); i++) {
+        for (int i = MainConfig.getOrnamentEffectSlots(); i < inv.getSize(); i++) {
             inv.setItem(i, mask);
         }
 

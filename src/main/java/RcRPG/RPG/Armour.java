@@ -186,7 +186,7 @@ public class Armour extends ItemAttr {
 
     public static boolean delArmourConfig(String name){
         if(getArmourConfig(name) != null){
-            File file = new File(RcRPGMain.getInstance().getArmourFile(),"/"+name+".yml");
+            File file = new File(RcRPGMain.getInstance().getArmourFile(), name+".yml");
             file.delete();
             return true;
         }

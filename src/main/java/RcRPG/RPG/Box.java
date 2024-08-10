@@ -93,7 +93,7 @@ public class Box {
 
     public static boolean delBoxConfig(String name){
         if(getBoxConfig(name) != null){
-            File file = new File(RcRPGMain.getInstance().getBoxFile(),"/"+name+".yml");
+            File file = new File(RcRPGMain.getInstance().getBoxFile(), name+".yml");
             file.delete();
             return true;
         }

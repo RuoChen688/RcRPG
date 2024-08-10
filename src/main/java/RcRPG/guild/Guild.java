@@ -2,6 +2,7 @@ package RcRPG.guild;
 
 import RcRPG.Handle;
 import RcRPG.RcRPGMain;
+import RcRPG.config.MainConfig;
 import cn.nukkit.Player;
 import cn.nukkit.Server;
 import cn.nukkit.level.Position;
@@ -9,6 +10,7 @@ import cn.nukkit.utils.Config;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Guild {
 
@@ -16,8 +18,8 @@ public class Guild {
         RcRPGMain.getInstance().saveResource("Guild/Guild.yml","/Guild/"+guild+".yml",false);
         Config config = new Config(RcRPGMain.getInstance().getGuildFile()+"/"+guild+".yml");
         config.set("名称",guild);
-        config.set("公会资金", RcRPGMain.getInstance().config.getInt("公会创建初始资金"));
-        config.set("公会人数", RcRPGMain.getInstance().config.getInt("公会初始人数"));
+        config.set("公会资金", MainConfig.getInitialGuildCreationFunds());
+        config.set("公会人数", MainConfig.getInitialGuildMembers());
         config.save();
         Guild.setGuild(player,guild);
         Guild.setMaster(player,guild);
@@ -115,30 +117,39 @@ public class Guild {
         return list;
     }
 
+    /**
+     * 解散公会
+     * @param player
+     */
     public static void dismissGuild(Player player){
         String guild = Guild.getGuild(player);
         for(String name : Guild.getAllMember(player)){
             Config pConfig = Handle.getPlayerConfig(name);
-            pConfig.set("公会", RcRPGMain.getInstance().config.get("初始公会"));
+            pConfig.set("公会", MainConfig.getInitialGuild());
             pConfig.save();
         }
-        File file = new File(RcRPGMain.getInstance().getGuildFile(),"/"+guild+".yml");
+        File file = new File(RcRPGMain.getInstance().getGuildFile(), guild+".yml");
         file.delete();
     }
 
     public static void kickGuild(Player player,String name){
         String guild = Guild.getGuild(player);
         Config config = Handle.getPlayerConfig(name);
-        config.set("公会", RcRPGMain.getInstance().config.get("初始公会"));
+        config.set("公会", MainConfig.getInitialGuild());
         config.save();
-        config = new Config(RcRPGMain.getInstance().getGuildFile()+"/"+guild+".yml");
+        config = new Config(RcRPGMain.getInstance().getGuildFile()+File.separator+guild+".yml");
         if(config.getString("副会长").equals(name)) config.set("副会长",null);
         ArrayList<String> list = (ArrayList<String>) config.getStringList("成员");
-        if(list.contains(name)) list.remove(name);
+        list.remove(name);
         config.set("成员",list);
         config.save();
     }
 
+    /**
+     * 接受 √ 玩家的公会加入申请
+     * @param player
+     * @param name
+     */
     public static void acceptApp(Player player,String name){
         String guild = Guild.getGuild(player);
         Config config = Handle.getPlayerConfig(name);
@@ -149,16 +160,21 @@ public class Guild {
         if(!list.contains(name)) list.add(name);
         config.set("成员",list);
         list = (ArrayList<String>) config.getStringList("申请者");
-        if(list.contains(name)) list.remove(name);
+        list.remove(name);
         config.set("申请者",list);
         config.save();
     }
 
+    /**
+     * 拒绝 X 玩家的公会加入申请
+     * @param player
+     * @param name
+     */
     public static void rejectApp(Player player,String name){
         String guild = Guild.getGuild(player);
         Config config = new Config(RcRPGMain.getInstance().getGuildFile()+"/"+guild+".yml");
         ArrayList<String> list = (ArrayList<String>) config.getStringList("申请者");
-        if(list.contains(name)) list.remove(name);
+        list.remove(name);
         config.set("申请者",list);
         config.save();
     }
@@ -188,7 +204,7 @@ public class Guild {
     public static int getUpdateMoney(Player player){
         String guild = Guild.getGuild(player);
         Config config = new Config(RcRPGMain.getInstance().getGuildFile()+"/"+guild+".yml");
-        ArrayList<String> list = (ArrayList<String>) RcRPGMain.getInstance().config.getStringList("公会升级金币");
+        List<String> list = MainConfig.getGuildUpgradeCosts();
         for(String s : list){
             String[] arr = s.split(":");
             if(arr[0].equals(config.getString("公会等级"))) return Integer.parseInt(arr[1]);
@@ -199,7 +215,7 @@ public class Guild {
     public static int getUpdateSize(Player player){
         String guild = Guild.getGuild(player);
         Config config = new Config(RcRPGMain.getInstance().getGuildFile()+"/"+guild+".yml");
-        ArrayList<String> list = (ArrayList<String>) RcRPGMain.getInstance().config.getStringList("公会升级人数");
+        List<String> list = MainConfig.getGuildUpgradeMembers();
         for(String s : list){
             String[] arr = s.split(":");
             if(arr[0].equals(String.valueOf(config.getInt("公会等级") + 1))) return Integer.parseInt(arr[1]);

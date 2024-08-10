@@ -7,6 +7,7 @@ import RcRPG.Task.BoxTimeTask;
 import RcRPG.Task.PlayerAttrUpdateTask;
 import RcRPG.Task.Tip;
 import RcRPG.command.Commands;
+import RcRPG.config.MainConfig;
 import RcRPG.floatingtext.TextEntity;
 import RcRPG.tips.TipsVariables;
 import cn.nukkit.Server;
@@ -36,14 +37,6 @@ public class RcRPGMain extends PluginBase implements Listener {
 
     public static LangCode serverLangCode;
 
-    public boolean disableChatStyle;
-    public static boolean disablePrefix = false;
-
-    /**
-     * 插件主配置
-     */
-    public Config config;
-
     public Config ornamentConfig;
 
     /**
@@ -55,10 +48,6 @@ public class RcRPGMain extends PluginBase implements Listener {
      * 以百分比显示的属性列表
      */
     public List<String> attrDisplayPercentList;
-    public static boolean money;
-
-    public static boolean point;
-
 
     public static LinkedHashMap<String, Weapon> loadWeapon = new LinkedHashMap<>();
     public static LinkedHashMap<String, Armour> loadArmour = new LinkedHashMap<>();
@@ -86,20 +75,16 @@ public class RcRPGMain extends PluginBase implements Listener {
         Entity.registerEntity("TextEntity", TextEntity.class);
 
         this.createConfigDir();
-        this.saveResource("config.yml", "/config.yml", false);
-        config = new Config(this.getDataFolder() + File.separator + "config.yml");
-
         init();
 
-        if (config.exists("称号.disable") && config.getBoolean("称号.disable")) {
-            disablePrefix = true;
-        }
-        if (config.exists("RcRPG经验.disable") && config.getBoolean("RcRPG经验.disable")) {
+        if (MainConfig.isPrefixSystemDisabled()) {
             Level.enable = false;
         }
 
         this.getServer().getPluginManager().registerEvents(new Events(), this);
-        if (config.exists("底部显示") && !config.getString("底部显示").isEmpty()) {
+
+        // 底部显示不为空时
+        if (!MainConfig.getBottomFormat().isEmpty()) {
             this.getServer().getScheduler().scheduleRepeatingTask(new Tip(this), 20);
         }
         this.getServer().getScheduler().scheduleRepeatingTask(new BoxTimeTask(this), 20);
@@ -111,16 +96,10 @@ public class RcRPGMain extends PluginBase implements Listener {
         this.getServer().getCommandMap().register("rpg", new Commands("rpg"));
 
         if (Server.getInstance().getPluginManager().getPlugin("EconomyAPI") == null) {
-            this.getLogger().warning("检测到未安装核心，将使用默认的经济核心");
-            money = false;
-        } else {
-            money = true;
+            this.getLogger().warning("未检测到 EconomyAPI 插件，将使用默认的经济核心");
         }
         if (Server.getInstance().getPluginManager().getPlugin("playerPoints") == null) {
-            this.getLogger().warning("检测到未安装点券插件，将使用默认的点券核心");
-            point = false;
-        } else {
-            point = true;
+            this.getLogger().warning("未检测到 PlayerPoints 插件，将使用默认的点券核心");
         }
         if (Server.getInstance().getPluginManager().getPlugin("Tips") != null) {
             Api.registerVariables("AyearTipsApi", TipsVariables.class);
@@ -129,6 +108,8 @@ public class RcRPGMain extends PluginBase implements Listener {
     }
 
     public void init() {
+        MainConfig.init();
+
         this.saveResource("OrnamentConfig.yml", "/OrnamentConfig.yml", false);
         ornamentConfig = new Config(this.getDataFolder() + File.separator + "OrnamentConfig.yml");
 
@@ -138,8 +119,7 @@ public class RcRPGMain extends PluginBase implements Listener {
         this.saveResource("SuitPlan.yml", "/SuitPlan.yml", false);
         Suit.init();
 
-        initAttrDisplayPercent();
-        disableChatStyle = !config.exists("底部显示") || config.getString("底部显示").isEmpty();
+        initAttrDisplayPercent();// 初始化以百分比显示的属性列表
 
         this.getLogger().info("开始读取武器信息");
         for (String name : Handle.getDefaultFiles("Weapon")) {
@@ -382,10 +362,10 @@ public class RcRPGMain extends PluginBase implements Listener {
         attrDisplayPercent.add("燃烧概率");
         attrDisplayPercent.add("雷击概率");
         attrDisplayPercent.add("冰冻概率");
-        if (RcRPGMain.getInstance().config.exists("AttrDisplayPercent")) {
-            attrDisplayPercentList = RcRPGMain.getInstance().config.getStringList("AttrDisplayPercent");
-        } else {
+        if (MainConfig.getAttrDisplayPercent().isEmpty()) {
             attrDisplayPercentList = attrDisplayPercent;
+        } else {
+            attrDisplayPercentList = MainConfig.getAttrDisplayPercent();
         }
     }
 

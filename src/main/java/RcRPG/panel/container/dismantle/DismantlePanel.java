@@ -1,4 +1,4 @@
-package RcRPG.panel.dismantle;
+package RcRPG.panel.container.dismantle;
 
 import RcRPG.RPG.Armour;
 import RcRPG.RPG.Weapon;

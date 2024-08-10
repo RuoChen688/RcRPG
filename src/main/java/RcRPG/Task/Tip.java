@@ -5,6 +5,7 @@ import RcRPG.RcRPGMain;
 import RcRPG.RPG.*;
 import RcRPG.Society.Money;
 import RcRPG.Society.Points;
+import RcRPG.config.MainConfig;
 import cn.nukkit.Player;
 import cn.nukkit.item.Item;
 import cn.nukkit.nbt.tag.CompoundTag;
@@ -21,7 +22,7 @@ public class Tip extends PluginTask<RcRPGMain> {
         for (Player player : RcRPGMain.getInstance().getServer().getOnlinePlayers().values()) {
             if(Handle.getPlayerConfig(player.getName()) == null) return;
             if(player.getInventory().getItemInHand().isNull() || player.getInventory().getItemInHand().getNamedTag() == null){
-                String text = RcRPGMain.getInstance().config.getString("底部显示");
+                String text = MainConfig.getBottomFormat();
                 if(text.contains("@name")) text = text.replace("@name", player.getName());
                 if(text.contains("@hp")) text = text.replace("@hp",String.valueOf(player.getHealth()));
                 if(text.contains("@maxhp")) text = text.replace("@maxhp",String.valueOf(player.getMaxHealth()));

@@ -1,15 +1,15 @@
-package RcRPG.panel.forging;
+package RcRPG.panel.container.forging;
 
 import cn.nukkit.Player;
 import cn.nukkit.inventory.InventoryType;
 import cn.nukkit.network.protocol.RemoveEntityPacket;
 import me.iwareq.fakeinventories.FakeInventory;
 
-public class ForgingSubInventory extends FakeInventory {
+public class ForgingInventory extends FakeInventory {
 
     public long id;
 
-    public ForgingSubInventory(String name) {
+    public ForgingInventory(String name) {
         super(InventoryType.CHEST, name);
     }
 

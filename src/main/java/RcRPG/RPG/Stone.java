@@ -104,7 +104,7 @@ public class Stone extends ItemAttr {
 
     public static boolean delStoneConfig(String name){
         if(getStoneConfig(name) != null){
-            File file = new File(RcRPGMain.getInstance().getStoneFile(),"/"+name+".yml");
+            File file = new File(RcRPGMain.getInstance().getStoneFile(), name+".yml");
             file.delete();
             return true;
         }

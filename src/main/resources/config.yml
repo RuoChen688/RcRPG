@@ -5,6 +5,8 @@
 
 RcRPG经验:
   disable: true
+称号:
+  disable: false
 经验增加提示: "你获得了@exp点经验"
 等级增加提示: "你提升了@level等级，达到了@newLevel"
 经验增量: 100
@@ -13,8 +15,6 @@ RcRPG经验:
 金币增加提示: "你获得了@money金币"
 点券增加提示: "你获得了@point点券"
 饰品生效格数: 3
-称号:
-  disable: false
 初始称号: "无称号"
 初始公会: "无公会"
 公会初始人数: 10

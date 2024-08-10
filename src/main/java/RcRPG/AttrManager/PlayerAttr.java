@@ -2,7 +2,8 @@ package RcRPG.AttrManager;
 
 import RcRPG.RPG.*;
 import RcRPG.RcRPGMain;
-import RcRPG.panel.ornament.OrnamentPanel;
+import RcRPG.config.MainConfig;
+import RcRPG.panel.container.ornament.OrnamentPanel;
 import cn.nukkit.Player;
 import cn.nukkit.form.element.Element;
 import cn.nukkit.form.element.ElementLabel;
@@ -101,8 +102,8 @@ public class PlayerAttr extends Manager {
 
     public void update() {
         // 等级加点
-        if (RcRPGMain.getInstance().config.exists("等级增加血量")) {
-            String[] s = RcRPGMain.getInstance().config.getString("等级增加血量").split(":");
+        if (!MainConfig.getHpIncreasePerLevel().isEmpty()) {
+            String[] s = MainConfig.getHpIncreasePerLevel().split(":");
             int lvAddHealth;
             if (Level.enable) {
                 lvAddHealth = Level.getLevel(player) / Integer.parseInt(s[0]) * Integer.parseInt(s[1]);
@@ -169,7 +170,7 @@ public class PlayerAttr extends Manager {
         Map<Integer, Item> map = OrnamentPanel.getPanel(player);
         if (!map.isEmpty()) {
             Map<String, float[]> attr = new HashMap<>();
-            for (int i = 0; i < Math.min(RcRPGMain.getInstance().config.getInt("饰品生效格数"), map.size()); i++) {
+            for (int i = 0; i < Math.min(MainConfig.getOrnamentEffectSlots(), map.size()); i++) {
                 if (!map.get(i).hasCompoundTag()) continue;
                 Ornament ornament = RcRPGMain.loadOrnament.get(map.get(i).getNamedTag().getString("name"));
                 if (ornament == null) continue;

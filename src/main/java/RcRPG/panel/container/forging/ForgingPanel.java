@@ -1,4 +1,4 @@
-package RcRPG.panel.forging;
+package RcRPG.panel.container.forging;
 
 import RcRPG.RPG.Forging.ForgingPaper;
 import RcRPG.RcRPGMain;

@@ -1,4 +1,4 @@
-package RcRPG.window;
+package RcRPG.panel.form;
 
 import RcRPG.RcRPGMain;
 import RcRPG.RPG.Weapon;

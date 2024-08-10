@@ -1,4 +1,4 @@
-package RcRPG.form;
+package RcRPG.panel.form;
 
 import RcRPG.Handle;
 import RcRPG.RcRPGMain;

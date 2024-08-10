@@ -1,7 +1,7 @@
-package RcRPG.window;
+package RcRPG.panel.form;
 
 import RcRPG.RcRPGMain;
-import RcRPG.RPG.Stone;
+import RcRPG.RPG.Armour;
 import cn.nukkit.Player;
 import cn.nukkit.event.Listener;
 import cn.nukkit.form.element.ElementButton;
@@ -10,12 +10,12 @@ import cn.nukkit.form.response.FormResponseSimple;
 import cn.nukkit.form.window.FormWindowSimple;
 import cn.nukkit.lang.LangCode;
 
-public class SendStoneAdminWin implements Listener { //一般实际开发中不在这个类中写监听器
+public class SendArmourAdminWin implements Listener {
 
-    public SendStoneAdminWin(Player player) {
+    public SendArmourAdminWin(Player player) {
         LangCode langCode = player.getLanguageCode();
-        FormWindowSimple form = new FormWindowSimple(RcRPGMain.getI18n().tr(langCode, "rcrpg.manage.window.stone.title"), RcRPGMain.getI18n().tr(langCode, "rcrpg.manage.window.select_config_manage"));
-        for (String key : RcRPGMain.loadStone.keySet()) {
+        FormWindowSimple form = new FormWindowSimple(RcRPGMain.getI18n().tr(langCode, "rcrpg.manage.window.armour.title"), RcRPGMain.getI18n().tr(langCode, "rcrpg.manage.window.select_config_manage"));
+        for (String key : RcRPGMain.loadArmour.keySet()) {
             form.addButton(new ElementButton(key));
         }
         form.addHandler(FormResponseHandler.withoutPlayer(ignored -> {
@@ -24,19 +24,19 @@ public class SendStoneAdminWin implements Listener { //一般实际开发中不�
             }
             FormResponseSimple response = form.getResponse();
             String key = response.getClickedButton().getText();
-            SendStoneOptionsWin(player, key);
+            SendArmourOptionsWin(player, key);
         }));
         player.showFormWindow(form);
     }
 
-    public void SendStoneOptionsWin(Player player, String stoneKey) {
-        Stone stone = RcRPGMain.loadStone.get(stoneKey);
+    public void SendArmourOptionsWin(Player player, String armourKey) {
+        Armour armour = RcRPGMain.loadArmour.get(armourKey);
 
-        FormWindowSimple form = new FormWindowSimple("RcRPG管理 - " + stoneKey,
-                "显示名称: " + stone.getShowName() +
-                        "\n§r标签: " + stone.getLabel() +
-                        "\n§r物品ID: " + stone.getConfig().get("物品ID") +
-                        "\n§r介绍: " + stone.getMessage());
+        FormWindowSimple form = new FormWindowSimple("RcRPG管理 - " + armourKey,
+                "显示名称: " + armour.getShowName() +
+                        "\n§r标签: " + armour.getLabel() +
+                        "\n§r物品ID: " + armour.getConfig().get("物品ID") +
+                        "\n§r介绍: " + armour.getMessage());
         form.addButton(new ElementButton("获取"));
         form.addButton(new ElementButton("修改 (未完成)"));
         form.addButton(new ElementButton("返回"));
@@ -48,7 +48,7 @@ public class SendStoneAdminWin implements Listener { //一般实际开发中不�
             int key = response.getClickedButtonId();
             switch (key) {
                 case 0 -> {
-                    if (Stone.giveStone(player, stoneKey, 1)) {
+                    if (Armour.giveArmour(player, armourKey, 1)) {
                         player.sendMessage("给予成功");
                     } else {
                         player.sendMessage("给予失败");
@@ -58,7 +58,7 @@ public class SendStoneAdminWin implements Listener { //一般实际开发中不�
                     player.sendMessage("还没完成这个");
                 }
                 case 2 -> {
-                    new SendStoneAdminWin(player);
+                    new SendArmourAdminWin(player);
                 }
             }
         }));

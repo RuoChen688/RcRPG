@@ -5,7 +5,8 @@ import RcRPG.AttrManager.LittleMonsterAttr;
 import RcRPG.AttrManager.Manager;
 import RcRPG.AttrManager.PlayerAttr;
 import RcRPG.AttrManager.RcNPCAttr;
-import RcRPG.form.guildForm;
+import RcRPG.config.MainConfig;
+import RcRPG.panel.form.guildForm;
 import RcRPG.RPG.*;
 import RcRPG.Society.Money;
 import RcRPG.Society.Prefix;
@@ -46,6 +47,8 @@ public class Events implements Listener {
 
     public static LinkedHashMap<Player,String> playerShop = new LinkedHashMap<>();
 
+    public static final boolean hasEconomyAPI = Server.getInstance().getPluginManager().getPlugin("EconomyAPI") != null;
+    public static final boolean hasPlayerPoints = Server.getInstance().getPluginManager().getPlugin("playerPoints") != null;
     public static final boolean hasHealthAPI = Server.getInstance().getPluginManager().getPlugin("HealthAPI") != null;
     public static final boolean hasRsNPC = Server.getInstance().getPluginManager().getPlugin("RsNPC") != null;
     public static final boolean hasLittleMonster = Server.getInstance().getPluginManager().getPlugin("LittleMonster") != null;
@@ -121,9 +124,11 @@ public class Events implements Listener {
                     if (Handle.getGuilds().contains(response10.getInputResponse(1))) {
                         guildForm.create_failed(player);
                     } else {
-                        if (Money.getMoney(player) < RcRPGMain.getInstance().config.getInt("公会创建初始资金")) {
+
+                        if (Money.getMoney(player) < MainConfig.getInitialGuildCreationFunds()) {
                             guildForm.create_failed(player);
                         } else {
+                            Money.delMoney(player, MainConfig.getInitialGuildCreationFunds());
                             Guild.addGuild(player, response10.getInputResponse(1));
                             guildForm.make_one(player);
                         }
@@ -170,14 +175,19 @@ public class Events implements Listener {
                 }
                 case 20008 -> {
                     FormResponseSimple response16 = (FormResponseSimple) event.getResponse();
-                    if (response16.getClickedButtonId() == 1) guildForm.make_one(player);
-                    else Guild.dismissGuild(player);
+                    if (response16.getClickedButtonId() == 1) {
+                        guildForm.make_one(player);
+                    } else {
+                        Guild.dismissGuild(player);
+                    }
                 }
                 case 20011 -> {
                     FormResponseSimple response17 = (FormResponseSimple) event.getResponse();
-                    if (response17.getClickedButtonId() == 0)
+                    if (response17.getClickedButtonId() == 0) {
                         Guild.kickGuild(player, response17.getClickedButton().getText());
-                    else guildForm.make_member(player);
+                    } else {
+                        guildForm.make_member(player);
+                    }
                 }
                 case 20012 -> {
                     FormResponseSimple response18 = (FormResponseSimple) event.getResponse();
@@ -569,12 +579,12 @@ public class Events implements Listener {
 
     @EventHandler
     public void chatEvent(PlayerChatEvent event){
-        if (RcRPGMain.getInstance().disableChatStyle) return;
+        if (MainConfig.getChatFormat().isEmpty()) return;
         Player player = event.getPlayer();
         String name = player.getName();
         String message = event.getMessage();
         event.setCancelled();
-        String text = RcRPGMain.getInstance().config.getString("聊天显示");
+        String text = MainConfig.getChatFormat();
         if(text.contains("@name")) text = text.replace("@name", player.getName());
         if(text.contains("@hp")) text = text.replace("@hp",String.valueOf(player.getHealth()));
         if(text.contains("@maxhp")) text = text.replace("@maxhp",String.valueOf(player.getMaxHealth()));
@@ -599,15 +609,15 @@ public class Events implements Listener {
             RcRPGMain.getInstance().saveResource("Players/Player.yml","/Players/"+name+".yml",false);
             Config config = new Config(RcRPGMain.getInstance().getPlayerFile()+"/"+name+".yml");
             config.set("名称",name);
-            config.set("公会", RcRPGMain.getInstance().config.getString("初始公会"));
-            config.set("称号", RcRPGMain.getInstance().config.getString("初始称号"));
+            config.set("公会", MainConfig.getInitialGuild());
+            config.set("称号", MainConfig.getInitialPrefix());
             ArrayList<String> list = (ArrayList<String>) config.getStringList("称号列表");
-            list.add(RcRPGMain.getInstance().config.getString("初始称号"));
+            list.add(MainConfig.getInitialPrefix());
             config.set("称号列表",list);
             config.save();
         }
-        if (!RcRPGMain.getInstance().config.getString("顶部显示", "").isEmpty()) {
-            String text = RcRPGMain.getInstance().config.getString("顶部显示");
+        if (!MainConfig.getTopFormat().isEmpty()) {
+            String text = MainConfig.getTopFormat();
             if (text.contains("@name")) text = text.replace("@name", player.getName());
             if (text.contains("@hp")) text = text.replace("@hp", String.valueOf(player.getHealth()));
             if (text.contains("@maxhp")) text = text.replace("@maxhp", String.valueOf(player.getMaxHealth()));

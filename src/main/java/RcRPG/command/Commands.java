@@ -1,20 +1,18 @@
 package RcRPG.command;
 
 import RcRPG.AttrManager.PlayerAttr;
+import RcRPG.RPG.*;
 import RcRPG.RPG.Forging.ForgingPaper;
 import RcRPG.RPG.Forging.ForgingStone;
-import RcRPG.form.guildForm;
-import RcRPG.form.inlayForm;
-import RcRPG.form.prefixForm;
-import RcRPG.RPG.*;
 import RcRPG.RcRPGMain;
 import RcRPG.Society.Money;
 import RcRPG.Society.Points;
 import RcRPG.Society.Prefix;
-import RcRPG.panel.dismantle.DismantlePanel;
-import RcRPG.panel.forging.ForgingPanel;
-import RcRPG.panel.ornament.OrnamentPanel;
-import RcRPG.window.*;
+import RcRPG.config.MainConfig;
+import RcRPG.panel.container.dismantle.DismantlePanel;
+import RcRPG.panel.container.forging.ForgingPanel;
+import RcRPG.panel.container.ornament.OrnamentPanel;
+import RcRPG.panel.form.*;
 import cn.nukkit.Player;
 import cn.nukkit.Server;
 import cn.nukkit.command.CommandSender;
@@ -29,7 +27,6 @@ import cn.nukkit.utils.TextFormat;
 
 import java.util.ArrayList;
 
-import static RcRPG.RcRPGMain.disablePrefix;
 import static RcRPG.RcRPGMain.serverLangCode;
 
 public class Commands extends PluginCommand<RcRPGMain> {
@@ -86,7 +83,7 @@ public class Commands extends PluginCommand<RcRPGMain> {
         });
         this.addCommandParameters("exp", new CommandParameter[]{
                 CommandParameter.newEnum("exp", new String[]{"exp"}),
-                CommandParameter.newEnum("give", new String[]{"give"}),
+                CommandParameter.newEnum("add", new String[]{"add"}),
                 CommandParameter.newType("playerName", CommandParamType.STRING),
                 CommandParameter.newType("Exp", CommandParamType.INT)
         });
@@ -346,9 +343,9 @@ public class Commands extends PluginCommand<RcRPGMain> {
                 }
                 switch (args[1]) {
                     case "help" -> {
-                        sender.sendMessage("/rpg exp give [Player] [Exp] 给予玩家经验");
+                        sender.sendMessage("/rpg exp add [Player] [Exp] 给予玩家经验");
                     }
-                    case "give" -> {
+                    case "add" -> {
                         if (args.length < 4) {
                             sender.sendMessage(TextFormat.RED + "缺少第 4 个参数");
                             return false;
@@ -366,53 +363,44 @@ public class Commands extends PluginCommand<RcRPGMain> {
                 sender.sendMessage(TextFormat.RED + "错误的命令，请使用：/rpg help");
                 return false;
             case "money": {
-                if (!sender.isOp()) {
-                    sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.message.noPermission"));
-                    return false;
-                }
-
-                switch (args[1]) {
-                    case "my" -> sender.sendMessage(String.valueOf(Money.getMoney((Player) sender)));
-                    default -> {
-                        sender.sendMessage("/rpg money add [Player] [Money] 给予玩家金币");
-                        sender.sendMessage("/rpg money del [Player] [Money] 扣除玩家金币");
-                        sender.sendMessage("/rpg money my 查看自身金币");
-                    }
-                }
-
-                if (args.length < 3) {
-                    sender.sendMessage(TextFormat.RED + "缺少第 3 个参数");
-                    return false;
-                }
-                Player player = api.getServer().getPlayer(args[2]);
-                if (player == null) {
-                    sender.sendMessage(i18n.get(langCode, "rcrpg.commands.message.noTarget"));
-                    return false;
-                }
-                if (args.length < 4) {
-                    sender.sendMessage(TextFormat.RED + "缺少第 4 个参数");
-                    return false;
-                }
-                int money = Integer.parseInt(args[3]);
-
                 switch (args[1]) {
                     case "help" -> {
-                        sender.sendMessage("/rpg money add [Player] [Money] 给予玩家金币");
-                        sender.sendMessage("/rpg money del [Player] [Money] 扣除玩家金币");
+                        sender.sendMessage("/rpg money add <Player> [Money] 给予玩家金币");
+                        sender.sendMessage("/rpg money del <Player> [Money] 扣除玩家金币");
                         sender.sendMessage("/rpg money my 查看自身金币");
                     }
-                    case "add" -> {
-                        if (Money.addMoney(player, money)) {
-                            if (sender.isPlayer()) sender.sendMessage("给予成功");
-                        } else {
-                            if (sender.isPlayer()) sender.sendMessage("给予失败");
+                    case "add", "del" -> {
+                        if (!sender.isOp()) {
+                            sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.message.noPermission"));
+                            return false;
                         }
-                    }
-                    case "del" -> {
-                        if (Money.delMoney(player, money)) {
-                            if (sender.isPlayer()) sender.sendMessage("扣除成功");
+
+                        if (args.length < 3) {
+                            sender.sendMessage(TextFormat.RED + "缺少第 3 个参数");
+                            return false;
+                        }
+                        Player player = api.getServer().getPlayer(args[2]);
+                        if (player == null) {
+                            sender.sendMessage(i18n.get(langCode, "rcrpg.commands.message.noTarget"));
+                            return false;
+                        }
+                        if (args.length < 4) {
+                            sender.sendMessage(TextFormat.RED + "缺少第 4 个参数");
+                            return false;
+                        }
+                        int money = Integer.parseInt(args[3]);
+                        if (args[1].equals("add")) {
+                            if (Money.addMoney(player, money)) {
+                                if (sender.isPlayer()) sender.sendMessage("给予成功");
+                            } else {
+                                if (sender.isPlayer()) sender.sendMessage("给予失败");
+                            }
                         } else {
-                            if (sender.isPlayer()) sender.sendMessage("扣除失败");
+                            if (Money.delMoney(player, money)) {
+                                if (sender.isPlayer()) sender.sendMessage("扣除成功");
+                            } else {
+                                if (sender.isPlayer()) sender.sendMessage("扣除失败");
+                            }
                         }
                     }
                     case "my" -> sender.sendMessage(String.valueOf(Money.getMoney((Player) sender)));
@@ -420,44 +408,45 @@ public class Commands extends PluginCommand<RcRPGMain> {
                 break;
             }
             case "point": {
-                if (!sender.isOp()) {
-                    sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.message.noPermission"));
-                    return false;
-                }
-                if (args.length < 2) {
-                    sender.sendMessage(TextFormat.RED + "缺少第 2 个参数");
-                    return false;
-                }
-                Player player = null;
-                if (args.length > 2) {
-                    player = api.getServer().getPlayer(args[2]);
-                    if (player == null) {
-                        sender.sendMessage(i18n.get(langCode, "rcrpg.commands.message.noTarget"));
-                        return false;
-                    }
-                }
-                int point = 0;
-                if (args.length > 3) {
-                    point = Integer.parseInt(args[3]);
-                }
                 switch (args[1]) {
                     case "help" -> {
-                        sender.sendMessage("/rpg point add [Player] [Point] 给予玩家点券");
-                        sender.sendMessage("/rpg point del [Player] [Point] 扣除玩家点券");
+                        sender.sendMessage("/rpg point add <Player> [Point] 给予玩家点券");
+                        sender.sendMessage("/rpg point del <Player> [Point] 扣除玩家点券");
                         sender.sendMessage("/rpg point my 查看自身点券");
                     }
-                    case "add" -> {
-                        if (Points.addPoint(player, point)) {
-                            if (sender.isPlayer()) sender.sendMessage("给予成功");
-                        } else {
-                            if (sender.isPlayer()) sender.sendMessage("给予失败");
+                    case "add", "del" -> {
+                        if (!sender.isOp()) {
+                            sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.message.noPermission"));
+                            return false;
                         }
-                    }
-                    case "del" -> {
-                        if (Points.delPoint(player, point)) {
-                            if (sender.isPlayer()) sender.sendMessage("扣除成功");
+                        if (args.length < 2) {
+                            sender.sendMessage(TextFormat.RED + "缺少第 2 个参数");
+                            return false;
+                        }
+                        Player player = null;
+                        if (args.length > 2) {
+                            player = api.getServer().getPlayer(args[2]);
+                            if (player == null) {
+                                sender.sendMessage(i18n.get(langCode, "rcrpg.commands.message.noTarget"));
+                                return false;
+                            }
+                        }
+                        int point = 0;
+                        if (args.length > 3) {
+                            point = Integer.parseInt(args[3]);
+                        }
+                        if (args[1].equals("add")) {
+                            if (Points.addPoint(player, point)) {
+                                if (sender.isPlayer()) sender.sendMessage("给予成功");
+                            } else {
+                                if (sender.isPlayer()) sender.sendMessage("给予失败");
+                            }
                         } else {
-                            if (sender.isPlayer()) sender.sendMessage("扣除失败");
+                            if (Points.delPoint(player, point)) {
+                                if (sender.isPlayer()) sender.sendMessage("扣除成功");
+                            } else {
+                                if (sender.isPlayer()) sender.sendMessage("扣除失败");
+                            }
                         }
                     }
                     case "my" -> sender.sendMessage(String.valueOf(Points.getPoint((Player) sender)));
@@ -473,7 +462,7 @@ public class Commands extends PluginCommand<RcRPGMain> {
                     sender.sendMessage(TextFormat.RED + "缺少第 2 个参数");
                     return false;
                 }
-                if (disablePrefix) {
+                if (MainConfig.isPrefixSystemDisabled()) {
                     sender.sendMessage(TextFormat.RED + "RcRPG 称号已被禁用");
                     return false;
                 }

@@ -1,6 +1,7 @@
-package RcRPG.panel.ornament;
+package RcRPG.panel.container.ornament;
 
 import RcRPG.RcRPGMain;
+import RcRPG.config.MainConfig;
 import cn.nukkit.Player;
 import cn.nukkit.inventory.InventoryType;
 import cn.nukkit.item.Item;
@@ -37,7 +38,7 @@ public class OrnamentInventory extends FakeInventory {
         who.dataPacket(pk);
         super.onClose(who);
         ArrayList<String> list = new ArrayList<>();
-        for (int i = 0; i < RcRPGMain.getInstance().config.getInt("饰品生效格数"); i++) {
+        for (int i = 0; i < MainConfig.getOrnamentEffectSlots(); i++) {
             Item item = this.getItem(i);
             if (item.isNull()) {
                 list.add(i, "");

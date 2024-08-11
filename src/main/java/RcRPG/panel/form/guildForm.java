@@ -23,8 +23,16 @@ public class guildForm {
         } else {
             String guild = Guild.getGuild(player);
             Config guildConfig = Guild.getGuildConfig(guild);
-            String text = "公会名称: " + guild + "\n公会等级: " + guildConfig.getString("公会等级") + "\n公会资金: " + Guild.getMoney(player) + "\n公会人数: " + Guild.getSize(guild) + "/" + guildConfig.get("公会人数") + "\n我的职务: " + Guild.getStatus(player);
-            FormWindowSimple form = new FormWindowSimple("公会系统", text);
+
+            String[] parts = new String[]{
+                    "公会名称: " + guild,
+                    "公会等级: " + guildConfig.getString("公会等级"),
+                    "公会资金: " + Guild.getMoney(player),
+                    "公会人数: " + Guild.getSize(guild) + "/" + guildConfig.get("公会人数"),
+                    "我的职务: " + Guild.getStatus(player)
+            };
+            FormWindowSimple form = new FormWindowSimple("公会系统", String.join("\n", parts));
+
             form.addButton(new ElementButton("公会贡献"));
             form.addButton(new ElementButton("公会成员"));
             form.addButton(new ElementButton("传送至公会基地"));
@@ -98,12 +106,12 @@ public class guildForm {
     }
 
     public static void make_app(Player player) {
-        String guild = Guild.getGuild(player);
+        String guildName = Guild.getGuild(player);
         FormWindowSimple form = new FormWindowSimple("公会系统", "");
-        if (Guild.getApp(guild).isEmpty()) {
+        if (Guild.getAppList(guildName).isEmpty()) {
             form.setContent("当前没有人要加入公会哦");
         } else {
-            for (String app : Guild.getApp(guild)) {
+            for (String app : Guild.getAppList(guildName)) {
                 form.addButton(new ElementButton(app));
             }
         }

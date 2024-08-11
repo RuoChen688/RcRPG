@@ -223,6 +223,23 @@ public class Commands extends PluginCommand<RcRPGMain> {
             case "help":
                 sendHelp(sender, langCode);
                 break;
+            case "test": {
+//                String guildName = "测试";
+//                String name = "Mcayear";
+//                Config playerConfig = Handle.getPlayerConfig(name);
+//                playerConfig.set("公会", guildName);
+//                playerConfig.save();
+//
+//                Config guildConfig = Guild.getGuildConfig(guildName);
+//                ArrayList<String> memberList = (ArrayList<String>) guildConfig.getStringList("成员");
+//                if (!memberList.contains(name)) memberList.add(name);
+//                guildConfig.set("成员", memberList);
+//                ArrayList<String> appList = (ArrayList<String>) guildConfig.getStringList("申请者");
+//                appList.remove(name);
+//                guildConfig.set("申请者", appList);
+//                guildConfig.save();
+                break;
+            }
             case "admin": {
                 if (!sender.isOp()) {
                     sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.message.noPermission"));

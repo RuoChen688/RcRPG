@@ -30,7 +30,7 @@ public class MainConfig {
     @Getter
     public static int maxLevel;
     @Getter
-    public static String hpIncreasePerLevel = "";
+    public static int[] hpIncreasePerLevel = new int[]{};
     @Getter
     public static String moneyGainMessage = "";
     @Getter
@@ -72,7 +72,7 @@ public class MainConfig {
         levelUpMessage = config.getString("等级增加提示");
         expIncrement = config.getInt("经验增量");
         maxLevel = config.getInt("最大等级");
-        hpIncreasePerLevel = config.getString("等级增加血量");
+        readHpIncreasePerLevel();
         moneyGainMessage = config.getString("金币增加提示");
         pointGainMessage = config.getString("点券增加提示");
         ornamentEffectSlots = config.getInt("饰品生效格数");
@@ -84,6 +84,15 @@ public class MainConfig {
         guildUpgradeMembers = config.getStringList("公会升级人数");
         readAttrDisplayPercent();// 初始化以百分比显示的属性列表
 
+    }
+
+    public static void readHpIncreasePerLevel() {
+        String[] cfgValue = config.getString("等级增加血量", "10:0").split(":");
+        if (cfgValue.length < 2 || cfgValue[1].isEmpty()) {
+            hpIncreasePerLevel = new int[]{};
+        } else {
+            hpIncreasePerLevel = new int[]{Integer.parseInt(cfgValue[0]), Integer.parseInt(cfgValue[1])};
+        }
     }
 
     public static void readAttrDisplayPercent() {

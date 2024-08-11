@@ -102,13 +102,13 @@ public class PlayerAttr extends Manager {
 
     public void update() {
         // 等级加点
-        if (!MainConfig.getHpIncreasePerLevel().isEmpty()) {
-            String[] s = MainConfig.getHpIncreasePerLevel().split(":");
+        if (MainConfig.getHpIncreasePerLevel().length > 0) {
+            int[] increase = MainConfig.getHpIncreasePerLevel();
             int lvAddHealth;
-            if (Level.enable) {
-                lvAddHealth = Level.getLevel(player) / Integer.parseInt(s[0]) * Integer.parseInt(s[1]);
-            } else {
-                lvAddHealth = player.getExperienceLevel() / Integer.parseInt(s[0]) * Integer.parseInt(s[1]);
+            if (Level.enable) {// RcRPG 经验
+                lvAddHealth = Level.getLevel(player) / increase[0] * increase[1];
+            } else {// Vanilla 经验
+                lvAddHealth = player.getExperienceLevel() / increase[0] * increase[1];
             }
             if (lvAddHealth > 0) {
                 PlayerAttr pAttr = PlayerAttr.getPlayerAttr(player);

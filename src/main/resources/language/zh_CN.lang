@@ -1,3 +1,5 @@
+rcrpg.missing.plugin=未检测到 {%0} 插件，插件无法启动！下载地址：{%1}
+
 rcrpg.commands.message.noPermission=§c权限不足
 rcrpg.commands.message.noTarget=§c没有匹配的目标
 rcrpg.commands.reloaded=§a配置文件重载成功

@@ -5,13 +5,13 @@ import RcRPG.AttrManager.LittleMonsterAttr;
 import RcRPG.AttrManager.Manager;
 import RcRPG.AttrManager.PlayerAttr;
 import RcRPG.AttrManager.RcNPCAttr;
-import RcRPG.config.MainConfig;
-import RcRPG.panel.form.guildForm;
 import RcRPG.RPG.*;
 import RcRPG.Society.Money;
 import RcRPG.Society.Prefix;
+import RcRPG.config.MainConfig;
 import RcRPG.floatingtext.TextEntity;
 import RcRPG.guild.Guild;
+import RcRPG.panel.form.guildForm;
 import cn.nukkit.Player;
 import cn.nukkit.Server;
 import cn.nukkit.block.Block;
@@ -33,19 +33,18 @@ import cn.nukkit.utils.Config;
 import com.smallaswater.littlemonster.entity.IEntity;
 import com.smallaswater.npc.entitys.EntityRsNPC;
 import healthapi.PlayerHealth;
+import org.sobadfish.displaydamage.DamageApi;
+import org.sobadfish.displaydamage.dto.DamageTextDTO;
 
 import java.io.File;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedHashMap;
 import java.util.List;
 
 import static RcRPG.Handle.getProbabilisticResults;
 
 public class Events implements Listener {
-
-    public static LinkedHashMap<Player,String> playerShop = new LinkedHashMap<>();
 
     public static final boolean hasEconomyAPI = Server.getInstance().getPluginManager().getPlugin("EconomyAPI") != null;
     public static final boolean hasPlayerPoints = Server.getInstance().getPluginManager().getPlugin("playerPoints") != null;
@@ -54,6 +53,8 @@ public class Events implements Listener {
     public static final boolean hasLittleMonster = Server.getInstance().getPluginManager().getPlugin("LittleMonster") != null;
     public static final boolean hasRcEntity = Server.getInstance().getPluginManager().getPlugin("RcEntity") != null;
     public static final boolean hasRcNPC = Server.getInstance().getPluginManager().getPlugin("RcNPC") != null;
+    public static final boolean hasDisplayDamage = Server.getInstance().getPluginManager().getPlugin("DisplayDamage") != null;
+
     public static final List<String> ProjectileWeapons = Arrays.asList("minecraft:bow", "minecraft:crossbow", "minecraft:trident");
 
     public Events(){
@@ -512,6 +513,7 @@ public class Events implements Listener {
                 if (damagerIsPlayer) {
                     ((Player) damager).sendMessage(RcRPGMain.getI18n().tr(((Player) damager).getLanguageCode(), "rcrpg.events.life_steal_message", lifeSteal));
                 }
+                if (hasDisplayDamage) DamageApi.displayAsParticle(new DamageTextDTO(finalDamage, wounded, "damage:ph"));
             }
         }
 
@@ -531,6 +533,7 @@ public class Events implements Listener {
             Damage.onDamage((Player) damager, wounded);
 
             if (crtDamage > 0) {
+                if (hasDisplayDamage) DamageApi.displayAsParticle(new DamageTextDTO(finalDamage, wounded, "damage:ed"));
                 ((Player) damager).sendMessage(RcRPGMain.getI18n().tr(((Player) damager).getLanguageCode(), "rcrpg.events.critical_damage_message", woundedName, crtDamage));
             }
 
@@ -551,7 +554,11 @@ public class Events implements Listener {
             }
 
             // 伤害 浮空字
-            TextEntity.send(wounded, "§c-"+finalDamage);
+            if (hasDisplayDamage) {
+                DamageApi.displayAsParticle(new DamageTextDTO(finalDamage, wounded, "damage:epd"));
+            } else {
+                TextEntity.send(wounded, "§c-" + finalDamage);
+            }
         }
     }
     @EventHandler

@@ -6,7 +6,7 @@
 
     <groupId>RcRPG.RcRPGMain</groupId>
     <artifactId>RcRPG</artifactId>
-    <version>1.1.0-MOT</version>
+    <version>1.1.1-MOT</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -165,6 +165,14 @@
             <version>1.1.5</version>
             <scope>system</scope>
             <systemPath>${pom.basedir}/lib/FakeInventories-1.1.5.jar</systemPath>
+        </dependency>
+
+        <dependency>
+            <groupId>org.sobadfish.displaydamage.PluginMain</groupId>
+            <artifactId>DisplayDamage</artifactId>
+            <version>1.0.3</version>
+            <scope>system</scope>
+            <systemPath>${pom.basedir}/lib/DisplayDamage_v1.0.3-clean.jar</systemPath>
         </dependency>
 
         <dependency>

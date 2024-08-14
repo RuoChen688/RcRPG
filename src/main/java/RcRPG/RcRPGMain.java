@@ -66,8 +66,8 @@ public class RcRPGMain extends PluginBase implements Listener {
 
     public void onEnable() {
         if (Server.getInstance().getPluginManager().getPlugin("FakeInventories") == null) {
-            this.getLogger().error("未检测到 FakeInventories 插件，插件无法启动");
-            throw new RuntimeException("前置插件 FakeInventories 下载地址：https://github.com/JkqzDev/FakeInventories-MOT/releases");
+            this.getLogger().error(i18n.tr(serverLangCode, "rcrpg.missing.plugin", "FakeInventories", "https://github.com/JkqzDev/FakeInventories-MOT/releases"));
+            throw new RuntimeException("Missing required plugin FakeInventories!");
         }
 
         Entity.registerEntity("TextEntity", TextEntity.class);
@@ -100,9 +100,9 @@ public class RcRPGMain extends PluginBase implements Listener {
             this.getLogger().warning("未检测到 PlayerPoints 插件，将使用默认的点券核心");
         }
         if (Server.getInstance().getPluginManager().getPlugin("Tips") != null) {
-            Api.registerVariables("AyearTipsApi", TipsVariables.class);
+            Api.registerVariables("RcRPGTipsApi", TipsVariables.class);
         }
-        this.getLogger().info("插件加载成功，作者：若尘");
+        this.getLogger().info("插件加载成功，作者：若尘、Mcayear");
     }
 
     public void init() {

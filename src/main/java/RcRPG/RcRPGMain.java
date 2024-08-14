@@ -75,7 +75,7 @@ public class RcRPGMain extends PluginBase implements Listener {
         this.createConfigDir();
         init();
 
-        if (MainConfig.isPrefixSystemDisabled()) {
+        if (MainConfig.isExpSystemDisabled()) {
             Level.enable = false;
         }
 

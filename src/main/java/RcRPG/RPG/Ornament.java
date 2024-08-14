@@ -88,12 +88,11 @@ public class Ornament extends ItemAttr {
             ornament.setLoreList(new ArrayList<>(config.getStringList("显示")));
 
             if (config.exists("套装")) {
-                String suitStr = config.getString("套装", "");
                 List<String> suitList;
-                if (suitStr.isEmpty()) {
+                if (config.isList("套装")) {
                     suitList = config.getStringList("套装");
                 } else {
-                    suitList = new ArrayList<>(Arrays.asList(suitStr.split(",")));
+                    suitList = new ArrayList<>(Arrays.asList(config.getString("套装", "").split(",")));
                 }
                 ornament.setSuit(suitList);
             }

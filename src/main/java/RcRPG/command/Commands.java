@@ -370,10 +370,13 @@ public class Commands extends PluginCommand<RcRPGMain> {
                         Player player = Server.getInstance().getPlayer(args[2]);
                         if (player == null) return false;
                         int expValue = Integer.parseInt(args[3]);
-                        if (Level.addExp(player, expValue)) {
-                            if (sender.isPlayer()) sender.sendMessage("给予成功");
-                        } else {
-                            if (sender.isPlayer()) sender.sendMessage("给予失败");
+                        if (sender.isPlayer()) {
+                            if (Level.addExp(player, expValue)) {
+                                sender.sendMessage("给予成功");
+                            } else {
+                                sender.sendMessage("给予失败");
+                            }
+                            return true;
                         }
                     }
                 }

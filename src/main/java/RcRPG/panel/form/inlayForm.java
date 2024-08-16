@@ -1,16 +1,14 @@
 package RcRPG.panel.form;
 
 import RcRPG.Handle;
-import RcRPG.RcRPGMain;
 import RcRPG.RPG.Armour;
 import RcRPG.RPG.Stone;
 import RcRPG.RPG.Weapon;
+import RcRPG.RcRPGMain;
 import cn.nukkit.Player;
 import cn.nukkit.form.element.ElementButton;
 import cn.nukkit.form.element.ElementDropdown;
 import cn.nukkit.form.handler.FormResponseHandler;
-import cn.nukkit.form.response.FormResponseCustom;
-import cn.nukkit.form.response.FormResponseData;
 import cn.nukkit.form.response.FormResponseSimple;
 import cn.nukkit.form.window.FormWindowCustom;
 import cn.nukkit.form.window.FormWindowSimple;
@@ -21,9 +19,12 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.stream.Collectors;
 
+import static RcRPG.RcRPGMain.i18n;
+
 public class inlayForm {
-    private static final String NO_STONE = "无";
-    private static final String SUCCESS_MESSAGE = "宝石操作成功！";
+    private final Player player;
+    private final String NO_STONE;
+    private final String SUCCESS_MESSAGE;
     private Stone beforeStone;
     private int beforeClick;
     private Item handItem = null;
@@ -31,15 +32,18 @@ public class inlayForm {
     private Armour armourItem = null;
     private LinkedList<Stone> originStones = new LinkedList<>();
 
-    public void makeInlayForm(Player player, Item item) {
+    public inlayForm(Player player) {
+        this.player = player;
+        this.NO_STONE = i18n.tr(player.getLanguageCode(), "rcrpg.window.inlay.no_stone");
+        this.SUCCESS_MESSAGE = i18n.tr(player.getLanguageCode(), "rcrpg.window.inlay.success_message");
+    }
+
+    public void makeInlayForm(Item item) {
         handItem = item;
-        //Object state;
         if (Weapon.isWeapon(item)) {
             weaponItem = RcRPGMain.loadWeapon.get(item.getNamedTag().getString("name"));
-            //state = weaponItem;
         } else if (Armour.isArmour(item)) {
             armourItem = RcRPGMain.loadArmour.get(item.getNamedTag().getString("name"));
-            //state = armourItem;
         } else {
             return;
         }
@@ -52,7 +56,9 @@ public class inlayForm {
 
     private FormWindowSimple getStateWindow() {
         String label = "";
+        // 镶嵌在装备上的宝石列表
         LinkedList<Stone> stones = new LinkedList<>();
+        // 装备可镶嵌的宝石类型列表
         ArrayList<String> stoneSlots = new ArrayList<>();
         if (weaponItem != null) {
             stones = Weapon.getStones(handItem);
@@ -76,8 +82,8 @@ public class inlayForm {
         }
         this.originStones = stones;
         return new FormWindowSimple(
-                "§f"+label + "宝石列表",
-                stoneCount > 0 ? "装备拥有 " + stoneCount + " 个宝石槽：\n"+slotShow : "本装备没有宝石槽",
+                i18n.tr(player.getLanguageCode(), "rcrpg.window.inlay.title", label),
+                stoneCount > 0 ? i18n.tr(player.getLanguageCode(), "rcrpg.window.inlay.title.hasSlot", stoneCount, slotShow).replace("\\n", "\n") : i18n.tr(player.getLanguageCode(), "rcrpg.window.inlay.title.notSlot"),
                 stones.stream()
                         .map(stone -> new ElementButton(stone == null ? NO_STONE : stone.getShowName()))
                         .collect(Collectors.toList()));
@@ -111,7 +117,11 @@ public class inlayForm {
 
         FormWindowCustom form_ = getStoneWindow(yamlName, playerStones);
         form_.addHandler(FormResponseHandler.withoutPlayer(ignored -> {
-            if (form_.wasClosed()) return;
+            if (form_.wasClosed()) {
+                // 若玩家点了 X 则返回上一级表单
+                makeInlayForm(player.getInventory().getItemInHand());
+                return;
+            }
             handleStoneWindowResponse(form_, player);
         }));
         player.showFormWindow(form_);
@@ -124,6 +134,7 @@ public class inlayForm {
     }
 
     private void handleStoneWindowResponse(FormWindowCustom form, Player player) {
+        // 装备 yamlName 名字
         String itemName = "";
         LinkedList<Stone> stones = new LinkedList<>();
         if (weaponItem != null) {
@@ -134,34 +145,33 @@ public class inlayForm {
             itemName = armourItem.getName();
         }
 
-        FormResponseCustom response = form.getResponse();
-        FormResponseData responseData = response.getDropdownResponse(0);
-        // 选择的是 yamlName 还是 NO_STONE
-        String responseContent = responseData.getElementContent();
+        // 选择的宝石是 yamlName 还是 NO_STONE
+        String selectedStoneName = form.getResponse().getDropdownResponse(0).getElementContent();
 
+        // 检查手持装备是否变动
         Item item = player.getInventory().getItemInHand();
         if (item.getNamedTag() == null) return;
         if (!itemName.equals(item.getNamedTag().getString("name"))) return;
-        player.sendMessage(SUCCESS_MESSAGE);
 
-        int clickedButtonId = beforeClick;
-        Stone newStone = NO_STONE.equals(responseContent) ? null : Handle.getStoneViaName(responseContent);
-
-        for (int i = 0; i < stones.size(); i++) {
-            if (i == clickedButtonId) {
-                if (newStone != null) {
-                    stones.set(i, newStone);
-                } else {
-                    stones.remove(i);
-                }
-                break;
-            }
+        // 先发送成功提示
+        if (NO_STONE.equals(selectedStoneName) && stones.get(beforeClick) == null) {
+            // ignored
+        } else {
+            player.sendMessage(SUCCESS_MESSAGE);
         }
 
+        Stone newStone = NO_STONE.equals(selectedStoneName) ? null : Handle.getStoneViaName(selectedStoneName);
+
+        // 扣除新宝石
         if (newStone != null) {
-            Handle.removeStoneViaName(player, responseContent);
+            stones.set(beforeClick, newStone);
+            Handle.removeStoneViaName(player, selectedStoneName);
+        } else {
+            stones.set(beforeClick, null);
         }
-        if (beforeStone != null) {// 过去的宝石
+
+        // 返还原有的宝石
+        if (beforeStone != null) {
             Stone.giveStone(player, beforeStone.getName(), 1);
         }
 

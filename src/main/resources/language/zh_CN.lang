@@ -46,3 +46,9 @@ rcrpg.manage.window.armour.title=§fRcRPG管理 - 护甲列表
 rcrpg.manage.window.ornament.title=§fRcRPG管理 - 饰品列表
 rcrpg.manage.window.stone.title=§fRcRPG管理 - 宝石列表
 rcrpg.manage.window.weapon.title=§fRcRPG管理 - 武器列表
+
+rcrpg.window.inlay.no_stone=无
+rcrpg.window.inlay.success_message=宝石操作成功！
+rcrpg.window.inlay.title=§f{%0}宝石列表
+rcrpg.window.inlay.title.hasSlot=装备拥有 {%0} 个宝石槽：\n{%1}
+rcrpg.window.inlay.title.notSlot=本装备没有宝石槽

@@ -46,3 +46,9 @@ rcrpg.manage.window.armour.title=§fRcRPG Management - Armor List
 rcrpg.manage.window.ornament.title=§fRcRPG Management - Ornament List
 rcrpg.manage.window.stone.title=§fRcRPG Management - Gem List
 rcrpg.manage.window.weapon.title=§fRcRPG Management - Weapon List
+
+rcrpg.window.inlay.no_stone=Null
+rcrpg.window.inlay.success_message=Gem operation successful!
+rcrpg.window.inlay.title=§f{%0} Gem List
+rcrpg.window.inlay.title.hasSlot=Equipment has {%0} gem slots:\n{%1}
+rcrpg.window.inlay.title.notSlot=This equipment has no gem slots

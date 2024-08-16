@@ -118,6 +118,7 @@ public class RcRPGMain extends PluginBase implements Listener {
         Suit.init();
 
         this.getLogger().info("开始读取武器信息");
+        loadWeapon.clear();
         for (String name : Handle.getDefaultFiles("Weapon")) {
             Weapon weapon = null;
             try {
@@ -133,6 +134,7 @@ public class RcRPGMain extends PluginBase implements Listener {
             }
         }
         this.getLogger().info("开始读取盔甲信息");
+        loadArmour.clear();
         for (String name : Handle.getDefaultFiles("Armour")) {
             Armour armour = null;
             try {
@@ -148,6 +150,7 @@ public class RcRPGMain extends PluginBase implements Listener {
             }
         }
         this.getLogger().info("开始读取宝石信息");
+        loadStone.clear();
         for (String name : Handle.getDefaultFiles("Stone")) {
             Stone stone = null;
             try {
@@ -163,6 +166,7 @@ public class RcRPGMain extends PluginBase implements Listener {
             }
         }
         this.getLogger().info("开始读取箱子信息");
+        loadBox.clear();
         for (String name : Handle.getDefaultFiles("Box")) {
             Box box = null;
             try {
@@ -178,6 +182,7 @@ public class RcRPGMain extends PluginBase implements Listener {
             }
         }
         this.getLogger().info("开始读取饰品信息");
+        loadOrnament.clear();
         for (String name : Handle.getDefaultFiles("Ornament")) {
             Ornament ornament = null;
             try {
@@ -193,6 +198,7 @@ public class RcRPGMain extends PluginBase implements Listener {
             }
         }
         this.getLogger().info("开始读取锻造图信息");
+        loadForgingPaper.clear();
         for (String name : Handle.getDefaultFiles("Forging" + File.separator + "Paper")) {
             ForgingPaper forgingPaper;
             try {
@@ -208,6 +214,7 @@ public class RcRPGMain extends PluginBase implements Listener {
             }
         }
         this.getLogger().info("开始读取锻造石信息");
+        loadForgingStone.clear();
         for (String name : Handle.getDefaultFiles("Forging" + File.separator + "Stone")) {
             ForgingStone forgingStone;
             try {

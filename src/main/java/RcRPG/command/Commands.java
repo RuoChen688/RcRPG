@@ -314,7 +314,7 @@ public class Commands extends PluginCommand<RcRPGMain> {
                     sender.sendMessage(TextFormat.RED + "请手持有效装备");
                     return false;
                 }
-                new inlayForm().makeInlayForm((Player) sender, item);
+                new inlayForm((Player) sender).makeInlayForm(item);
                 return true;
             }
             case "check":

@@ -34,7 +34,7 @@ public class Stone extends ItemAttr {
 
     private int reDamage;
 
-    private Object attr;
+    private Map<String, Object> attr;
 
     private String tipText;
 
@@ -192,19 +192,18 @@ public class Stone extends ItemAttr {
         for(int i = 0;i < player.getInventory().getSize();i++){
             item = player.getInventory().getItem(i);
             if(Stone.isStone(item)){
-                if(!list.contains(item.getNamedTag().getString("name")) &&
-                        RcRPGMain.loadStone.get(item.getNamedTag().getString("name")).getType().equals(type)
-                ){
-                    list.add(item.getNamedTag().getString("name"));
+                String stoneName = item.getNamedTag().getString("name");
+                if (!RcRPGMain.loadStone.containsKey(stoneName)) {
+                    continue;
+                }
+                if(!list.contains(stoneName) && RcRPGMain.loadStone.get(stoneName).getType().equals(type)){
+                    list.add(stoneName);
                 }
             }
         }
         return list;
     }
 
-    public Object getAttr() {
-        return attr;
-    }
     public void setAttr(Map<String, Object> attr) {
         this.attr = attr;
         setItemAttrConfig(attr);

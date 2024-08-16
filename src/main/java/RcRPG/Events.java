@@ -512,8 +512,8 @@ public class Events implements Listener {
                 }
                 if (damagerIsPlayer) {
                     ((Player) damager).sendMessage(RcRPGMain.getI18n().tr(((Player) damager).getLanguageCode(), "rcrpg.events.life_steal_message", lifeSteal));
+                    if (hasDisplayDamage) DamageApi.displayAsParticle(new DamageTextDTO(finalDamage, wounded, "damage:ph"));
                 }
-                if (hasDisplayDamage) DamageApi.displayAsParticle(new DamageTextDTO(finalDamage, wounded, "damage:ph"));
             }
         }
 
@@ -533,7 +533,7 @@ public class Events implements Listener {
             Damage.onDamage((Player) damager, wounded);
 
             if (crtDamage > 0) {
-                if (hasDisplayDamage) DamageApi.displayAsParticle(new DamageTextDTO(finalDamage, wounded, "damage:ed"));
+                if (hasDisplayDamage) DamageApi.displayAsParticle(new DamageTextDTO((int) crtDamage, wounded, "damage:ed"));
                 ((Player) damager).sendMessage(RcRPGMain.getI18n().tr(((Player) damager).getLanguageCode(), "rcrpg.events.critical_damage_message", woundedName, crtDamage));
             }
 
@@ -568,7 +568,33 @@ public class Events implements Listener {
         PlayerAttr attr = PlayerAttr.getPlayerAttr(player);
         if (attr == null) return;
         float speedAddition = attr.movementSpeedMultiplier;// 处理移速加成
-        //TODO: if (speedAddition > 0) player.sendMovementSpeed(speedAddition);
+        if (speedAddition <= -1) {
+            return;
+        }
+
+        float finalSpeed = Player.DEFAULT_SPEED;
+
+        Effect speedEffect = player.getEffect(Effect.SPEED);
+        if (speedEffect != null) {
+            finalSpeed *= (1 + 0.2f * (speedEffect.getAmplifier() + 1));
+        }
+
+        Effect slownessEffect = player.getEffect(Effect.SLOWNESS);
+        if (slownessEffect != null) {
+            finalSpeed *= (1 - 0.15f * (slownessEffect.getAmplifier() + 1));
+        }
+
+        // 处理移速加成
+        finalSpeed *= (1 + speedAddition);
+
+//        // 处理冲刺状态的影响
+//        if (event.isSprinting()) {
+//            finalSpeed *= 1.3f;
+//        } else {
+//            finalSpeed /= 1.3f;
+//        }
+
+        player.setMovementSpeed(finalSpeed);
     }
 
     @EventHandler

@@ -48,7 +48,7 @@ public class Weapon extends ItemAttr {
 
     private int lightRound;// 属性 - 雷击
 
-    private Object attr;
+    private Map<String, Object> attr;
 
     private int stone;
 

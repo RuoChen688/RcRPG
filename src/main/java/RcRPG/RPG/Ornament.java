@@ -46,7 +46,7 @@ public class Ornament extends ItemAttr {
     private int level;
 
     @Getter
-    private Object attr;
+    private Map<String, Object> attr;
 
     private String tipText;
 

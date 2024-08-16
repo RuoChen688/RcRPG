@@ -1,4 +1,4 @@
-package RcRPG.Task;
+package RcRPG.task;
 
 import RcRPG.Handle;
 import RcRPG.RcRPGMain;
@@ -11,9 +11,9 @@ import cn.nukkit.item.Item;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.scheduler.PluginTask;
 
-public class Tip extends PluginTask<RcRPGMain> {
+public class PlayerTipTask extends PluginTask<RcRPGMain> {
 
-    public Tip(RcRPGMain rcRPGMain){
+    public PlayerTipTask(RcRPGMain rcRPGMain){
         super(rcRPGMain);
     }
 

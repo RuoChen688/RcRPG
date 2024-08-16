@@ -15,6 +15,7 @@ public class Suit {
     public static Map<String, SuitConfig> suitInfo = new HashMap<>();
 
     public static void init() {
+        suitInfo.clear();
         Config cfg = new Config(RcRPGMain.getInstance().getDataFolder() + "/SuitPlan.yml");
         cfg.getAll().keySet().forEach(suitName -> {
             RcRPGMain.getInstance().getLogger().info("suitName: "+suitName);

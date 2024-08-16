@@ -77,6 +77,9 @@ public class Weapon extends ItemAttr {
 
     private String message;
 
+    /**
+     * 宝石槽列表
+     */
     private ArrayList<String> stoneList = new ArrayList<>();
 
     private ArrayList<String> loreList = new ArrayList<>();
@@ -276,7 +279,10 @@ public class Weapon extends ItemAttr {
     public static void setStone(Player player, Item item, LinkedList<Stone> list) {
         ListTag<StringTag> stoneList = new ListTag<>("stone");
         for (Stone stone : list) {
-            if (stone == null) continue;
+            if (stone == null) {
+                stoneList.add(new StringTag("", ""));
+                continue;
+            }
             stoneList.add(new StringTag(stone.getName(), stone.getName()));
         }
         CompoundTag tag = item.getNamedTag();

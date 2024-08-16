@@ -280,7 +280,10 @@ public class Armour extends ItemAttr {
     public static void setStone(Player player,Item item,LinkedList<Stone> list){
         ListTag<StringTag> stoneList = new ListTag<>("stone");
         for(Stone stone : list){
-            if(stone == null) continue;
+            if (stone == null) {
+                stoneList.add(new StringTag("", ""));
+                continue;
+            }
             stoneList.add(new StringTag(stone.getLabel(),stone.getLabel()));
         }
         CompoundTag tag = item.getNamedTag();

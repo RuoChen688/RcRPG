@@ -1,7 +1,7 @@
 package RcRPG.panel.container.forging;
 
-import RcRPG.RPG.Forging.ForgingPaper;
-import RcRPG.RPG.Forging.ForgingStone;
+import RcRPG.RPG.forging.ForgingPaper;
+import RcRPG.RPG.forging.ForgingStone;
 import RcRPG.RcRPGMain;
 import cn.nukkit.Player;
 import cn.nukkit.inventory.Inventory;

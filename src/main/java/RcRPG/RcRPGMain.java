@@ -1,11 +1,11 @@
 package RcRPG;
 
 import RcRPG.RPG.*;
-import RcRPG.RPG.Forging.ForgingPaper;
-import RcRPG.RPG.Forging.ForgingStone;
-import RcRPG.Task.BoxTimeTask;
-import RcRPG.Task.PlayerAttrUpdateTask;
-import RcRPG.Task.Tip;
+import RcRPG.RPG.forging.ForgingPaper;
+import RcRPG.RPG.forging.ForgingStone;
+import RcRPG.task.BoxTimeTask;
+import RcRPG.task.PlayerAttrUpdateTask;
+import RcRPG.task.PlayerTipTask;
 import RcRPG.command.Commands;
 import RcRPG.config.MainConfig;
 import RcRPG.floatingtext.TextEntity;
@@ -83,7 +83,7 @@ public class RcRPGMain extends PluginBase implements Listener {
 
         // 底部显示不为空时
         if (!MainConfig.getBottomFormat().isEmpty()) {
-            this.getServer().getScheduler().scheduleRepeatingTask(new Tip(this), 20);
+            this.getServer().getScheduler().scheduleRepeatingTask(new PlayerTipTask(this), 20);
         }
         this.getServer().getScheduler().scheduleRepeatingTask(new BoxTimeTask(this), 20);
         //this.getServer().getScheduler().scheduleRepeatingTask(new loadHealth(this), 10);

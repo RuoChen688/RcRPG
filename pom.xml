@@ -156,7 +156,7 @@
             <artifactId>MagicItem</artifactId>
             <version>1.0.0</version>
             <scope>system</scope>
-            <systemPath>${pom.basedir}/lib/MagicItem-1.1.0.jar</systemPath>
+            <systemPath>${pom.basedir}/lib/MagicItem-1.1.2.jar</systemPath>
         </dependency>
 
         <dependency>

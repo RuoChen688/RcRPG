@@ -1,4 +1,4 @@
-package RcRPG.Task;
+package RcRPG.task;
 
 import RcRPG.RcRPGMain;
 import RcRPG.PlayerStatus;

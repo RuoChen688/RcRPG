@@ -1,4 +1,4 @@
-package RcRPG.Task;
+package RcRPG.task;
 
 import RcRPG.AttrManager.PlayerAttr;
 import RcRPG.Events;

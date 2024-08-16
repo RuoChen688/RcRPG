@@ -1,4 +1,4 @@
-package RcRPG.RPG.Forging;
+package RcRPG.RPG.forging;
 
 import RcRPG.RcRPGMain;
 import cn.ankele.plugin.MagicItem;

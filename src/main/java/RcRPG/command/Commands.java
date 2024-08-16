@@ -2,8 +2,8 @@ package RcRPG.command;
 
 import RcRPG.AttrManager.PlayerAttr;
 import RcRPG.RPG.*;
-import RcRPG.RPG.Forging.ForgingPaper;
-import RcRPG.RPG.Forging.ForgingStone;
+import RcRPG.RPG.forging.ForgingPaper;
+import RcRPG.RPG.forging.ForgingStone;
 import RcRPG.RcRPGMain;
 import RcRPG.Society.Money;
 import RcRPG.Society.Points;

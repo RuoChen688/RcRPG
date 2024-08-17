@@ -585,12 +585,12 @@ public class Events implements Listener {
         // 处理移速加成
         finalSpeed *= (1 + speedAddition);
 
-//        // 处理冲刺状态的影响
-//        if (event.isSprinting()) {
-//            finalSpeed *= 1.3f;
-//        } else {
-//            finalSpeed /= 1.3f;
-//        }
+        // 处理冲刺状态的影响
+        if (event.isSprinting()) {
+            finalSpeed *= 1.2f;
+        } else {
+            finalSpeed /= 1.2f;
+        }
 
         player.setMovementSpeed(finalSpeed);
     }

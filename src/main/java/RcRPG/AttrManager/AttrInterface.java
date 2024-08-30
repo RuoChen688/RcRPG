@@ -1,7 +1,6 @@
 package RcRPG.AttrManager;
 
 public interface AttrInterface {
-    AttrComp getComp();
     boolean checkFloatArray(float[] array);
     /**
      * 获取指定属性值（随机后）

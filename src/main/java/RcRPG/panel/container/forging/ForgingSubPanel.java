@@ -48,7 +48,7 @@ public class ForgingSubPanel implements InventoryHolder {
     public Item forgingStoneItem = Item.AIR_ITEM;
 
     public void sendPanel(Player player) {
-        FakeInventory inv = new ForgingInventory("锻造 - 「" + forgingPaper.getShowName() + "」");
+        FakeInventory inv = new ForgingSubInventory("锻造 - 「" + forgingPaper.getShowName() + "」");
         inv.setContents(getPanel(player));
         inv.setDefaultItemHandler((item, event) -> {
             boolean isNotAction = false;

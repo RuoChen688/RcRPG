@@ -69,10 +69,6 @@ public class Manager implements AttrInterface {
         movementSpeedMultiplier = getRandomNum(getMovementSpeedMultiplier());
         // ...继续更新其他变量的值
     }
-    @Override
-    public AttrComp getComp() {
-        return null;
-    }
 
     /**
      * 返回 [最小值, 最大值] 的随机值

@@ -123,7 +123,7 @@ public class PlayerAttr extends Manager {
         ArrayList<String> beforeLabel = new ArrayList<>(labelList);
         labelList.clear();
 
-        Map<String, Integer> suitMap = new HashMap<>();// _声明套装Map
+        Map<String, Integer> suitMap = new HashMap<>();// 声明套装Map
 
         ArrayList<Item> itemList = new ArrayList<>();
         // 主手
@@ -246,33 +246,19 @@ public class PlayerAttr extends Manager {
     /**
      * 属性结构
      * {
-     * "Main": {
-     * "攻击力": [1,3]
-     * }
+     *   "Main": {
+     *     "攻击力": [1,3]
+     *   }
      * }
      */
     public Map<String, Map<String, float[]>> myAttr = new HashMap<>();
 
-    public void setItemAttrConfig(String id, Object newAttr) {
+    public void setItemAttrConfig(String id, Map<String, float[]> newAttr) {
         Map<String, float[]> attrMap = new HashMap<>();
-        Map<String, Object> attr = (Map<String, Object>) newAttr;
-        for (Map.Entry<String, Object> entry : attr.entrySet()) {
+        for (Map.Entry<String, float[]> entry : newAttr.entrySet()) {
             String key = entry.getKey();
             Object value = entry.getValue();
-            if (value instanceof List<?> values) {
-                float[] floatValue = new float[values.size()];
-                for (int i = 0; i < values.size(); i++) {
-                    if (values.get(i) instanceof Double) {
-                        floatValue[i] = ((Double) values.get(i)).floatValue();
-                    } else if (values.get(i) instanceof Integer) {
-                        floatValue[i] = ((Integer) values.get(i)).floatValue();
-                    }
-                }
-                if (floatValue.length < 2) {
-                    floatValue = new float[]{floatValue[0], floatValue[0]};
-                }
-                attrMap.put(key, floatValue);
-            } else if (value instanceof float[] floatValue) {
+            if (value instanceof float[] floatValue) {
                 if (floatValue.length < 2) {
                     floatValue = new float[]{floatValue[0], floatValue[0]};
                 }

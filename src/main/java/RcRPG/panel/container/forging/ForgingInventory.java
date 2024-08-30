@@ -19,8 +19,7 @@ public class ForgingInventory extends FakeInventory {
         pk.eid = id;
         who.dataPacket(pk);
         super.onClose(who);
-        //Map<Integer, Item> content = this.getContents();
-        //List<Item> invItemList = content.values().stream().toList();
+
     }
 
 }

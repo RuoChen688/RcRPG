@@ -29,3 +29,8 @@ RcRPG经验:
   - "3:20"
   - "4:25"
   - "5:30"
+# 启用伤害事件的相关效果生效信息
+enableDamageMessage:
+  life_steal: true # 吸血
+  critical_damage: true # 暴击伤害
+  dodge: true # 闪避

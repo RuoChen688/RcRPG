@@ -2,6 +2,8 @@ rcrpg.missing.plugin={%0} plugin not detected, the plugin cannot be started! Dow
 
 rcrpg.commands.message.noPermission=§cNo permissions!
 rcrpg.commands.message.noTarget=§cNo matching target found.
+rcrpg.commands.message.noFoundPlayer=§cTarget player is offline!
+rcrpg.commands.message.mustPlayerExecuted=§cCommand must be executed by a player!
 rcrpg.commands.reloaded=§aConfiguration reload successful!
 rcrpg.commands.help=§7------ RcRPG Help ------
 rcrpg.commands.effect.help=§2/rpg effect <flag> <player> <attrName> <value> [duration]:§f Add attribute effect command

@@ -2,6 +2,8 @@ rcrpg.missing.plugin=未检测到 {%0} 插件，插件无法启动！下载地�
 
 rcrpg.commands.message.noPermission=§c权限不足
 rcrpg.commands.message.noTarget=§c没有匹配的目标
+rcrpg.commands.message.noFoundPlayer=§c目标玩家离线
+rcrpg.commands.message.mustPlayerExecuted=§c本命令必须是玩家执行
 rcrpg.commands.reloaded=§a配置文件重载成功
 rcrpg.commands.help=§7------ RcRPG Help ------
 rcrpg.commands.effect.help=§2/rpg effect <flag> <player> <attrName> <value> [duration]:§f 添加属性效果的命令
@@ -22,7 +24,7 @@ rcrpg.commands.point.help=§2/rpg point help:§f 点券指令
 
 rcrpg.events.insufficient_level_for_weapon=等级不足，无法使用此武器
 rcrpg.events.life_steal_message=你已汲取对方 §c§l{%0}§r 血量值
-rcrpg.events.critical_damage_message=你对 {%0} 附加了 §l{%1}§r 点暴击
+rcrpg.events.critical_damage_message=你对 {%0} §r附加了 §l{%1}§r 点暴击
 rcrpg.events.dodge_message_you_evaded=你闪避了 {%0} §r的攻击
 rcrpg.events.dodge_message_enemy_evaded={%0} §r闪避了你的攻击
 

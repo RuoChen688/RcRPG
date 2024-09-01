@@ -361,6 +361,7 @@ public class Commands extends PluginCommand<RcRPGMain> {
                 switch (args[1]) {
                     case "help" -> {
                         sender.sendMessage("/rpg exp add [Player] [Exp] 给予玩家经验");
+                        return true;
                     }
                     case "add" -> {
                         if (args.length < 4) {
@@ -370,14 +371,12 @@ public class Commands extends PluginCommand<RcRPGMain> {
                         Player player = Server.getInstance().getPlayer(args[2]);
                         if (player == null) return false;
                         int expValue = Integer.parseInt(args[3]);
-                        if (sender.isPlayer()) {
-                            if (Level.addExp(player, expValue)) {
-                                sender.sendMessage("给予成功");
-                            } else {
-                                sender.sendMessage("给予失败");
-                            }
-                            return true;
+                        if (Level.addExp(player, expValue)) {
+                            if (sender.isPlayer()) sender.sendMessage("给予成功");
+                        } else {
+                            if (sender.isPlayer()) sender.sendMessage("给予失败");
                         }
+                        return true;
                     }
                 }
                 sender.sendMessage(TextFormat.RED + "错误的命令，请使用：/rpg help");

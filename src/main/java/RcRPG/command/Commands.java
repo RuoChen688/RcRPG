@@ -246,7 +246,7 @@ public class Commands extends PluginCommand<RcRPGMain> {
                     return false;
                 }
                 if (!sender.isPlayer()) {
-                    sender.sendMessage(TextFormat.RED + "本命令必须是玩家执行");
+                    sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.message.mustPlayerExecuted"));
                     return false;
                 }
                 new RcRPGAdminWin((Player) sender);
@@ -293,7 +293,7 @@ public class Commands extends PluginCommand<RcRPGMain> {
             }
             case "dismantle": {
                 if (!sender.isPlayer()) {
-                    sender.sendMessage(TextFormat.RED + "本命令必须是玩家执行");
+                    sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.message.mustPlayerExecuted"));
                     return false;
                 }
                 DismantlePanel panel = new DismantlePanel();
@@ -302,7 +302,7 @@ public class Commands extends PluginCommand<RcRPGMain> {
             }
             case "inlay": {
                 if (!sender.isPlayer()) {
-                    sender.sendMessage(TextFormat.RED + "本命令必须是玩家执行");
+                    sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.message.mustPlayerExecuted"));
                     return false;
                 }
                 Item item = ((Player) sender).getInventory().getItemInHand();
@@ -319,7 +319,7 @@ public class Commands extends PluginCommand<RcRPGMain> {
             }
             case "check":
                 if (!(sender instanceof Player)) {
-                    sender.sendMessage(TextFormat.RED + "本命令必须是玩家执行");
+                    sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.message.mustPlayerExecuted"));
                     return false;
                 }
 
@@ -348,7 +348,7 @@ public class Commands extends PluginCommand<RcRPGMain> {
                 }
             case "guild":
                 if (!(sender instanceof Player)) {
-                    sender.sendMessage(TextFormat.RED + "本命令必须是玩家执行");
+                    sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.message.mustPlayerExecuted"));
                     return false;
                 }
                 guildForm.make_one((Player) sender);
@@ -548,7 +548,7 @@ public class Commands extends PluginCommand<RcRPGMain> {
                     }
                     case "admin" -> {
                         if (!sender.isPlayer()) {
-                            sender.sendMessage(TextFormat.RED + "本命令必须是玩家执行");
+                            sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.message.mustPlayerExecuted"));
                             return false;
                         }
                         new SendWeaponAdminWin((Player) sender);
@@ -594,7 +594,7 @@ public class Commands extends PluginCommand<RcRPGMain> {
                         int count = args.length > 4 ? Integer.parseInt(args[4]) : 1;
                         Player player = RcRPGMain.getInstance().getServer().getPlayer(playerName);
                         if (!player.isOnline()) {
-                            sender.sendMessage("玩家不在线");
+                            sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.message.noFoundPlayer"));
                             return false;
                         }
                         if (args[1].equals("drop")) {
@@ -634,7 +634,7 @@ public class Commands extends PluginCommand<RcRPGMain> {
                     }
                     case "admin" -> {
                         if (!sender.isPlayer()) {
-                            sender.sendMessage(TextFormat.RED + "本命令必须是玩家执行");
+                            sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.message.mustPlayerExecuted"));
                             return false;
                         }
                         new SendArmourAdminWin((Player) sender);
@@ -680,7 +680,7 @@ public class Commands extends PluginCommand<RcRPGMain> {
                         int count = args.length > 4 ? Integer.parseInt(args[4]) : 1;
                         Player player = RcRPGMain.getInstance().getServer().getPlayer(playerName);
                         if (!player.isOnline()) {
-                            sender.sendMessage("玩家不在线");
+                            sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.message.noFoundPlayer"));
                             return false;
                         }
                         if (args[1].equals("drop")) {
@@ -719,7 +719,7 @@ public class Commands extends PluginCommand<RcRPGMain> {
                     }
                     case "admin" -> {
                         if (!sender.isPlayer()) {
-                            sender.sendMessage(TextFormat.RED + "本命令必须是玩家执行");
+                            sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.message.mustPlayerExecuted"));
                             return false;
                         }
                         new SendStoneAdminWin((Player) sender);
@@ -765,7 +765,7 @@ public class Commands extends PluginCommand<RcRPGMain> {
                         int count = args.length > 4 ? Integer.parseInt(args[4]) : 1;
                         Player player = RcRPGMain.getInstance().getServer().getPlayer(playerName);
                         if (!player.isOnline()) {
-                            sender.sendMessage("玩家不在线");
+                            sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.message.noFoundPlayer"));
                             return false;
                         }
                         if (Stone.giveStone(player, stoneName, count)) {
@@ -833,7 +833,7 @@ public class Commands extends PluginCommand<RcRPGMain> {
                         int count = args.length > 4 ? Integer.parseInt(args[4]) : 1;
                         Player player = RcRPGMain.getInstance().getServer().getPlayer(playerName);
                         if (!player.isOnline()) {
-                            sender.sendMessage("玩家不在线");
+                            sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.message.noFoundPlayer"));
                             return false;
                         }
                         if (Box.giveBox(player, boxName, count)) {
@@ -846,10 +846,6 @@ public class Commands extends PluginCommand<RcRPGMain> {
                 break;
             }
             case "ornament": {
-                if (!sender.isOp()) {
-                    sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.message.noPermission"));
-                    return false;
-                }
                 if (args.length < 2) {
                     sender.sendMessage(TextFormat.RED + "缺少第 2 个参数");
                     return false;
@@ -861,16 +857,24 @@ public class Commands extends PluginCommand<RcRPGMain> {
                         sender.sendMessage("/rpg ornament give [Player] [Name] [Count] 给予玩家一定数量的饰品");
                         sender.sendMessage("/rpg ornament my 打开自己的饰品背包");
                     }
-                    case "admin" -> {
-                        if (!sender.isPlayer()) {
-                            sender.sendMessage(TextFormat.RED + "本命令必须是玩家执行");
-                            return false;
-                        }
-                        new SendOrnamentAdminWin((Player) sender);
-                    }
                     case "my" -> {
                         OrnamentPanel panel = new OrnamentPanel();
                         panel.sendPanel((Player) sender);
+                    }
+                    case "admin", "add", "del", "give" -> {
+                        if (!sender.isOp()) {
+                            sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.message.noPermission"));
+                            return false;
+                        }
+                    }
+                }
+                switch (args[1]) {
+                    case "admin" -> {
+                        if (!sender.isPlayer()) {
+                            sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.message.mustPlayerExecuted"));
+                            return false;
+                        }
+                        new SendOrnamentAdminWin((Player) sender);
                     }
                     case "add" -> {
                         if (args.length < 3) {
@@ -913,7 +917,7 @@ public class Commands extends PluginCommand<RcRPGMain> {
                         int count = args.length > 4 ? Integer.parseInt(args[4]) : 1;
                         Player player = RcRPGMain.getInstance().getServer().getPlayer(playerName);
                         if (!player.isOnline()) {
-                            sender.sendMessage("玩家不在线");
+                            sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.message.noFoundPlayer"));
                             return false;
                         }
                         if (Ornament.giveOrnament(player, ornamentName, count)) {
@@ -927,7 +931,7 @@ public class Commands extends PluginCommand<RcRPGMain> {
             }
             case "forging": {
                 if (!sender.isPlayer()) {
-                    sender.sendMessage(TextFormat.RED + "本命令必须是玩家执行");
+                    sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.message.mustPlayerExecuted"));
                     return false;
                 }
                 switch (args[1]) {
@@ -938,7 +942,7 @@ public class Commands extends PluginCommand<RcRPGMain> {
                             int count = args.length > 5 ? Integer.parseInt(args[5]) : 1;
                             Player player = RcRPGMain.getInstance().getServer().getPlayer(playerName);
                             if (!player.isOnline()) {
-                                sender.sendMessage("玩家不在线");
+                                sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.message.noFoundPlayer"));
                                 return false;
                             }
                             if (ForgingStone.giveForgingStone(player, itemName, count)) {
@@ -956,7 +960,7 @@ public class Commands extends PluginCommand<RcRPGMain> {
                             int count = args.length > 5 ? Integer.parseInt(args[5]) : 1;
                             Player player = RcRPGMain.getInstance().getServer().getPlayer(playerName);
                             if (!player.isOnline()) {
-                                sender.sendMessage("玩家不在线");
+                                sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.message.noFoundPlayer"));
                                 return false;
                             }
                             if (ForgingPaper.giveForgingPaper(player, itemName, count)) {

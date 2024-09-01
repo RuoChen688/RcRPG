@@ -37,6 +37,7 @@ public class ForgingSubPanel implements InventoryHolder {
 
     public ForgingPaper forgingPaper;
     public ForgingStone forgingStone;
+    public Item mainFootage = Item.AIR_ITEM;
     public ArrayList<Item> normalFootageList = new ArrayList<>();
 
     public ForgingSubPanel(ForgingPaper paper) {
@@ -47,9 +48,11 @@ public class ForgingSubPanel implements InventoryHolder {
     public Item forgingStoneItem = Item.AIR_ITEM;
 
     public void sendPanel(Player player) {
-        FakeInventory inv = new ForgingInventory("锻造 - 「" + forgingPaper.getShowName() + "」");
+        FakeInventory inv = new ForgingSubInventory("锻造 - 「" + forgingPaper.getShowName() + "」");
         inv.setContents(getPanel(player));
         inv.setDefaultItemHandler((item, event) -> {
+            boolean isNotAction = false;
+            Item cursorItem = Item.AIR_ITEM;
             for (InventoryAction action : event.getTransaction().getActions()) {
                 Item sourceItem = action.getSourceItem();
                 Item targetItem = action.getTargetItem();
@@ -57,8 +60,13 @@ public class ForgingSubPanel implements InventoryHolder {
                     if (!(slotChange.getInventory() instanceof FakeInventory)) {
                         continue;
                     }
+                    cursorItem = targetItem.clone();
+                    player.getCursorInventory().setItem(0, Item.AIR_ITEM);// 清空浮标物品（For Windows）
                     event.setCancelled();
-                    if (targetItem.isNull()) {// 回退
+                    player.getInventory().removeItem(targetItem);// 清理背包里的物品（For Mobile）
+
+                    // 操作 - 回退
+                    if (targetItem.isNull()) {
                         if (sourceItem.getNamedTag() == null || AIR_PLACEHOLDER.deepEquals(sourceItem)) break;
                         if (slotChange.getSlot() == 1) {// 回退原初之石
                             player.getInventory().addItem(sourceItem);
@@ -74,6 +82,21 @@ public class ForgingSubPanel implements InventoryHolder {
                             Item barrierItem = Item.fromString("minecraft:barrier");
                             barrierItem.setCustomName("§r§7一一一 §c不可放入§7 一一一");
                             inv.setItem(1, barrierItem);
+
+                            // 清理主素材
+                            if (!AIR_PLACEHOLDER.deepEquals(inv.getItemFast(2))) {
+                                player.getInventory().addItem(inv.getItem(2));
+                                inv.setItem(2, AIR_PLACEHOLDER);
+                            }
+                            // 清理普通素材
+                            player.getInventory().addItem(this.normalFootageList.toArray(Item[]::new));
+                            for (int i = 3; i < 27; i++) {
+                                if (AIR_PLACEHOLDER.deepEquals(inv.getItemFast(i))) {
+                                    break;// 如果不行请改成 continue
+                                }
+                                inv.setItem(i, AIR_PLACEHOLDER);
+                            }
+                            this.normalFootageList.clear();
                         } else if (slotChange.getSlot() == 2) {// 回退主素材
                             player.getInventory().addItem(sourceItem);
 
@@ -112,8 +135,8 @@ public class ForgingSubPanel implements InventoryHolder {
 
                             // 清理普通素材
                             // 0x, 1y, 2y, 3z, 4z
-                            for (int i = 3; i < this.normalFootageList.size() + 2; i++) {
-                                inv.setItem(i, this.normalFootageList.get(i - 2));
+                            for (int i = 3; i < this.normalFootageList.size() + 3; i++) {
+                                inv.setItem(i, this.normalFootageList.get(i - 3));
                             }
                             for (int i = this.normalFootageList.size() + 3; i < 27; i++) {
                                 if (AIR_PLACEHOLDER.deepEquals(inv.getItemFast(i))) {
@@ -122,9 +145,11 @@ public class ForgingSubPanel implements InventoryHolder {
                                 inv.setItem(i, AIR_PLACEHOLDER);
                             }
                         }
+                        break;
                     }
 
-                    if (ForgingStone.isForgingStone(targetItem)) {// 如果放入的是原初之石
+                    // 操作 - 如果放入的是原初之石
+                    if (ForgingStone.isForgingStone(targetItem)) {
                         String stoneName = targetItem.getNamedTag().getString("name");
                         this.forgingStone = RcRPGMain.loadForgingStone.get(stoneName);
                         // 修改箱内物品状态
@@ -139,7 +164,8 @@ public class ForgingSubPanel implements InventoryHolder {
                         break;
                     }
 
-                    if (targetItem.getNamedTag() != null) {// 放入的如果是素材
+                    // 操作 - 放入的如果是素材
+                    if (targetItem.getNamedTag() != null) {
                         if (this.forgingStone == null) {
                             break;
                         }
@@ -169,14 +195,21 @@ public class ForgingSubPanel implements InventoryHolder {
                                         "§r§f素材品质范围：§a" + (Math.max(this.forgingStone.getQuality(), 0)) + "~" + Math.min(this.forgingStone.getQuality() + 2, MAX_QUALITY) + "级"
                                 );
                                 inv.setItem(0, stoneTipItem);
+                                break;
                             }
                         } else {
                             addFootage(player, targetItem, inv, slotChange.getSlot());
+                            break;
                         }
-
                     }
+
+                    isNotAction = true;
                     break;
                 }
+            }
+            // 若没有进行任何操作则返还物品
+            if (isNotAction) {
+                player.getInventory().addItem(cursorItem);
             }
 
         });
@@ -244,15 +277,17 @@ public class ForgingSubPanel implements InventoryHolder {
                 break;
             }
         }
-        for (int i = 3; i < this.normalFootageList.size() + 2; i++) {
-            inv.setItem(i, this.normalFootageList.get(i - 2));
-        }
-        for (int i = this.normalFootageList.size() + 3; i < 27; i++) {
-            if (AIR_PLACEHOLDER.deepEquals(inv.getItemFast(i))) {
-                break;// 如果不行请改成 continue
-            }
-            inv.setItem(i, AIR_PLACEHOLDER);
-        }
+//        for (int i = 3; i < this.normalFootageList.size() + 2; i++) {
+//            RcRPGMain.getInstance().getLogger().info("设置 "+ (i+1)+" 格子为"+this.normalFootageList.get(i - 2).getName());
+//            inv.setItem(i, this.normalFootageList.get(i - 2));
+//        }
+//        for (int i = this.normalFootageList.size() + 3; i < 27; i++) {
+//            if (AIR_PLACEHOLDER.deepEquals(inv.getItemFast(i))) {
+//                break;// 如果不行请改成 continue
+//            }
+//            RcRPGMain.getInstance().getLogger().info("将 "+ (i+1)+" 格子置空");
+//            inv.setItem(i, AIR_PLACEHOLDER);
+//        }
     }
 
     public void removeAndReturnItem(Player player, Item targetItem, FakeInventory inv, int invIndex) {
@@ -269,7 +304,6 @@ public class ForgingSubPanel implements InventoryHolder {
                 }
             }
         }
-        player.getCursorInventory().setItem(0, Item.AIR_ITEM);
 
         // 返还物品
         if (targetItem.getCount() - 1 > 0) {

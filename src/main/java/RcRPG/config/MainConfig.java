@@ -2,6 +2,7 @@ package RcRPG.config;
 
 import RcRPG.RcRPGMain;
 import cn.nukkit.utils.Config;
+import cn.nukkit.utils.ConfigSection;
 import lombok.Getter;
 
 import java.io.File;
@@ -49,6 +50,8 @@ public class MainConfig {
     public static List<String> guildUpgradeCosts = new ArrayList<>();
     @Getter
     public static List<String> guildUpgradeMembers = new ArrayList<>();
+    @Getter
+    public static DamageMessageConfig enableDamageMessage = new DamageMessageConfig(new ConfigSection());
 
     /**
      * 以百分比显示的属性列表
@@ -82,6 +85,7 @@ public class MainConfig {
         initialGuildCreationFunds = config.getInt("公会创建初始资金");
         guildUpgradeCosts = config.getStringList("公会升级金币");
         guildUpgradeMembers = config.getStringList("公会升级人数");
+        enableDamageMessage = new DamageMessageConfig(config.getSection("enableDamageMessage"));
         readAttrDisplayPercent();// 初始化以百分比显示的属性列表
 
     }

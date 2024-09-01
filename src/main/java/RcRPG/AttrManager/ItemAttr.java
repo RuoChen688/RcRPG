@@ -67,7 +67,7 @@ public class ItemAttr extends Manager {
     /**
      * 获取指定属性的原始值
      * @param attrName 属性名
-     * @param index 索引，0为min，1为max。内部可能传入-1
+     * @param index 索引，0为min，1为max。-1为min-max的随机值
      * @return
      */
     public float getItemAttr(String attrName, int index) {
@@ -85,8 +85,8 @@ public class ItemAttr extends Manager {
     }
 
     /**
-     * 返回 [最小值, 最大值] 的随机值
-     * @param array
+     * 返回 min-max 的随机值
+     * @param array [最小值, 最大值]
      * @return
      */
     public static float getRandomNum(float[] array) {
@@ -107,7 +107,7 @@ public class ItemAttr extends Manager {
     }
 
     public String replaceAttrTemplate(String str) {
-        Pattern pattern = Pattern.compile("\\{\\{(.*?)\\}\\}");
+        Pattern pattern = Pattern.compile("\\{\\{(.*?)}}");
         Matcher matcher = pattern.matcher(str);
         StringBuilder sb = new StringBuilder();
 

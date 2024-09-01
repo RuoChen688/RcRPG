@@ -354,11 +354,15 @@ public class Events implements Listener {
         if (getProbabilisticResults(dodge - DAttr.hitChance)) {
             if (woundedIsPlayer) {
                 wounded.getLevel().addSound(wounded, Sound.valueOf("GAME_PLAYER_ATTACK_NODAMAGE"));
-                ((Player) wounded).sendMessage(RcRPGMain.getI18n().tr(((Player) wounded).getLanguageCode(), "rcrpg.events.dodge_message_you_evaded", damagerName));
+                if (MainConfig.getEnableDamageMessage().isDodge()) {
+                    ((Player) wounded).sendMessage(RcRPGMain.getI18n().tr(((Player) wounded).getLanguageCode(), "rcrpg.events.dodge_message_you_evaded", damagerName));
+                }
             }
             if (damagerIsPlayer) {
                 damager.getLevel().addSound(damager, Sound.valueOf("GAME_PLAYER_ATTACK_NODAMAGE"));
-                ((Player) damager).sendMessage(RcRPGMain.getI18n().tr(((Player) damager).getLanguageCode(), "rcrpg.events.dodge_message_enemy_evaded", woundedName));
+                if (MainConfig.getEnableDamageMessage().isDodge()) {
+                    ((Player) damager).sendMessage(RcRPGMain.getI18n().tr(((Player) damager).getLanguageCode(), "rcrpg.events.dodge_message_enemy_evaded", woundedName));
+                }
             }
             event.setCancelled(true);
             return;
@@ -508,7 +512,7 @@ public class Events implements Listener {
                 } else {
                     damager.heal(new EntityRegainHealthEvent(damager, (float) lifeSteal, RegainHealthEnum.LifeSteal.getCode()));
                 }
-                if (damagerIsPlayer) {
+                if (damagerIsPlayer && MainConfig.getEnableDamageMessage().isLifeSteal()) {
                     ((Player) damager).sendMessage(RcRPGMain.getI18n().tr(((Player) damager).getLanguageCode(), "rcrpg.events.life_steal_message", lifeSteal));
                     //if (hasDisplayDamage) DamageApi.displayAsParticle(new DamageTextDTO(finalDamage, wounded, "damage:ph"));
                 }
@@ -532,7 +536,10 @@ public class Events implements Listener {
 
             if (crtDamage > 0) {
                 //if (hasDisplayDamage) DamageApi.displayAsParticle(new DamageTextDTO((int) crtDamage, wounded, "damage:ed"));
-                ((Player) damager).sendMessage(RcRPGMain.getI18n().tr(((Player) damager).getLanguageCode(), "rcrpg.events.critical_damage_message", woundedName, crtDamage));
+
+                if (MainConfig.getEnableDamageMessage().isCriticalDamage()) {
+                    ((Player) damager).sendMessage(RcRPGMain.getI18n().tr(((Player) damager).getLanguageCode(), "rcrpg.events.critical_damage_message", woundedName, crtDamage));
+                }
             }
 
             // 击杀提示
@@ -585,12 +592,12 @@ public class Events implements Listener {
         // 处理移速加成
         finalSpeed *= (1 + speedAddition);
 
-//        // 处理冲刺状态的影响
-//        if (event.isSprinting()) {
-//            finalSpeed *= 1.3f;
-//        } else {
-//            finalSpeed /= 1.3f;
-//        }
+        // 处理冲刺状态的影响
+        if (event.isSprinting()) {
+            finalSpeed *= 1.2f;
+        } else {
+            finalSpeed /= 1.2f;
+        }
 
         player.setMovementSpeed(finalSpeed);
     }

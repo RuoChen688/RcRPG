@@ -636,16 +636,21 @@ public class Events implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
-    public void joinEvent(PlayerPreLoginEvent event){
+    public void joinEvent(PlayerLocallyInitializedEvent event){
+        RcRPGMain.updateItemLore(event.getPlayer());// 更新玩家背包物品
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void preJoinEvent(PlayerPreLoginEvent event){
         Player player = event.getPlayer();
         String name = player.getName();
 
-        PlayerAttr.setPlayerAttr(player);
+        PlayerAttr.setPlayerAttr(player);// 设置玩家属性
 
         File file = new File(RcRPGMain.getInstance().getDataFolder()+"/Players/"+name+".yml");
         if(!file.exists()) {
             RcRPGMain.getInstance().saveResource("Players/Player.yml","/Players/"+name+".yml",false);
-            Config config = new Config(RcRPGMain.getInstance().getPlayerFile()+"/"+name+".yml");
+            Config config = new Config(RcRPGMain.getInstance().getPlayerFile()+File.separator + name+".yml");
             config.set("名称",name);
             config.set("公会", MainConfig.getInitialGuild());
             config.set("称号", MainConfig.getInitialPrefix());

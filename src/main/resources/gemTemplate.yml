@@ -1,0 +1,20 @@
+en_US:
+  default:
+    insertable: §aInsertable<§7@stoneType§a>
+    embedded: "@stoneName"
+  攻击宝石:
+    insertable: §aInsertable<§c@stoneType§a>
+    embedded: "@stoneName"
+  生命宝石:
+    insertable: §aInsertable<§a§l@stoneType§r§a>
+    embedded: "@stoneName"
+zh_CN:
+  default:
+    insertable: §a可镶嵌<§7@stoneType§a>
+    embedded: "@stoneName"
+  攻击宝石:
+    insertable: §a可镶嵌<§c@stoneType§a>
+    embedded: "@stoneName"
+  生命宝石:
+    insertable: §a可镶嵌<§a§l@stoneType§r§a>
+    embedded: "@stoneName"

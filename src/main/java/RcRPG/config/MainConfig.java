@@ -60,9 +60,7 @@ public class MainConfig {
     public static List<String> attrDisplayPercent = new ArrayList<>();
 
     public static void init() {
-        if (!new File(RcRPGMain.getInstance().getDataFolder(), "config.yml").exists()) {
-            RcRPGMain.getInstance().saveResource("config.yml");
-        }
+        RcRPGMain.getInstance().saveResource("config.yml");
         config = new Config(new File(RcRPGMain.getInstance().getDataFolder(), "config.yml"), Config.YAML);
 
         // 读取配置文件中的值

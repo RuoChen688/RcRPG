@@ -258,6 +258,7 @@ public class Commands extends PluginCommand<RcRPGMain> {
                     return false;
                 }
                 RcRPGMain.getInstance().init();
+                Server.getInstance().getOnlinePlayers().values().forEach(RcRPGMain::updateItemLore);
                 sender.sendMessage(TextFormat.GREEN + i18n.tr(langCode, "rcrpg.commands.reloaded"));
                 return true;
             }

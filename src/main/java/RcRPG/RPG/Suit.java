@@ -6,6 +6,7 @@ import cn.nukkit.utils.Config;
 import cn.nukkit.utils.ConfigSection;
 import lombok.Getter;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,7 +17,7 @@ public class Suit {
 
     public static void init() {
         suitInfo.clear();
-        Config cfg = new Config(RcRPGMain.getInstance().getDataFolder() + "/SuitPlan.yml");
+        Config cfg = new Config(RcRPGMain.getInstance().getDataFolder() + File.separator + "suitPlan.yml");
         cfg.getAll().keySet().forEach(suitName -> {
             RcRPGMain.getInstance().getLogger().info("suitName: "+suitName);
             suitInfo.put(suitName, new SuitConfig(cfg.getSection(suitName)));

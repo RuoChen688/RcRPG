@@ -3,16 +3,20 @@ package RcRPG;
 import RcRPG.RPG.*;
 import RcRPG.RPG.forging.ForgingPaper;
 import RcRPG.RPG.forging.ForgingStone;
+import RcRPG.command.Commands;
+import RcRPG.config.GemTemplateConfig;
+import RcRPG.config.MainConfig;
+import RcRPG.floatingtext.TextEntity;
 import RcRPG.task.BoxTimeTask;
 import RcRPG.task.PlayerAttrUpdateTask;
 import RcRPG.task.PlayerTipTask;
-import RcRPG.command.Commands;
-import RcRPG.config.MainConfig;
-import RcRPG.floatingtext.TextEntity;
 import RcRPG.tips.TipsVariables;
+import cn.nukkit.Player;
 import cn.nukkit.Server;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.event.Listener;
+import cn.nukkit.inventory.PlayerInventory;
+import cn.nukkit.item.Item;
 import cn.nukkit.lang.LangCode;
 import cn.nukkit.lang.PluginI18n;
 import cn.nukkit.lang.PluginI18nManager;
@@ -34,6 +38,9 @@ public class RcRPGMain extends PluginBase implements Listener {
     public static PluginI18n i18n;
 
     public static LangCode serverLangCode;
+
+    @Getter
+    public GemTemplateConfig gemTemplateConfig;
 
     public Config ornamentConfig;
 
@@ -86,7 +93,7 @@ public class RcRPGMain extends PluginBase implements Listener {
             this.getServer().getScheduler().scheduleRepeatingTask(new PlayerTipTask(this), 20);
         }
         this.getServer().getScheduler().scheduleRepeatingTask(new BoxTimeTask(this), 20);
-        //this.getServer().getScheduler().scheduleRepeatingTask(new loadHealth(this), 10);
+        // this.getServer().getScheduler().scheduleRepeatingTask(new loadHealth(this), 10);
         this.getServer().getScheduler().scheduleRepeatingTask(new PlayerAttrUpdateTask(this), 20);
 
         this.getServer().getPluginManager().addPermission(new Permission("plugin.rcrpg", "rcrpg 命令权限", "true"));
@@ -108,21 +115,24 @@ public class RcRPGMain extends PluginBase implements Listener {
     public void init() {
         MainConfig.init();
 
-        this.saveResource("OrnamentConfig.yml", "/OrnamentConfig.yml", false);
+        this.saveResource("OrnamentConfig.yml", "OrnamentConfig.yml", false);
         ornamentConfig = new Config(this.getDataFolder() + File.separator + "OrnamentConfig.yml");
 
-        this.saveResource("DismantlePlan.yml", "/DismantlePlan.yml", false);
-        dismantleConfig = new Config(this.getDataFolder() + File.separator + "DismantlePlan.yml");
+        this.saveResource("dismantlePlan.yml", "dismantlePlan.yml", false);
+        dismantleConfig = new Config(this.getDataFolder() + File.separator + "dismantlePlan.yml");
 
-        this.saveResource("SuitPlan.yml", "/SuitPlan.yml", false);
+        this.saveResource("suitPlan.yml", "suitPlan.yml", false);
         Suit.init();
+
+        this.saveResource("gemTemplate.yml", "gemTemplate.yml", false);
+        gemTemplateConfig = new GemTemplateConfig(new Config(this.getDataFolder() + File.separator + "gemTemplate.yml"));
 
         this.getLogger().info("开始读取武器信息");
         loadWeapon.clear();
         for (String name : Handle.getDefaultFiles("Weapon")) {
             Weapon weapon = null;
             try {
-                weapon = Weapon.loadWeapon(name, new Config(this.getDataFolder() + File.separator + "Weapon/" + name + ".yml", Config.YAML));
+                weapon = Weapon.loadWeapon(name, new Config(this.getDataFolder() + File.separator + "Weapon" + File.separator + name + ".yml", Config.YAML));
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
@@ -326,6 +336,37 @@ public class RcRPGMain extends PluginBase implements Listener {
                 } catch (IllegalArgumentException e) {
                     serverLangCode = LangCode.en_US;
                 }
+            }
+        }
+    }
+
+    public static void updateItemLore(Player player) {
+        if (player == null) {
+            return;
+        }
+
+        PlayerInventory bag = player.getInventory();
+
+        for (int num = 0; num < bag.getSize(); num++) {
+            Item item = bag.getItem(num);
+
+            if (item.isNull() || !item.hasCompoundTag()) {
+                continue;
+            }
+
+            Item newItem;
+            if (Weapon.isWeapon(item)) {
+                newItem = Weapon.setWeaponLore(item.clone(), player.getLanguageCode());
+            } else if (Armour.isArmour(item)) {
+                newItem = Armour.setArmourLore(item.clone(), player.getLanguageCode());
+            } else {
+                continue;
+            }
+
+            if (!item.equals(newItem)) {
+                newItem.setCount(item.count);
+                bag.remove(item);
+                bag.setItem(num, newItem);
             }
         }
     }

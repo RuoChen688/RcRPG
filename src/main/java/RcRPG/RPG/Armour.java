@@ -5,6 +5,7 @@ import RcRPG.Handle;
 import RcRPG.RcRPGMain;
 import cn.nukkit.Player;
 import cn.nukkit.item.Item;
+import cn.nukkit.lang.LangCode;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.nbt.tag.ListTag;
 import cn.nukkit.nbt.tag.StringTag;
@@ -192,7 +193,7 @@ public class Armour extends ItemAttr {
         return false;
     }
 
-    public static Item getItem(String name, int count) {
+    public static Item getItem(String name, int count, LangCode langCode) {
         Armour armour = RcRPGMain.loadArmour.get(name);
         Item item = armour.getItem();
         item.setCount(count);
@@ -207,8 +208,13 @@ public class Armour extends ItemAttr {
 
         item.setNamedTag(tag);
         item.setCustomName(armour.getShowName());
-        Armour.setArmourLore(item);
+        Armour.setArmourLore(item, langCode);
         return item;
+
+    }
+
+    public static Item getItem(String name, int count) {
+        return getItem(name, count, LangCode.en_US);
     }
 
     public static boolean giveArmour(Player player, String name, int count) {
@@ -291,7 +297,7 @@ public class Armour extends ItemAttr {
         CompoundTag tag = item.getNamedTag();
         tag.putList(stoneList);
         item.setNamedTag(tag);
-        player.getInventory().setItemInHand(Armour.setArmourLore(item));
+        player.getInventory().setItemInHand(Armour.setArmourLore(item, player.getLanguageCode()));
     }
 
     public static int getStoneHealth(Item item) {
@@ -333,7 +339,7 @@ public class Armour extends ItemAttr {
         return 0;
     }
 
-    public static Item setArmourLore(Item item) {
+    public static Item setArmourLore(Item item, LangCode langCode) {
         if (Armour.isArmour(item)) {
             Armour armour = RcRPGMain.loadArmour.get(item.getNamedTag().getString("name"));
             ArrayList<String> lore = (ArrayList<String>) armour.getLoreList().clone();
@@ -346,12 +352,19 @@ public class Armour extends ItemAttr {
                     s = s.replace("@stoneDamage", String.valueOf(Armour.getStoneDamage(item)));
                 if (s.contains("@stoneReDamage"))
                     s = s.replace("@stoneReDamage", String.valueOf(Armour.getStoneReDamage(item)));
+                if (s.contains("@gemLore"))
+                    s = s.replace("@gemLore", RcRPGMain.getInstance().getGemTemplateConfig().getTemplateText(langCode, item.getNamedTag(), armour.getStone(), armour.getStoneList()));
+
                 s = armour.replaceAttrTemplate(s);// 替换属性的值
                 lore.set(i, s);
             }
             item.setLore(lore.toArray(new String[0]));
         }
         return item;
+    }
+
+    public static Item setArmourLore(Item item) {
+        return setArmourLore(item, LangCode.en_US);
     }
 
     public void setAttr(Map<String, Object> attr) {

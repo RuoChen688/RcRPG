@@ -5,6 +5,7 @@ import RcRPG.Handle;
 import RcRPG.RcRPGMain;
 import cn.nukkit.Player;
 import cn.nukkit.item.Item;
+import cn.nukkit.lang.LangCode;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.nbt.tag.ListTag;
 import cn.nukkit.nbt.tag.StringTag;
@@ -187,7 +188,7 @@ public class Weapon extends ItemAttr {
         return false;
     }
 
-    public static Item getItem(String name, int count) {
+    public static Item getItem(String name, int count, LangCode langCode) {
         Weapon weapon = RcRPGMain.loadWeapon.get(name);
         Item item = weapon.getItem();
         item.setCount(count);
@@ -204,8 +205,12 @@ public class Weapon extends ItemAttr {
         tag.putList(stoneList);
         item.setNamedTag(tag);
         item.setCustomName(weapon.getShowName());
-        Weapon.setWeaponLore(item);
+        Weapon.setWeaponLore(item, langCode);
         return item;
+    }
+
+    public static Item getItem(String name, int count) {
+        return getItem(name, count, LangCode.en_US);
     }
 
     public static boolean giveWeapon(Player player, String name, int count) {
@@ -288,7 +293,7 @@ public class Weapon extends ItemAttr {
         CompoundTag tag = item.getNamedTag();
         tag.putList(stoneList);
         item.setNamedTag(tag);
-        player.getInventory().setItemInHand(Weapon.setWeaponLore(item));
+        player.getInventory().setItemInHand(Weapon.setWeaponLore(item, player.getLanguageCode()));
     }
 
     public static int getStoneDamage(Item item) {
@@ -297,7 +302,7 @@ public class Weapon extends ItemAttr {
             int damage = 0;
             for (Stone stone : list) {
                 if (stone == null) continue;
-                damage += stone.getItemAttr("PVE攻击力");
+                damage += (int) stone.getItemAttr("PVE攻击力");
             }
             return damage;
         }
@@ -317,7 +322,7 @@ public class Weapon extends ItemAttr {
         return 0;
     }
 
-    public static Item setWeaponLore(Item item) {
+    public static Item setWeaponLore(Item item, LangCode langCode) {
         if (Weapon.isWeapon(item)) {
             Weapon weapon = RcRPGMain.loadWeapon.get(item.getNamedTag().getString("name"));
             ArrayList<String> lore;
@@ -331,12 +336,19 @@ public class Weapon extends ItemAttr {
                     s = s.replace("@stoneDamage", String.valueOf(Weapon.getStoneDamage(item)));
                 if (s.contains("@stoneReDamage"))
                     s = s.replace("@stoneReDamage", String.valueOf(Weapon.getStoneReDamage(item)));
+                if (s.contains("@gemLore"))
+                    s = s.replace("@gemLore", RcRPGMain.getInstance().getGemTemplateConfig().getTemplateText(langCode, item.getNamedTag(), weapon.getStone(), weapon.getStoneList()));
+
                 s = weapon.replaceAttrTemplate(s);// 替换属性的值
                 lore.set(i, s);
             }
             item.setLore(lore.toArray(new String[0]));
         }
         return item;
+    }
+
+    public static Item setWeaponLore(Item item) {
+        return setWeaponLore(item, LangCode.en_US);
     }
 
     /**

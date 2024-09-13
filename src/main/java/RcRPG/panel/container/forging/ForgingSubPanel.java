@@ -12,7 +12,6 @@ import cn.nukkit.item.Item;
 import cn.nukkit.nbt.tag.CompoundTag;
 import me.iwareq.fakeinventories.FakeInventory;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -38,7 +37,6 @@ public class ForgingSubPanel implements InventoryHolder {
     public ForgingPaper forgingPaper;
     public ForgingStone forgingStone;
     public Item mainFootage = Item.AIR_ITEM;
-    public ArrayList<Item> normalFootageList = new ArrayList<>();
 
     public ForgingSubPanel(ForgingPaper paper) {
         this.forgingPaper = paper;
@@ -48,7 +46,7 @@ public class ForgingSubPanel implements InventoryHolder {
     public Item forgingStoneItem = Item.AIR_ITEM;
 
     public void sendPanel(Player player) {
-        FakeInventory inv = new ForgingSubInventory("锻造 - 「" + forgingPaper.getShowName() + "」");
+        ForgingSubInventory inv = new ForgingSubInventory("锻造 - 「" + forgingPaper.getShowName() + "」");
         inv.setContents(getPanel(player));
         inv.setDefaultItemHandler((item, event) -> {
             boolean isNotAction = false;
@@ -89,14 +87,14 @@ public class ForgingSubPanel implements InventoryHolder {
                                 inv.setItem(2, AIR_PLACEHOLDER);
                             }
                             // 清理普通素材
-                            player.getInventory().addItem(this.normalFootageList.toArray(Item[]::new));
+                            player.getInventory().addItem(inv.normalFootageList.toArray(Item[]::new));
                             for (int i = 3; i < 27; i++) {
                                 if (AIR_PLACEHOLDER.deepEquals(inv.getItemFast(i))) {
                                     break;// 如果不行请改成 continue
                                 }
                                 inv.setItem(i, AIR_PLACEHOLDER);
                             }
-                            this.normalFootageList.clear();
+                            inv.normalFootageList.clear();
                         } else if (slotChange.getSlot() == 2) {// 回退主素材
                             player.getInventory().addItem(sourceItem);
 
@@ -113,32 +111,33 @@ public class ForgingSubPanel implements InventoryHolder {
                             inv.setItem(2, barrierItem);
 
                             // 清理普通素材
-                            player.getInventory().addItem(this.normalFootageList.toArray(Item[]::new));
+                            player.getInventory().addItem(inv.normalFootageList.toArray(Item[]::new));
                             for (int i = 3; i < 27; i++) {
                                 if (AIR_PLACEHOLDER.deepEquals(inv.getItemFast(i))) {
                                     break;// 如果不行请改成 continue
                                 }
                                 inv.setItem(i, AIR_PLACEHOLDER);
                             }
-                            this.normalFootageList.clear();
+                            inv.normalFootageList.clear();
                         } else if (slotChange.getSlot() > 2) {
-                            player.getInventory().addItem(this.normalFootageList.get(slotChange.getSlot() - 3));
-                            this.normalFootageList.remove(slotChange.getSlot() - 3);
+                            player.getInventory().addItem(inv.normalFootageList.get(slotChange.getSlot() - 3));
+                            inv.normalFootageList.remove(slotChange.getSlot() - 3);
                             // 修改箱内物品状态
                             Item stoneTipItem = Item.fromString("minecraft:oak_sign");
                             stoneTipItem.setCustomName("§r§7一一一 §e放入「素材」 §7一一一");
                             stoneTipItem.setLore(
-                                    "§r§f素材剩余容量：§a" + (this.forgingStone.getVolume() - this.normalFootageList.size()),
-                                    "§r§f素材品质范围：§a" + (Math.max(this.forgingStone.getQuality(), 0)) + "~" + Math.min(this.forgingStone.getQuality() + 2, MAX_QUALITY) + "级"
+                                    "§r§f素材剩余容量：§a" + (this.forgingStone.getVolume() - inv.normalFootageList.size()),
+                                    "§r§f素材品质范围：§a" + (Math.max(this.forgingStone.getQuality(), 0)) + "~" + Math.min(this.forgingStone.getQuality() + 2, MAX_QUALITY) + "级",
+                                    !inv.normalFootageList.isEmpty() ? "§l§a>> 关闭进行锻造 <<" : "§c锻造需放入至少一个素材"
                             );
                             inv.setItem(0, stoneTipItem);
 
                             // 清理普通素材
                             // 0x, 1y, 2y, 3z, 4z
-                            for (int i = 3; i < this.normalFootageList.size() + 3; i++) {
-                                inv.setItem(i, this.normalFootageList.get(i - 3));
+                            for (int i = 3; i < inv.normalFootageList.size() + 3; i++) {
+                                inv.setItem(i, inv.normalFootageList.get(i - 3));
                             }
-                            for (int i = this.normalFootageList.size() + 3; i < 27; i++) {
+                            for (int i = inv.normalFootageList.size() + 3; i < 27; i++) {
                                 if (AIR_PLACEHOLDER.deepEquals(inv.getItemFast(i))) {
                                     break;// 如果不行请改成 continue
                                 }
@@ -158,7 +157,8 @@ public class ForgingSubPanel implements InventoryHolder {
                         stoneTipItem.setCustomName("§r§7一一一 §e放入「主素材」 §7一一一");
                         stoneTipItem.setLore(
                                 "§r§f主素材，请放入素材：" + this.forgingPaper.getMainFootage().getName(),
-                                "§r§f素材品质范围：§a" + (Math.max(this.forgingStone.getQuality(), 0)) + "~" + Math.min(this.forgingStone.getQuality() + 2, MAX_QUALITY) + "级"
+                                "§r§f素材品质范围：§a" + (Math.max(this.forgingStone.getQuality(), 0)) + "~" + Math.min(this.forgingStone.getQuality() + 2, MAX_QUALITY) + "级",
+                                !inv.normalFootageList.isEmpty() ? "§l§a>> 关闭进行锻造 <<" : "§c锻造需放入至少一个素材"
                         );
                         inv.setItem(0, stoneTipItem);
                         break;
@@ -192,7 +192,8 @@ public class ForgingSubPanel implements InventoryHolder {
                                 stoneTipItem.setCustomName("§r§7一一一 §e放入「素材」 §7一一一");
                                 stoneTipItem.setLore(
                                         "§r§f素材剩余容量：§a" + this.forgingStone.getVolume(),
-                                        "§r§f素材品质范围：§a" + (Math.max(this.forgingStone.getQuality(), 0)) + "~" + Math.min(this.forgingStone.getQuality() + 2, MAX_QUALITY) + "级"
+                                        "§r§f素材品质范围：§a" + (Math.max(this.forgingStone.getQuality(), 0)) + "~" + Math.min(this.forgingStone.getQuality() + 2, MAX_QUALITY) + "级",
+                                        !inv.normalFootageList.isEmpty() ? "§l§a>> 关闭进行锻造 <<" : "§c锻造需放入至少一个素材"
                                 );
                                 inv.setItem(0, stoneTipItem);
                                 break;
@@ -227,7 +228,7 @@ public class ForgingSubPanel implements InventoryHolder {
                 quality > Math.min(this.forgingStone.getQuality() + 2, MAX_QUALITY);
     }
 
-    public void addFootage(Player player, Item targetItem, FakeInventory inv, int actionSlot) {
+    public void addFootage(Player player, Item targetItem, ForgingSubInventory inv, int actionSlot) {
         if (this.forgingStone == null) {
             return;
         }
@@ -250,7 +251,7 @@ public class ForgingSubPanel implements InventoryHolder {
         }
 
         // 如果素材已经满了
-        if (this.normalFootageList.size() >= this.forgingStone.getVolume()) {
+        if (inv.normalFootageList.size() >= this.forgingStone.getVolume()) {
             return;
         }
         for (int i = 3; i < 27; i++) {
@@ -264,24 +265,24 @@ public class ForgingSubPanel implements InventoryHolder {
                 }
                 Item addItem = targetItem.clone();
                 addItem.setCount(1);
-                this.normalFootageList.add(addItem);
+                inv.normalFootageList.add(addItem);
                 removeAndReturnItem(player, targetItem, inv, i);
                 // 修改箱内物品状态
                 Item stoneTipItem = Item.fromString("minecraft:oak_sign");
                 stoneTipItem.setCustomName("§r§7一一一 §e放入「素材」 §7一一一");
                 stoneTipItem.setLore(
-                        "§r§f素材剩余容量：§a" + (this.forgingStone.getVolume() - this.normalFootageList.size()),
+                        "§r§f素材剩余容量：§a" + (this.forgingStone.getVolume() - inv.normalFootageList.size()),
                         "§r§f素材品质范围：§a" + (Math.max(this.forgingStone.getQuality(), 0)) + "~" + Math.min(this.forgingStone.getQuality() + 2, MAX_QUALITY) + "级"
                 );
                 inv.setItem(0, stoneTipItem);
                 break;
             }
         }
-//        for (int i = 3; i < this.normalFootageList.size() + 2; i++) {
-//            RcRPGMain.getInstance().getLogger().info("设置 "+ (i+1)+" 格子为"+this.normalFootageList.get(i - 2).getName());
-//            inv.setItem(i, this.normalFootageList.get(i - 2));
+//        for (int i = 3; i < inv.normalFootageList.size() + 2; i++) {
+//            RcRPGMain.getInstance().getLogger().info("设置 "+ (i+1)+" 格子为"+inv.normalFootageList.get(i - 2).getName());
+//            inv.setItem(i, inv.normalFootageList.get(i - 2));
 //        }
-//        for (int i = this.normalFootageList.size() + 3; i < 27; i++) {
+//        for (int i = inv.normalFootageList.size() + 3; i < 27; i++) {
 //            if (AIR_PLACEHOLDER.deepEquals(inv.getItemFast(i))) {
 //                break;// 如果不行请改成 continue
 //            }

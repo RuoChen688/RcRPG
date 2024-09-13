@@ -95,10 +95,10 @@ public class GemTemplateConfig {
                             .replace("@stoneType", stoneSlots.get(i));
                 } else if (i < stoneSlots.size()) {
                     template = templateTr(langCode, stoneSlots.get(i), "embedded")
-                            .replace("@stoneName", loadStone.get(stoneName).getShowName());
+                            .replace("@stoneName", loadStone.containsKey(stoneName) ? loadStone.get(stoneName).getShowName() : "unknown");
                 } else {
                     template = templateTr(langCode, "default", "embedded")
-                            .replace("@stoneName", loadStone.get(stoneName).getShowName());
+                            .replace("@stoneName", loadStone.containsKey(stoneName) ? loadStone.get(stoneName).getShowName() : "unknown");
                 }
             }
             templateList.add(template);  // 将模板字符串添加到列表中

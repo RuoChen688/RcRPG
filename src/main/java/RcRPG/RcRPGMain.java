@@ -143,6 +143,7 @@ public class RcRPGMain extends PluginBase implements Listener {
                 this.getLogger().warning(name + ".yml 武器数据读取失败");
             }
         }
+
         this.getLogger().info("开始读取盔甲信息");
         loadArmour.clear();
         for (String name : Handle.getDefaultFiles("Armour")) {
@@ -159,6 +160,7 @@ public class RcRPGMain extends PluginBase implements Listener {
                 this.getLogger().warning(name + ".yml 盔甲数据读取失败");
             }
         }
+
         this.getLogger().info("开始读取宝石信息");
         loadStone.clear();
         for (String name : Handle.getDefaultFiles("Stone")) {
@@ -175,6 +177,7 @@ public class RcRPGMain extends PluginBase implements Listener {
                 this.getLogger().warning(name + ".yml 宝石数据读取失败");
             }
         }
+
         this.getLogger().info("开始读取箱子信息");
         loadBox.clear();
         for (String name : Handle.getDefaultFiles("Box")) {

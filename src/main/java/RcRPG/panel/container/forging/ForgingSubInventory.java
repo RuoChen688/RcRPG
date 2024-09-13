@@ -1,6 +1,7 @@
 package RcRPG.panel.container.forging;
 
 import RcRPG.AttrManager.FootageAttr;
+import RcRPG.RPG.Weapon;
 import cn.ankele.plugin.MagicItem;
 import cn.ankele.plugin.bean.ItemBean;
 import cn.nukkit.Player;
@@ -10,6 +11,7 @@ import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.network.protocol.RemoveEntityPacket;
 import me.iwareq.fakeinventories.FakeInventory;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +19,8 @@ import java.util.Map;
 public class ForgingSubInventory extends FakeInventory {
 
     public long id;
+
+    public ArrayList<Item> normalFootageList = new ArrayList<>();
 
     public ForgingSubInventory(String name) {
         super(InventoryType.CHEST, name);
@@ -29,6 +33,14 @@ public class ForgingSubInventory extends FakeInventory {
         who.dataPacket(pk);
         super.onClose(who);
         Map<Integer, Item> content = this.getContents();
+
+        if (normalFootageList.isEmpty()) {
+            who.sendMessage("锻造已取消，需至少放入一个素材");
+            List<Item> invItemList = content.values().stream()
+                    .skip(1).toList();
+            who.getInventory().addItem(invItemList.toArray(Item[]::new));
+            return;
+        }
         // get(0); // 原初之石
         // get(1); // 主素材
         // get(2); // 次素材
@@ -45,12 +57,16 @@ public class ForgingSubInventory extends FakeInventory {
             if (!tag.contains("yamlName")) {
                 continue;
             }
-            var itemBeam = magicItemMap.get(tag.getString("yamlName"));
+            ItemBean itemBeam = magicItemMap.get(tag.getString("yamlName"));
             if (itemBeam == null) {
                 continue;
             }
             attr.setItemAttrConfig("item_i" + i, itemBeam.getAttr());
         }
+
+        Item weapon = Weapon.getItem("标准型战斗长剑", 1);
+        weapon.getNamedTag().putCompound("attr", attr.toNBT());
+        who.getInventory().addItem(weapon);
     }
 
 }

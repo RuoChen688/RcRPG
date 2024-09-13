@@ -1,6 +1,9 @@
 package RcRPG.AttrManager;
 
 import RcRPG.RcRPGMain;
+import cn.nukkit.nbt.tag.CompoundTag;
+import cn.nukkit.nbt.tag.FloatTag;
+import cn.nukkit.nbt.tag.ListTag;
 
 import java.util.HashMap;
 import java.util.List;
@@ -79,5 +82,49 @@ public class FootageAttr extends Manager {
                 mainAttrMap.put(key, mainValues);
             }
         }
+    }
+
+    /**
+     * 将属性转换为 NBT 格式
+     * 此方法用于序列化对象的属性，以便可以将其保存至物品
+     *
+     * @return 返回包含所有属性的 CompoundTag，用于保存至物品
+     */
+    public CompoundTag toNBT() {
+        // 创建一个根CompoundTag来存储所有属性
+        CompoundTag nbt = new CompoundTag();
+
+        // 遍历属性映射，将每个属性转换为NBT格式
+        for (Map.Entry<String, Map<String, float[]>> entry : myAttr.entrySet()) {
+            // 获取当前条目的属性ID
+            String id = entry.getKey();
+            // 获取当前条目的属性映射
+            Map<String, float[]> attrMap = entry.getValue();
+
+            // 为当前属性创建一个CompoundTag
+            CompoundTag attrTag = new CompoundTag();
+            // 遍历属性映射，将每个属性值转换为ListTag并添加到attrTag
+            for (Map.Entry<String, float[]> attrEntry : attrMap.entrySet()) {
+                // 获取当前属性的键
+                String attrKey = attrEntry.getKey();
+                // 获取当前属性的值，是一个浮点数数组
+                float[] values = attrEntry.getValue();
+
+                // 创建一个ListTag来存储属性值
+                ListTag<FloatTag> valueList = new ListTag<>();
+                // 将属性值添加到ListTag中
+                valueList.add(new FloatTag("", values[0]));
+                valueList.add(new FloatTag("", values[1]));
+
+                // 将ListTag添加到attrTag中
+                attrTag.putList(attrKey, valueList);
+            }
+
+            // 将attrTag添加到根CompoundTag中
+            nbt.putCompound(id, attrTag);
+        }
+
+        // 返回包含所有属性的CompoundTag
+        return nbt;
     }
 }

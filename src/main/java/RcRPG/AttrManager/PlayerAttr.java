@@ -142,7 +142,7 @@ public class PlayerAttr extends Manager {
                 });
             }
 
-            setItemAttrConfig(weapon.getLabel(), weapon.getMainAttr());
+            setItemAttrConfig(weapon.getLabel(), ForgingItem.isForgingItem(rcItem) ? ForgingItem.fromNBT(rcItem.getNamedTag().getCompound("attr")) : weapon.getMainAttr());
             checkItemStoneAttr(weapon.getLabel(), Weapon.getStones(rcItem), beforeLabel, labelList);
 
             beforeLabel.remove(weapon.getLabel());
@@ -153,7 +153,7 @@ public class PlayerAttr extends Manager {
             if (rcItem.getNamedTag() == null) continue;
             Armour armour = RcRPGMain.loadArmour.get(rcItem.getNamedTag().getString("name"));
             if (armour == null) continue;
-            setItemAttrConfig(armour.getLabel(), armour.getMainAttr());
+            setItemAttrConfig(armour.getLabel(), ForgingItem.isForgingItem(rcItem) ? ForgingItem.fromNBT(rcItem.getNamedTag().getCompound("attr")) : armour.getMainAttr());
             checkItemStoneAttr(armour.getLabel(), Armour.getStones(rcItem), beforeLabel, labelList);
 
             if (!armour.getSuit().isEmpty()) {// 套装

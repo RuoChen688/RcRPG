@@ -38,7 +38,13 @@ public class ForgingSubInventory extends FakeInventory {
             who.sendMessage("锻造已取消，需至少放入一个素材");
             List<Item> invItemList = content.values().stream()
                     .skip(1).toList();
-            who.getInventory().addItem(invItemList.toArray(Item[]::new));
+            for (int i = 0; i < invItemList.size(); i++) {
+                Item item = invItemList.get(i);
+                if (item.deepEquals(ForgingSubPanel.AIR_PLACEHOLDER)) {
+                    break;
+                }
+                who.getInventory().addItem(item);
+            }
             return;
         }
         // get(0); // 原初之石
@@ -65,7 +71,8 @@ public class ForgingSubInventory extends FakeInventory {
         }
 
         Item weapon = Weapon.getItem("标准型战斗长剑", 1);
-        weapon.getNamedTag().putCompound("attr", attr.toNBT());
+        weapon.setNamedTag(weapon.getNamedTag().putCompound("attr", attr.toNBT()));
+        Weapon.setWeaponLore(weapon, who.getLanguageCode());
         who.getInventory().addItem(weapon);
     }
 

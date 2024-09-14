@@ -19,7 +19,7 @@ import java.util.*;
 
 @Getter
 @Setter
-public class Weapon extends ItemAttr {
+public class Weapon extends ItemAttr implements Cloneable {
 
     private Config config;
 
@@ -85,74 +85,83 @@ public class Weapon extends ItemAttr {
 
     private ArrayList<String> loreList = new ArrayList<>();
 
+    public ForgingItem forgingItem;
+
     public Weapon(String name, Config config) {
         this.name = name;
         this.config = config;
     }
 
+    public Weapon initWeapon() {
+        this.setLabel(config.getString("标签"));
+        this.setShowName(config.getString("显示名称"));
+        this.setItem(Item.fromString(config.getString("物品ID")));
+        this.setUnBreak(config.getBoolean("无限耐久"));
+        this.setOffHand(config.getBoolean("可副手"));
+        this.setLevel(config.getInt("最低使用等级"));
+
+        if (config.exists("属性")) {
+            this.setAttr((Map<String, Object>) config.get("属性"));
+        }
+        this.setFire(config.getInt("燃烧时间"));
+        this.setFireRound(config.getInt("燃烧概率"));
+        this.setFrozen(config.getInt("冰冻时间"));
+        this.setFrozenRound(config.getInt("冰冻概率"));
+        this.setLighting(config.getInt("雷击"));
+        this.setLightRound(config.getInt("雷击概率"));
+
+        this.setStone(config.getInt("宝石孔数"));
+        this.setMessage(config.getString("介绍", ""));
+
+        ArrayList<Effect> list1 = new ArrayList<>();
+        for (String effect : config.getStringList("攻击者药水效果")) {
+            list1.add(Handle.StringToEffect(effect));
+        }
+        this.setDamagerEffect(list1);
+        ArrayList<Effect> list2 = new ArrayList<>();
+        for (String effect : config.getStringList("受击者药水效果")) {
+            list2.add(Handle.StringToEffect(effect));
+        }
+        this.setDamagedEffect(list2);
+        ArrayList<Effect> list3 = new ArrayList<>();
+        for (String effect : config.getStringList("群体药水效果")) {
+            list3.add(Handle.StringToEffect(effect));
+        }
+        this.setGroupEffect(list3);
+        ArrayList<String> loreList = new ArrayList<>(config.getStringList("显示"));
+        this.setLoreList(loreList);
+        ArrayList<String> stoneList = new ArrayList<>(config.getStringList("宝石槽"));
+        this.setStoneList(stoneList);
+
+        this.setDismantle(config.getString("分解", ""));
+
+        if (config.exists("套装")) {
+            List<String> suitList;
+            if (config.isList("套装")) {
+                suitList = config.getStringList("套装");
+            } else {
+                suitList = new ArrayList<>(Arrays.asList(config.getString("套装", "").split(",")));
+            }
+            this.setSuit(suitList);
+        }
+
+        this.setKillMessage(config.getString("击杀提示"));
+        this.setTipText(config.getString("底部显示"));
+        this.setMyMessage(config.getString("个人通知"));
+        this.setServerMessage(config.getString("全服通知"));
+        return this;
+    }
+
+    @Override
+    public Weapon clone() {
+        return new Weapon(name, config).initWeapon();
+    }
+
     public static Weapon loadWeapon(String name, Config config) {
         try {
-            Weapon weapon = new Weapon(name, config);
-
-            weapon.setLabel(config.getString("标签"));
-            weapon.setShowName(config.getString("显示名称"));
-            weapon.setItem(Item.fromString(config.getString("物品ID")));
-            weapon.setUnBreak(config.getBoolean("无限耐久"));
-            weapon.setOffHand(config.getBoolean("可副手"));
-            weapon.setLevel(config.getInt("最低使用等级"));
-
-            if (config.exists("属性")) {
-                weapon.setAttr((Map<String, Object>) config.get("属性"));
-            }
-            weapon.setFire(config.getInt("燃烧时间"));
-            weapon.setFireRound(config.getInt("燃烧概率"));
-            weapon.setFrozen(config.getInt("冰冻时间"));
-            weapon.setFrozenRound(config.getInt("冰冻概率"));
-            weapon.setLighting(config.getInt("雷击"));
-            weapon.setLightRound(config.getInt("雷击概率"));
-
-            weapon.setStone(config.getInt("宝石孔数"));
-            weapon.setMessage(config.getString("介绍", ""));
-
-            ArrayList<Effect> list1 = new ArrayList<>();
-            for (String effect : config.getStringList("攻击者药水效果")) {
-                list1.add(Handle.StringToEffect(effect));
-            }
-            weapon.setDamagerEffect(list1);
-            ArrayList<Effect> list2 = new ArrayList<>();
-            for (String effect : config.getStringList("受击者药水效果")) {
-                list2.add(Handle.StringToEffect(effect));
-            }
-            weapon.setDamagedEffect(list2);
-            ArrayList<Effect> list3 = new ArrayList<>();
-            for (String effect : config.getStringList("群体药水效果")) {
-                list3.add(Handle.StringToEffect(effect));
-            }
-            weapon.setGroupEffect(list3);
-            ArrayList<String> loreList = new ArrayList<>(config.getStringList("显示"));
-            weapon.setLoreList(loreList);
-            ArrayList<String> stoneList = new ArrayList<>(config.getStringList("宝石槽"));
-            weapon.setStoneList(stoneList);
-
-            weapon.setDismantle(config.getString("分解", ""));
-
-            if (config.exists("套装")) {
-                List<String> suitList;
-                if (config.isList("套装")) {
-                    suitList = config.getStringList("套装");
-                } else {
-                    suitList = new ArrayList<>(Arrays.asList(config.getString("套装", "").split(",")));
-                }
-                weapon.setSuit(suitList);
-            }
-
-            weapon.setKillMessage(config.getString("击杀提示"));
-            weapon.setTipText(config.getString("底部显示"));
-            weapon.setMyMessage(config.getString("个人通知"));
-            weapon.setServerMessage(config.getString("全服通知"));
-            return weapon;
+            return new Weapon(name, config).initWeapon();
         } catch (Exception e) {
-            RcRPGMain.getInstance().getLogger().error("加载武器" + name + "配置文件失败");
+            RcRPGMain.getInstance().getLogger().error("加载武器 " + name + " 配置文件失败");
             return null;
         }
     }
@@ -190,7 +199,7 @@ public class Weapon extends ItemAttr {
 
     public static Item getItem(String name, int count, LangCode langCode) {
         Weapon weapon = RcRPGMain.loadWeapon.get(name);
-        Item item = weapon.getItem();
+        Item item = weapon.getItem().clone();
         item.setCount(count);
         CompoundTag tag = item.getNamedTag();
         if (tag == null) {
@@ -324,8 +333,16 @@ public class Weapon extends ItemAttr {
 
     public static Item setWeaponLore(Item item, LangCode langCode) {
         if (Weapon.isWeapon(item)) {
-            Weapon weapon = RcRPGMain.loadWeapon.get(item.getNamedTag().getString("name"));
+            Weapon weapon = RcRPGMain.loadWeapon.get(item.getNamedTag().getString("name")).clone();
             ArrayList<String> lore;
+            if (ForgingItem.isForgingItem(item)) {
+                // TODO: 此处应该可以优化
+                weapon.mainAttr = new HashMap<>();
+
+                for (Map.Entry<String, float[]> entry : ForgingItem.fromNBT(item.getNamedTag().getCompound("attr")).entrySet()) {
+                    weapon.mainAttr.put(entry.getKey(), entry.getValue());
+                }
+            }
             lore = (ArrayList<String>) weapon.getLoreList().clone();
             for (int i = 0; i < lore.size(); i++) {
                 String s = lore.get(i);

@@ -4,6 +4,7 @@ import RcRPG.RcRPGMain;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.nbt.tag.FloatTag;
 import cn.nukkit.nbt.tag.ListTag;
+import cn.nukkit.nbt.tag.Tag;
 
 import java.util.HashMap;
 import java.util.List;
@@ -11,6 +12,9 @@ import java.util.Map;
 
 public class FootageAttr extends Manager {
 
+    public FootageAttr() {
+        myAttr.put("Main", new HashMap<>());
+    }
     /**
      * 属性结构
      * {
@@ -20,6 +24,10 @@ public class FootageAttr extends Manager {
      * }
      */
     public Map<String, Map<String, float[]>> myAttr = new HashMap<>();
+
+    public Map<String, float[]> getMainAttr() {
+        return myAttr.get("Main");
+    }
 
     public void setItemAttrConfig(String id, Map<String, Object> newAttr) {
         Map<String, float[]> attrMap = new HashMap<>();
@@ -91,40 +99,54 @@ public class FootageAttr extends Manager {
      * @return 返回包含所有属性的 CompoundTag，用于保存至物品
      */
     public CompoundTag toNBT() {
-        // 创建一个根CompoundTag来存储所有属性
+        // 创建一个根CompoundTag来存储主属性
         CompoundTag nbt = new CompoundTag();
 
-        // 遍历属性映射，将每个属性转换为NBT格式
-        for (Map.Entry<String, Map<String, float[]>> entry : myAttr.entrySet()) {
-            // 获取当前条目的属性ID
-            String id = entry.getKey();
-            // 获取当前条目的属性映射
-            Map<String, float[]> attrMap = entry.getValue();
+        // 获取主属性
+        Map<String, float[]> mainAttr = getMainAttr();
 
-            // 为当前属性创建一个CompoundTag
-            CompoundTag attrTag = new CompoundTag();
-            // 遍历属性映射，将每个属性值转换为ListTag并添加到attrTag
-            for (Map.Entry<String, float[]> attrEntry : attrMap.entrySet()) {
-                // 获取当前属性的键
+        // 如果主属性不为空，遍历它并将其转换为NBT格式
+        if (mainAttr != null) {
+            for (Map.Entry<String, float[]> attrEntry : mainAttr.entrySet()) {
+                // 获取属性键和值
                 String attrKey = attrEntry.getKey();
-                // 获取当前属性的值，是一个浮点数数组
                 float[] values = attrEntry.getValue();
 
                 // 创建一个ListTag来存储属性值
                 ListTag<FloatTag> valueList = new ListTag<>();
-                // 将属性值添加到ListTag中
                 valueList.add(new FloatTag("", values[0]));
                 valueList.add(new FloatTag("", values[1]));
 
-                // 将ListTag添加到attrTag中
-                attrTag.putList(attrKey, valueList);
+                // 将ListTag添加到根CompoundTag中
+                nbt.putList(attrKey, valueList);
             }
-
-            // 将attrTag添加到根CompoundTag中
-            nbt.putCompound(id, attrTag);
         }
 
-        // 返回包含所有属性的CompoundTag
+        // 返回包含主属性的CompoundTag
         return nbt;
     }
+
+    public static Map<String, float[]> fromNBT(CompoundTag compoundTag) {
+        // 创建一个Map来存储反序列化后的主属性
+        Map<String, float[]> mainAttr = new HashMap<>();
+
+        // 遍历CompoundTag中的每个Tag
+        for (Tag tag : compoundTag.getAllTags()) {
+            if (tag instanceof ListTag<?> valueList && tag.getName() != null) {
+                String attrKey = tag.getName(); // 获取属性的键
+
+                // 提取ListTag中的两个值并存储到一个float数组中
+                float[] values = new float[2];
+                values[0] = ((FloatTag) valueList.get(0)).getData(); // 确保是FloatTag
+                values[1] = ((FloatTag) valueList.get(1)).getData();
+
+                // 将该属性键和值添加到主属性Map中
+                mainAttr.put(attrKey, values);
+            }
+        }
+
+        // 返回反序列化后的主属性Map
+        return mainAttr;
+    }
+
 }

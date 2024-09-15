@@ -349,21 +349,38 @@ public class Armour extends ItemAttr implements Cloneable {
 
     public static Item setArmourLore(Item item, LangCode langCode) {
         if (Armour.isArmour(item)) {
-            Armour armour = RcRPGMain.loadArmour.get(item.getNamedTag().getString("name"));
+            Armour armour;
+
+            boolean isForgingItem = ForgingItem.isForgingItem(item);
+            if (isForgingItem) {
+                // 锻造物品属性处理
+                armour = RcRPGMain.loadArmour.get(item.getNamedTag().getString("name")).clone();
+                armour.mainAttr = new HashMap<>();
+
+                for (Map.Entry<String, float[]> entry : ForgingItem.fromNBT(item.getNamedTag().getCompound("attr")).entrySet()) {
+                    armour.mainAttr.put(entry.getKey(), entry.getValue());
+                }
+            } else {
+                // 非锻造物品不使用深拷贝
+                armour = RcRPGMain.loadArmour.get(item.getNamedTag().getString("name"));
+            }
+
             ArrayList<String> lore = (ArrayList<String>) armour.getLoreList().clone();
             for (int i = 0; i < lore.size(); i++) {
                 String s = lore.get(i);
-                if (s.contains("@message")) s = s.replace("@message", armour.getMessage());
-                if (s.contains("@stoneHealth"))
-                    s = s.replace("@stoneHealth", String.valueOf(Armour.getStoneHealth(item)));
-                if (s.contains("@stoneDamage"))
-                    s = s.replace("@stoneDamage", String.valueOf(Armour.getStoneDamage(item)));
-                if (s.contains("@stoneReDamage"))
-                    s = s.replace("@stoneReDamage", String.valueOf(Armour.getStoneReDamage(item)));
-                if (s.contains("@gemLore"))
-                    s = s.replace("@gemLore", RcRPGMain.getInstance().getGemTemplateConfig().getTemplateText(langCode, item.getNamedTag(), armour.getStone(), armour.getStoneList()));
+                s = s.replace("@message", armour.getMessage());
+                s = s.replace("@stoneHealth", String.valueOf(Armour.getStoneHealth(item)));
+                s = s.replace("@stoneDamage", String.valueOf(Armour.getStoneDamage(item)));
+                s = s.replace("@stoneReDamage", String.valueOf(Armour.getStoneReDamage(item)));
+                s = s.replace("@gemLore", RcRPGMain.getInstance().getGemTemplateConfig().getTemplateText(langCode, item.getNamedTag(), armour.getStone(), armour.getStoneList()));
 
-                s = armour.replaceAttrTemplate(s);// 替换属性的值
+                // 替换属性的值
+                if (isForgingItem) {
+                    s = s.replace("@attrLore", armour.attrInfo(langCode));
+                } else {
+                    s = armour.replaceAttrTemplate(s);
+                }
+
                 lore.set(i, s);
             }
             item.setLore(lore.toArray(new String[0]));

@@ -4,6 +4,7 @@ import RcRPG.RPG.*;
 import RcRPG.RPG.forging.ForgingPaper;
 import RcRPG.RPG.forging.ForgingStone;
 import RcRPG.command.Commands;
+import RcRPG.config.AttrTemplateConfig;
 import RcRPG.config.GemTemplateConfig;
 import RcRPG.config.MainConfig;
 import RcRPG.floatingtext.TextEntity;
@@ -41,6 +42,9 @@ public class RcRPGMain extends PluginBase implements Listener {
 
     @Getter
     public GemTemplateConfig gemTemplateConfig;
+
+    @Getter
+    public AttrTemplateConfig attrTemplateConfig;
 
     public Config ornamentConfig;
 
@@ -126,6 +130,9 @@ public class RcRPGMain extends PluginBase implements Listener {
 
         this.saveResource("gemTemplate.yml", "gemTemplate.yml", false);
         gemTemplateConfig = new GemTemplateConfig(new Config(this.getDataFolder() + File.separator + "gemTemplate.yml"));
+
+        this.saveResource("attrTemplate.yml", "attrTemplate.yml", false);
+        attrTemplateConfig = new AttrTemplateConfig(new Config(this.getDataFolder() + File.separator + "attrTemplate.yml"));
 
         this.getLogger().info("开始读取武器信息");
         loadWeapon.clear();
@@ -283,39 +290,39 @@ public class RcRPGMain extends PluginBase implements Listener {
     public void createConfigDir() {
         File playerFile = this.getPlayerFile();
         if (!playerFile.exists() && !playerFile.mkdirs()) {
-            this.getLogger().info("/Players 文件夹创建失败");
+            this.getLogger().info(i18n.tr(serverLangCode, "rcrpg.dir.create.failed=", "/Players"));
         }
         File weaponFile = this.getWeaponFile();
         if (!weaponFile.exists() && !weaponFile.mkdirs()) {
-            this.getLogger().info("/Weapon 文件夹创建失败");
+            this.getLogger().info(i18n.tr(serverLangCode, "rcrpg.dir.create.failed=", "/Weapon"));
         }
         File armourFile = this.getArmourFile();
         if (!armourFile.exists() && !armourFile.mkdirs()) {
-            this.getLogger().info("/Armour 文件夹创建失败");
+            this.getLogger().info(i18n.tr(serverLangCode, "rcrpg.dir.create.failed=", "/Armour"));
         }
         File stoneFile = this.getStoneFile();
         if (!stoneFile.exists() && !stoneFile.mkdirs()) {
-            this.getLogger().info("/Stone 文件夹创建失败");
+            this.getLogger().info(i18n.tr(serverLangCode, "rcrpg.dir.create.failed=", "/Stone"));
         }
         File guildFile = this.getGuildFile();
         if (!guildFile.exists() && !guildFile.mkdirs()) {
-            this.getLogger().info("/Guild 文件夹创建失败");
+            this.getLogger().info(i18n.tr(serverLangCode, "rcrpg.dir.create.failed=", "/Guild"));
         }
         File boxFile = this.getBoxFile();
         if (!boxFile.exists() && !boxFile.mkdirs()) {
-            this.getLogger().info("/Box 文件夹创建失败");
+            this.getLogger().info(i18n.tr(serverLangCode, "rcrpg.dir.create.failed=", "/Box"));
         }
         File ornamentFile = this.getOrnamentFile();
         if (!ornamentFile.exists() && !ornamentFile.mkdirs()) {
-            this.getLogger().info("/Ornament 文件夹创建失败");
+            this.getLogger().info(i18n.tr(serverLangCode, "rcrpg.dir.create.failed=", "/Ornament"));
         }
         File forgingPaperFile = this.getForgingPaperFile();
         if (!forgingPaperFile.exists() && !forgingPaperFile.mkdirs()) {
-            this.getLogger().info("/Forging/Paper 文件夹创建失败");
+            this.getLogger().info(i18n.tr(serverLangCode, "rcrpg.dir.create.failed=", "/Forging/Paper"));
         }
         File forgingStoneFile = this.getForgingStoneFile();
         if (!forgingStoneFile.exists() && !forgingStoneFile.mkdirs()) {
-            this.getLogger().info("/Forging/Stone 文件夹创建失败");
+            this.getLogger().info(i18n.tr(serverLangCode, "rcrpg.dir.create.failed=", "/Forging/Stone"));
         }
     }
 

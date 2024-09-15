@@ -11,6 +11,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -26,6 +27,8 @@ public class ForgingPaper {
 
     private String message;
 
+    private List<String> origin;
+
     private ArrayList<String> loreList = new ArrayList<>();
 
     private ArrayList<ItemBean> mainFootage = new ArrayList<>();
@@ -39,9 +42,8 @@ public class ForgingPaper {
             forgingPaper.setMessage(config.getString("介绍", ""));
             ArrayList<String> loreList = new ArrayList<>(config.getStringList("显示"));
             forgingPaper.setLoreList(loreList);
-            new ArrayList<>(config.getStringList("主素材")).forEach((key)->{
-                forgingPaper.mainFootage.add(MagicItem.getItemsMap().get(key));
-            });
+            new ArrayList<>(config.getStringList("主素材")).forEach((key)-> forgingPaper.mainFootage.add(MagicItem.getItemsMap().get(key)));
+            forgingPaper.setOrigin(config.getStringList("源"));
             return forgingPaper;
         } catch (Exception e) {
             RcRPGMain.getInstance().getLogger().error("加载锻造图 " + name + " 配置文件失败");

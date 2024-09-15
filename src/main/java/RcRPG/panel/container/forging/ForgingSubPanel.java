@@ -13,6 +13,7 @@ import cn.nukkit.nbt.tag.CompoundTag;
 import me.iwareq.fakeinventories.FakeInventory;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ForgingSubPanel implements InventoryHolder {
@@ -47,6 +48,7 @@ public class ForgingSubPanel implements InventoryHolder {
 
     public void sendPanel(Player player) {
         ForgingSubInventory inv = new ForgingSubInventory("锻造 - 「" + forgingPaper.getShowName() + "」");
+        inv.origin = forgingPaper.getOrigin();
         inv.setContents(getPanel(player));
         inv.setDefaultItemHandler((item, event) -> {
             boolean isNotAction = false;

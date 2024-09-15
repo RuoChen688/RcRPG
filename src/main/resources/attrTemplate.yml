@@ -1,0 +1,75 @@
+en_US:
+  default:
+    # 仅有当属性是范围值时
+    template:
+      single: §r§7@attrName:§6 @max
+      double: §r§7@attrName:§6 @max - @min
+    # 属性是正数时
+    positive: §a@value
+    # 属性是负数时
+    negative: §c@value
+  PVE攻击力:
+    # 仅有当属性是范围值时
+    template:
+      single: §r§7ATK:§6 @max
+      double: §r§7ATK:§6 @max - @min
+    # 属性是正数时
+    positive: §a@value
+    # 属性是负数时
+    negative: §c@value
+  PVP攻击力:
+    # 仅有当属性是范围值时
+    template:
+      single: §r§7PVP ATK:§6 @max
+      double: §r§7PVP ATK:§6 @max - @min
+    # 属性是正数时
+    positive: §a@value
+    # 属性是负数时
+    negative: §c@value
+  血量值:
+    # 仅有当属性是范围值时
+    template:
+      single: §r§7Health:§6 @max
+      double: §r§7Health:§6 @max - @min
+    # 属性是正数时
+    positive: §a@value
+    # 属性是负数时
+    negative: §c@value
+
+zh_CN:
+  default:
+    # 仅有当属性是范围值时
+    template:
+      single: §r§7@attrName:§6 @max
+      double: §r§7@attrName:§6 @max - @min
+    # 属性是正数时
+    positive: §a@value
+    # 属性是负数时
+    negative: §c@value
+  PVE攻击力:
+    # 仅有当属性是范围值时
+    template:
+      single: §r§7攻击力:§6 @max
+      double: §r§7攻击力:§6 @max - @min
+    # 属性是正数时
+    positive: §a@value
+    # 属性是负数时
+    negative: §c@value
+  PVP攻击力:
+    # 仅有当属性是范围值时
+    template:
+      single: §r§7PVP攻击力:§6 @max
+      double: §r§7PVP攻击力:§6 @max - @min
+    # 属性是正数时
+    positive: §a@value
+    # 属性是负数时
+    negative: §c@value
+  血量值:
+    # 仅有当属性是范围值时
+    template:
+      single: §r§7血量值:§6 @max
+      double: §r§7血量值:§6 @max - @min
+    # 属性是正数时
+    positive: §a@value
+    # 属性是负数时
+    negative: §c@value

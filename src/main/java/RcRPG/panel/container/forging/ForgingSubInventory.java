@@ -1,6 +1,7 @@
 package RcRPG.panel.container.forging;
 
 import RcRPG.AttrManager.FootageAttr;
+import RcRPG.RPG.Armour;
 import RcRPG.RPG.Weapon;
 import cn.ankele.plugin.MagicItem;
 import cn.ankele.plugin.bean.ItemBean;
@@ -21,6 +22,8 @@ public class ForgingSubInventory extends FakeInventory {
     public long id;
 
     public ArrayList<Item> normalFootageList = new ArrayList<>();
+
+    List<String> origin;
 
     public ForgingSubInventory(String name) {
         super(InventoryType.CHEST, name);
@@ -69,11 +72,21 @@ public class ForgingSubInventory extends FakeInventory {
             }
             attr.setItemAttrConfig("item_i" + i, itemBeam.getAttr());
         }
-
-        Item weapon = Weapon.getItem("标准型战斗长剑", 1);
-        weapon.setNamedTag(weapon.getNamedTag().putCompound("attr", attr.toNBT()));
-        Weapon.setWeaponLore(weapon, who.getLanguageCode());
-        who.getInventory().addItem(weapon);
+        Item resultItem = Item.AIR_ITEM;
+        switch (origin.get(0)) {
+            case "Weapon" -> {
+                resultItem = Weapon.getItem(origin.get(1), 1);
+                resultItem.setNamedTag(resultItem.getNamedTag().putCompound("attr", attr.toNBT()));
+                Weapon.setWeaponLore(resultItem, who.getLanguageCode());
+            }
+            case "Armour" -> {
+                resultItem = Armour.getItem(origin.get(1), 1);
+                resultItem.setNamedTag(resultItem.getNamedTag().putCompound("attr", attr.toNBT()));
+                Armour.setArmourLore(resultItem, who.getLanguageCode());
+            }
+            default -> who.sendMessage("§c锻造图纸配置了未知的源：§e§l"+origin.get(0)+"/"+origin.get(1));
+        }
+        who.getInventory().addItem(resultItem);
     }
 
 }

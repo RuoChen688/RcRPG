@@ -1,4 +1,5 @@
 rcrpg.missing.plugin=未检测到 {%0} 插件，插件无法启动！下载地址：{%1}
+rcrpg.dir.create.failed=目录 {%0} 创建失败
 
 rcrpg.commands.message.noPermission=§c权限不足
 rcrpg.commands.message.noTarget=§c没有匹配的目标

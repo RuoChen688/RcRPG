@@ -85,8 +85,6 @@ public class Weapon extends ItemAttr implements Cloneable {
 
     private ArrayList<String> loreList = new ArrayList<>();
 
-    public ForgingItem forgingItem;
-
     public Weapon(String name, Config config) {
         this.name = name;
         this.config = config;
@@ -333,30 +331,38 @@ public class Weapon extends ItemAttr implements Cloneable {
 
     public static Item setWeaponLore(Item item, LangCode langCode) {
         if (Weapon.isWeapon(item)) {
-            Weapon weapon = RcRPGMain.loadWeapon.get(item.getNamedTag().getString("name")).clone();
-            ArrayList<String> lore;
-            if (ForgingItem.isForgingItem(item)) {
-                // TODO: 此处应该可以优化
+            Weapon weapon;
+
+            boolean isForgingItem = ForgingItem.isForgingItem(item);
+            if (isForgingItem) {
+                // 锻造物品属性处理
+                weapon = RcRPGMain.loadWeapon.get(item.getNamedTag().getString("name")).clone();
                 weapon.mainAttr = new HashMap<>();
 
                 for (Map.Entry<String, float[]> entry : ForgingItem.fromNBT(item.getNamedTag().getCompound("attr")).entrySet()) {
                     weapon.mainAttr.put(entry.getKey(), entry.getValue());
                 }
+            } else {
+                // 非锻造物品不使用深拷贝
+                weapon = RcRPGMain.loadWeapon.get(item.getNamedTag().getString("name"));
             }
-            lore = (ArrayList<String>) weapon.getLoreList().clone();
+
+            ArrayList<String> lore = (ArrayList<String>) weapon.getLoreList().clone();
             for (int i = 0; i < lore.size(); i++) {
                 String s = lore.get(i);
-                if (s.contains("@unBreak"))
-                    s = s.replace("@unBreak", weapon.unBreak ? "§a无限耐久" : (weapon.item.getMaxDurability() != -1 ? "§c会损坏" : "§a无耐久"));
-                if (s.contains("@message")) s = s.replace("@message", weapon.getMessage());
-                if (s.contains("@stoneDamage"))
-                    s = s.replace("@stoneDamage", String.valueOf(Weapon.getStoneDamage(item)));
-                if (s.contains("@stoneReDamage"))
-                    s = s.replace("@stoneReDamage", String.valueOf(Weapon.getStoneReDamage(item)));
-                if (s.contains("@gemLore"))
-                    s = s.replace("@gemLore", RcRPGMain.getInstance().getGemTemplateConfig().getTemplateText(langCode, item.getNamedTag(), weapon.getStone(), weapon.getStoneList()));
+                s = s.replace("@unBreak", weapon.unBreak ? "§a无限耐久" : (weapon.item.getMaxDurability() != -1 ? "§c会损坏" : "§a无耐久"));
+                s = s.replace("@message", weapon.getMessage());
+                s = s.replace("@stoneDamage", String.valueOf(Weapon.getStoneDamage(item)));
+                s = s.replace("@stoneReDamage", String.valueOf(Weapon.getStoneReDamage(item)));
+                s = s.replace("@gemLore", RcRPGMain.getInstance().getGemTemplateConfig().getTemplateText(langCode, item.getNamedTag(), weapon.getStone(), weapon.getStoneList()));
 
-                s = weapon.replaceAttrTemplate(s);// 替换属性的值
+                // 替换属性的值
+                if (isForgingItem) {
+                    s = s.replace("@attrLore", weapon.attrInfo(langCode));
+                } else {
+                    s = weapon.replaceAttrTemplate(s);
+                }
+
                 lore.set(i, s);
             }
             item.setLore(lore.toArray(new String[0]));

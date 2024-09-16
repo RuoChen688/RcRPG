@@ -41,8 +41,7 @@ public class ForgingSubInventory extends FakeInventory {
             who.sendMessage("锻造已取消，需至少放入一个素材");
             List<Item> invItemList = content.values().stream()
                     .skip(1).toList();
-            for (int i = 0; i < invItemList.size(); i++) {
-                Item item = invItemList.get(i);
+            for (Item item : invItemList) {
                 if (item.deepEquals(ForgingSubPanel.AIR_PLACEHOLDER)) {
                     break;
                 }

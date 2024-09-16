@@ -13,7 +13,6 @@ import cn.nukkit.nbt.tag.CompoundTag;
 import me.iwareq.fakeinventories.FakeInventory;
 
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 public class ForgingSubPanel implements InventoryHolder {
@@ -63,7 +62,9 @@ public class ForgingSubPanel implements InventoryHolder {
                     cursorItem = targetItem.clone();
                     player.getCursorInventory().setItem(0, Item.AIR_ITEM);// 清空浮标物品（For Windows）
                     event.setCancelled();
-                    player.getInventory().removeItem(targetItem);// 清理背包里的物品（For Mobile）
+                    if (player.getLoginChainData().getDeviceOS() != 7 && player.getLoginChainData().getDeviceOS() != 8) {// Windows10 or Windows
+                        player.getInventory().removeItem(targetItem);// 清理背包里的物品（For Mobile）
+                    }
 
                     // 操作 - 回退
                     if (targetItem.isNull()) {
@@ -79,9 +80,7 @@ public class ForgingSubPanel implements InventoryHolder {
                             );
                             inv.setItem(0, stoneTipItem);
 
-                            Item barrierItem = Item.fromString("minecraft:barrier");
-                            barrierItem.setCustomName("§r§7一一一 §c不可放入§7 一一一");
-                            inv.setItem(1, barrierItem);
+                            inv.setItem(1, AIR_PLACEHOLDER);
 
                             // 清理主素材
                             if (!AIR_PLACEHOLDER.deepEquals(inv.getItemFast(2))) {
@@ -108,9 +107,7 @@ public class ForgingSubPanel implements InventoryHolder {
                             );
                             inv.setItem(0, stoneTipItem);
 
-                            Item barrierItem = Item.fromString("minecraft:barrier");
-                            barrierItem.setCustomName("§r§7一一一 §c不可放入§7 一一一");
-                            inv.setItem(2, barrierItem);
+                            inv.setItem(2, AIR_PLACEHOLDER);
 
                             // 清理普通素材
                             player.getInventory().addItem(inv.normalFootageList.toArray(Item[]::new));
@@ -185,6 +182,7 @@ public class ForgingSubPanel implements InventoryHolder {
                         if (outOfQualityRange(quality)) {
                             break;
                         }
+
                         if (AIR_PLACEHOLDER.deepEquals(inv.getItem(2))) {// 主素材为空，替换
                             if (AIR_PLACEHOLDER.deepEquals(inv.getItem(1))) break;
                             if (forgingPaper.getMainFootage().getYamlName().equals(tag.getString("yamlName"))) {
@@ -199,6 +197,8 @@ public class ForgingSubPanel implements InventoryHolder {
                                 );
                                 inv.setItem(0, stoneTipItem);
                                 break;
+                            } else {
+
                             }
                         } else {
                             addFootage(player, targetItem, inv, slotChange.getSlot());
@@ -280,17 +280,6 @@ public class ForgingSubPanel implements InventoryHolder {
                 break;
             }
         }
-//        for (int i = 3; i < inv.normalFootageList.size() + 2; i++) {
-//            RcRPGMain.getInstance().getLogger().info("设置 "+ (i+1)+" 格子为"+inv.normalFootageList.get(i - 2).getName());
-//            inv.setItem(i, inv.normalFootageList.get(i - 2));
-//        }
-//        for (int i = inv.normalFootageList.size() + 3; i < 27; i++) {
-//            if (AIR_PLACEHOLDER.deepEquals(inv.getItemFast(i))) {
-//                break;// 如果不行请改成 continue
-//            }
-//            RcRPGMain.getInstance().getLogger().info("将 "+ (i+1)+" 格子置空");
-//            inv.setItem(i, AIR_PLACEHOLDER);
-//        }
     }
 
     public void removeAndReturnItem(Player player, Item targetItem, FakeInventory inv, int invIndex) {
@@ -317,10 +306,6 @@ public class ForgingSubPanel implements InventoryHolder {
 
         inv.setItem(invIndex, removeItem);
     }
-
-    public void returnInvStone() {}
-
-    public void returnInvMainFootage() {}
 
     @Override
     public Inventory getInventory() {

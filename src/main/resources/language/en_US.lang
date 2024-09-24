@@ -1,4 +1,5 @@
 rcrpg.missing.plugin={%0} plugin not detected, the plugin cannot be started! Download link: {%1}
+rcrpg.dir.create.failed=Directory {%0} creation failed
 
 rcrpg.commands.message.noPermission=§cNo permissions!
 rcrpg.commands.message.noTarget=§cNo matching target found.

@@ -142,7 +142,7 @@ public class PlayerAttr extends Manager {
                 });
             }
 
-            setItemAttrConfig(weapon.getLabel(), weapon.getMainAttr());
+            setItemAttrConfig(weapon.getLabel(), ForgingItem.isForgingItem(rcItem) ? ForgingItem.fromNBT(rcItem.getNamedTag().getCompound("attr")) : weapon.getMainAttr());
             checkItemStoneAttr(weapon.getLabel(), Weapon.getStones(rcItem), beforeLabel, labelList);
 
             beforeLabel.remove(weapon.getLabel());
@@ -153,7 +153,7 @@ public class PlayerAttr extends Manager {
             if (rcItem.getNamedTag() == null) continue;
             Armour armour = RcRPGMain.loadArmour.get(rcItem.getNamedTag().getString("name"));
             if (armour == null) continue;
-            setItemAttrConfig(armour.getLabel(), armour.getMainAttr());
+            setItemAttrConfig(armour.getLabel(), ForgingItem.isForgingItem(rcItem) ? ForgingItem.fromNBT(rcItem.getNamedTag().getCompound("attr")) : armour.getMainAttr());
             checkItemStoneAttr(armour.getLabel(), Armour.getStones(rcItem), beforeLabel, labelList);
 
             if (!armour.getSuit().isEmpty()) {// 套装
@@ -426,7 +426,6 @@ public class PlayerAttr extends Manager {
      * 将数据可视化，输入data,属性输出min-max或x%
      */
     public static String valueToString(float[] data, String attribute) {
-        List<String> attrDisplayPercent = MainConfig.getAttrDisplayPercent();
         String back = "";
         if (data.length == 2) {
             if (data[0] == data[1]) {
@@ -435,7 +434,7 @@ public class PlayerAttr extends Manager {
                 return lessZero(data[0]) + " - " + lessZero(data[1]);
             }
         }
-        if (attrDisplayPercent.contains(attribute)) {
+        if (MainConfig.getAttrDisplayPercent().contains(attribute)) {
             // 百分比的值
             DecimalFormat decimalFormat = new DecimalFormat("#.00");
             decimalFormat.setMinimumIntegerDigits(1); // 确保整数部分至少有一位数字

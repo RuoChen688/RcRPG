@@ -21,7 +21,7 @@ import java.util.*;
 
 @Getter
 @Setter
-public class Armour extends ItemAttr {
+public class Armour extends ItemAttr implements Cloneable {
 
     private Config config;
 
@@ -88,45 +88,53 @@ public class Armour extends ItemAttr {
         this.config = config;
     }
 
+    public Armour initArmour() {
+        this.setLabel(config.getString("标签"));
+        this.setShowName(config.getString("显示名称"));
+        this.setItem(Item.fromString(config.getString("物品ID")));
+        if (config.exists("属性")) {
+            this.setAttr((Map<String, Object>) config.get("属性"));
+        }
+        this.setMessage(config.getString("介绍", ""));
+
+        this.setColor(loadColorFromConfig(config));
+
+        this.setDismantle(config.getString("分解", ""));
+
+        if (config.exists("套装")) {
+            List<String> suitList;
+            if (config.isList("套装")) {
+                suitList = config.getStringList("套装");
+            } else {
+                suitList = new ArrayList<>(Arrays.asList(config.getString("套装", "").split(",")));
+            }
+            this.setSuit(suitList);
+        }
+
+        this.setTipText(config.getString("底部显示"));
+        this.setMyMessage(config.getString("个人通知"));
+        this.setServerMessage(config.getString("全服通知"));
+        this.setStone(config.getInt("宝石孔数"));
+
+        this.setEffects(loadEffectsFromConfig(config));
+
+        ArrayList<String> loreList = new ArrayList<>(config.getStringList("显示"));
+        this.setLoreList(loreList);
+        ArrayList<String> stoneList = new ArrayList<>(config.getStringList("宝石槽"));
+        this.setStoneList(stoneList);
+
+        return this;
+    }
+
+    @Override
+    public Armour clone() {
+        return new Armour(this.name, this.config).initArmour();
+    }
+
     public static Armour loadArmour(String name, Config config) {
         try {
-            Armour armour = new Armour(name, config);
 
-            armour.setLabel(config.getString("标签"));
-            armour.setShowName(config.getString("显示名称"));
-            armour.setItem(Item.fromString(config.getString("物品ID")));
-            if (config.exists("属性")) {
-                armour.setAttr((Map<String, Object>) config.get("属性"));
-            }
-            armour.setMessage(config.getString("介绍", ""));
-
-            armour.setColor(loadColorFromConfig(config));
-
-            armour.setDismantle(config.getString("分解", ""));
-
-            if (config.exists("套装")) {
-                List<String> suitList;
-                if (config.isList("套装")) {
-                    suitList = config.getStringList("套装");
-                } else {
-                    suitList = new ArrayList<>(Arrays.asList(config.getString("套装", "").split(",")));
-                }
-                armour.setSuit(suitList);
-            }
-
-            armour.setTipText(config.getString("底部显示"));
-            armour.setMyMessage(config.getString("个人通知"));
-            armour.setServerMessage(config.getString("全服通知"));
-            armour.setStone(config.getInt("宝石孔数"));
-
-            armour.setEffects(loadEffectsFromConfig(config));
-
-            ArrayList<String> loreList = new ArrayList<>(config.getStringList("显示"));
-            armour.setLoreList(loreList);
-            ArrayList<String> stoneList = new ArrayList<>(config.getStringList("宝石槽"));
-            armour.setStoneList(stoneList);
-
-            return armour;
+            return new Armour(name, config).initArmour();
         } catch (Exception e) {
             e.printStackTrace();
             RcRPGMain.getInstance().getLogger().error("加载盔甲" + name + "配置文件失败");
@@ -195,7 +203,7 @@ public class Armour extends ItemAttr {
 
     public static Item getItem(String name, int count, LangCode langCode) {
         Armour armour = RcRPGMain.loadArmour.get(name);
-        Item item = armour.getItem();
+        Item item = armour.getItem().clone();
         item.setCount(count);
         CompoundTag tag = item.hasCompoundTag() ? item.getNamedTag() : new CompoundTag();
         tag.putString("type", "armour");
@@ -341,21 +349,38 @@ public class Armour extends ItemAttr {
 
     public static Item setArmourLore(Item item, LangCode langCode) {
         if (Armour.isArmour(item)) {
-            Armour armour = RcRPGMain.loadArmour.get(item.getNamedTag().getString("name"));
+            Armour armour;
+
+            boolean isForgingItem = ForgingItem.isForgingItem(item);
+            if (isForgingItem) {
+                // 锻造物品属性处理
+                armour = RcRPGMain.loadArmour.get(item.getNamedTag().getString("name")).clone();
+                armour.mainAttr = new HashMap<>();
+
+                for (Map.Entry<String, float[]> entry : ForgingItem.fromNBT(item.getNamedTag().getCompound("attr")).entrySet()) {
+                    armour.mainAttr.put(entry.getKey(), entry.getValue());
+                }
+            } else {
+                // 非锻造物品不使用深拷贝
+                armour = RcRPGMain.loadArmour.get(item.getNamedTag().getString("name"));
+            }
+
             ArrayList<String> lore = (ArrayList<String>) armour.getLoreList().clone();
             for (int i = 0; i < lore.size(); i++) {
                 String s = lore.get(i);
-                if (s.contains("@message")) s = s.replace("@message", armour.getMessage());
-                if (s.contains("@stoneHealth"))
-                    s = s.replace("@stoneHealth", String.valueOf(Armour.getStoneHealth(item)));
-                if (s.contains("@stoneDamage"))
-                    s = s.replace("@stoneDamage", String.valueOf(Armour.getStoneDamage(item)));
-                if (s.contains("@stoneReDamage"))
-                    s = s.replace("@stoneReDamage", String.valueOf(Armour.getStoneReDamage(item)));
-                if (s.contains("@gemLore"))
-                    s = s.replace("@gemLore", RcRPGMain.getInstance().getGemTemplateConfig().getTemplateText(langCode, item.getNamedTag(), armour.getStone(), armour.getStoneList()));
+                s = s.replace("@message", armour.getMessage());
+                s = s.replace("@stoneHealth", String.valueOf(Armour.getStoneHealth(item)));
+                s = s.replace("@stoneDamage", String.valueOf(Armour.getStoneDamage(item)));
+                s = s.replace("@stoneReDamage", String.valueOf(Armour.getStoneReDamage(item)));
+                s = s.replace("@gemLore", RcRPGMain.getInstance().getGemTemplateConfig().getTemplateText(langCode, item.getNamedTag(), armour.getStone(), armour.getStoneList()));
 
-                s = armour.replaceAttrTemplate(s);// 替换属性的值
+                // 替换属性的值
+                if (isForgingItem) {
+                    s = s.replace("@attrLore", armour.attrInfo(langCode));
+                } else {
+                    s = armour.replaceAttrTemplate(s);
+                }
+
                 lore.set(i, s);
             }
             item.setLore(lore.toArray(new String[0]));

@@ -5,6 +5,7 @@ import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.nbt.tag.ListTag;
 import cn.nukkit.nbt.tag.StringTag;
 import cn.nukkit.utils.Config;
+import cn.nukkit.utils.ConfigSection;
 import lombok.Getter;
 
 import java.util.ArrayList;
@@ -25,13 +26,13 @@ public class GemTemplateConfig {
             Map<String, Map<String, String>> gemTemplates = new HashMap<>();
 
             // 获取该语言的所有宝石类型配置 (default, 攻击宝石, 生命宝石 等)
-            Map<String, Object> langSection = cfg.getSection(langKey);
+            ConfigSection langSection = cfg.getSection(langKey);
             for (String gemType : langSection.keySet()) {
                 Map<String, String> states = new HashMap<>();
 
                 // 获取具体的`insertable`和`embedded`值
-                String insertable = cfg.getString(langKey + "." + gemType + ".insertable");
-                String embedded = cfg.getString(langKey + "." + gemType + ".embedded");
+                String insertable = langSection.getString(gemType + ".insertable");
+                String embedded = langSection.getString(gemType + ".embedded");
 
                 // 存储这些值到 states 中
                 states.put("insertable", insertable);
@@ -95,10 +96,10 @@ public class GemTemplateConfig {
                             .replace("@stoneType", stoneSlots.get(i));
                 } else if (i < stoneSlots.size()) {
                     template = templateTr(langCode, stoneSlots.get(i), "embedded")
-                            .replace("@stoneName", loadStone.get(stoneName).getShowName());
+                            .replace("@stoneName", loadStone.containsKey(stoneName) ? loadStone.get(stoneName).getShowName() : "unknown");
                 } else {
                     template = templateTr(langCode, "default", "embedded")
-                            .replace("@stoneName", loadStone.get(stoneName).getShowName());
+                            .replace("@stoneName", loadStone.containsKey(stoneName) ? loadStone.get(stoneName).getShowName() : "unknown");
                 }
             }
             templateList.add(template);  // 将模板字符串添加到列表中

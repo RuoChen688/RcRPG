@@ -1,6 +1,7 @@
 package RcRPG.AttrManager;
 
 import RcRPG.RcRPGMain;
+import cn.nukkit.lang.LangCode;
 
 import java.util.HashMap;
 import java.util.List;
@@ -14,9 +15,7 @@ public class ItemAttr extends Manager {
 
     /** 属性结构
      * {
-     *     "Main": {
-     *         "攻击力": [1,3]
-     *     }
+     *     "攻击力": [1,3]
      * }
      * */
     protected Map<String, float[]> mainAttr;
@@ -118,6 +117,17 @@ public class ItemAttr extends Manager {
         }
         matcher.appendTail(sb);
 
+        return sb.toString();
+    }
+
+    public String attrInfo(LangCode langCode) {
+        StringBuilder sb = new StringBuilder();
+        for (String attrName : getMainAttr().keySet()) {
+            float[] value = mainAttr.get(attrName);
+            sb.append(RcRPGMain.getInstance().attrTemplateConfig.getAttributeText(langCode, attrName, value[0], value[1]));
+            sb.append('\n');
+        }
+        sb.deleteCharAt(sb.length() - 1);// Remove the trailing "\n"
         return sb.toString();
     }
 

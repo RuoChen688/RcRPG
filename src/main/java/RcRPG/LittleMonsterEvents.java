@@ -1,6 +1,7 @@
 package RcRPG;
 
 import RcRPG.AttrManager.PlayerAttr;
+import RcRPG.RPG.Level;
 import cn.nukkit.Player;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.event.EventHandler;
@@ -23,14 +24,20 @@ public class LittleMonsterEvents implements Listener {
 
         if (!damager.isPlayer) return;
 
-        PlayerAttr attr = PlayerAttr.getPlayerAttr((Player)damager);
+        Player player = (Player) damager;
+        PlayerAttr attr = PlayerAttr.getPlayerAttr(player);
         if (attr == null) return;
 
         if (attr.experienceGainMultiplier <= 0) return;
 
         int addtion = (int) (attr.experienceGainMultiplier * event.getOriginExp());
 
-        event.setStoredExp("rcrpg", addtion);
+        if (Level.enable) {
+            Level.addLevel(player, event.getTotalExp() + addtion);
+            event.setStoredExp("rcrpg-exp", -event.getTotalExp());
+        } else {
+            event.setStoredExp("rcrpg", addtion);
+        }
     }
 
 }

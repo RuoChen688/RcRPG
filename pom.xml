@@ -25,7 +25,7 @@
     </repositories>
 
     <build>
-        <finalName>${project.artifactId}_v${project.version}-MOT</finalName>
+        <finalName>${project.artifactId}-${project.version}-MOT</finalName>
 
         <resources>
             <resource>

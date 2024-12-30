@@ -91,6 +91,7 @@ public class RcRPGMain extends PluginBase implements Listener {
         }
 
         this.getServer().getPluginManager().registerEvents(new Events(), this);
+        if (Events.hasLittleMonster) this.getServer().getPluginManager().registerEvents(new LittleMonsterEvents(), this);
 
         // 底部显示不为空时
         if (!MainConfig.getBottomFormat().isEmpty()) {

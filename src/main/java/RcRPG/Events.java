@@ -379,7 +379,7 @@ public class Events implements Listener {
         }
 
         int finalDamage = 0;
-        // 三大乘区: 攻击力 * 攻击加成 * 暴击倍率
+        // 攻击力乘区: 攻击力 * 攻击加成 * 暴击倍率 * 伤害加成
         double atkValue;
         double atk;
         if (woundedIsPlayer) {

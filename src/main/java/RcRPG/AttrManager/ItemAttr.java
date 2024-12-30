@@ -168,6 +168,9 @@ public class ItemAttr extends Manager {
 
     @Override
     public float[] getPveAttackMultiplier() {
+        if (mainAttr.containsKey("攻击加成")) {
+            return mainAttr.get("攻击加成");
+        }
         if (mainAttr.containsKey("PVE攻击加成")) {
             return mainAttr.get("PVE攻击加成");
         }

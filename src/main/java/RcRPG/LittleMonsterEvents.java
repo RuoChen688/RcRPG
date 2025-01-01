@@ -8,6 +8,7 @@ import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.Listener;
 import cn.nukkit.event.entity.EntityDamageByEntityEvent;
 import cn.nukkit.event.entity.EntityDamageEvent;
+import cn.nukkit.lang.LangCode;
 import com.smallaswater.littlemonster.events.entity.LittleMonsterEntityDeathDropExpEvent;
 
 public class LittleMonsterEvents implements Listener {
@@ -30,13 +31,19 @@ public class LittleMonsterEvents implements Listener {
 
         if (attr.experienceGainMultiplier <= 0) return;
 
-        int addtion = (int) (attr.experienceGainMultiplier * event.getOriginExp());
+        int addition = (int) (attr.experienceGainMultiplier * event.getOriginExp());
 
         if (Level.enable) {
-            Level.addLevel(player, event.getTotalExp() + addtion);
+            Level.addExp(player, event.getTotalExp() + addition);
+            String expLabel = player.getLanguageCode().equals(LangCode.zh_CN) ? "经验" : "exp";
+            if (addition != 0) {
+                player.sendActionBar(expLabel + " +" + event.getTotalExp() + "§a(" + addition + ")");
+            } else {
+                player.sendActionBar(expLabel + " +" + event.getTotalExp());
+            }
             event.setStoredExp("rcrpg-exp", -event.getTotalExp());
         } else {
-            event.setStoredExp("rcrpg", addtion);
+            event.setStoredExp("rcrpg", addition);
         }
     }
 

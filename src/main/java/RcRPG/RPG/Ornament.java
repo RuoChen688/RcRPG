@@ -144,10 +144,7 @@ public class Ornament extends ItemAttr {
         if (ornament == null) return Item.AIR_ITEM;
         Item item = ornament.getItem();
         item.setCount(count);
-        CompoundTag tag = item.getNamedTag();
-        if (tag == null) {
-            tag = new CompoundTag();
-        }
+        CompoundTag tag = item.hasCompoundTag() ? item.getNamedTag() : new CompoundTag();
         tag.putString("type", "ornament");
         tag.putString("name", name);
         tag.putByte("Unbreakable", 1);

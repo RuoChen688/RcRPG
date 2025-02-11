@@ -133,10 +133,7 @@ public class Stone extends ItemAttr {
         Stone stone = RcRPGMain.loadStone.get(name);
         Item item = stone.getItem();
         item.setCount(count);
-        CompoundTag tag = item.getNamedTag();
-        if (tag == null) {
-            tag = new CompoundTag();
-        }
+        CompoundTag tag = item.hasCompoundTag() ? item.getNamedTag() : new CompoundTag();
         tag.putString("type", "stone");
         tag.putString("name", name);
         tag.putByte("Unbreakable", 1);

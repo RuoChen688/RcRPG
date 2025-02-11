@@ -199,10 +199,7 @@ public class Weapon extends ItemAttr implements Cloneable {
         Weapon weapon = RcRPGMain.loadWeapon.get(name);
         Item item = weapon.getItem().clone();
         item.setCount(count);
-        CompoundTag tag = item.getNamedTag();
-        if (tag == null) {
-            tag = new CompoundTag();
-        }
+        CompoundTag tag = item.hasCompoundTag() ? item.getNamedTag() : new CompoundTag();
         tag.putString("type", "weapon");
         tag.putString("name", name);
         if (weapon.isUnBreak()) {

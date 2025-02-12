@@ -131,12 +131,10 @@ public class Ornament extends ItemAttr {
     }
 
     public static boolean delOrnamentConfig(String name) {
-        if (getOrnamentConfig(name) != null) {
-            File file = new File(RcRPGMain.getInstance().getOrnamentFile(), File.separator + name + ".yml");
-            file.delete();
-            return true;
-        }
-        return false;
+        if (getOrnamentConfig(name) == null) return false;
+        File file = new File(RcRPGMain.getInstance().getOrnamentFile(), name + ".yml");
+        file.delete();
+        return true;
     }
 
     public static Item getItem(String name, int count) {

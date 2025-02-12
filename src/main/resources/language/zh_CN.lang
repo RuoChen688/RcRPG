@@ -22,6 +22,11 @@ rcrpg.commands.guild.help=§2/rpg guild:§f 公会指令
 rcrpg.commands.exp.help=§2/rpg exp help:§f 经验指令
 rcrpg.commands.money.help=§2/rpg money help:§f 金币指令
 rcrpg.commands.point.help=§2/rpg point help:§f 点券指令
+rcrpg.commands.item.give.success=§a成功给予
+rcrpg.commands.item.give.failed=§4给予失败，指定的配置文件不存在或物品ID无效
+rcrpg.commands.item.invalid.args=§c无效参数，请检查命令
+rcrpg.commands.item.delete.success=§a删除成功
+rcrpg.commands.item.delete.failed=§4删除失败，指定的配置文件不存在
 
 rcrpg.events.insufficient_level_for_weapon=等级不足，无法使用此武器
 rcrpg.events.life_steal_message=你已汲取对方 §c§l{%0}§r 血量值

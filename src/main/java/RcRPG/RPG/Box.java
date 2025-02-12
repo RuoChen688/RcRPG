@@ -92,12 +92,10 @@ public class Box {
     }
 
     public static boolean delBoxConfig(String name){
-        if(getBoxConfig(name) != null){
-            File file = new File(RcRPGMain.getInstance().getBoxFile(), name+".yml");
-            file.delete();
-            return true;
-        }
-        return false;
+        if(getBoxConfig(name) == null) return false;
+        File file = new File(RcRPGMain.getInstance().getBoxFile(), name+".yml");
+        file.delete();
+        return true;
     }
 
     public static boolean giveBox(Player player, String name, int count){

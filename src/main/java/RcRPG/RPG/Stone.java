@@ -103,19 +103,16 @@ public class Stone extends ItemAttr {
     }
 
     public static boolean delStoneConfig(String name){
-        if(getStoneConfig(name) != null){
-            File file = new File(RcRPGMain.getInstance().getStoneFile(), name+".yml");
-            file.delete();
-            return true;
-        }
-        return false;
+        if(getStoneConfig(name) == null) return false;
+        File file = new File(RcRPGMain.getInstance().getStoneFile(), name+".yml");
+        file.delete();
+        return true;
     }
 
     public static Item setStoneLore(Item item) {
         if (Stone.isStone(item)) {
             Stone stone = RcRPGMain.loadStone.get(item.getNamedTag().getString("name"));
-            ArrayList<String> lore;
-            lore = (ArrayList<String>) stone.getLoreList().clone();
+            ArrayList<String> lore = (ArrayList<String>) stone.getLoreList().clone();
             for (int i = 0;i < lore.size();i++) {
                 String s = lore.get(i);
                 if(s.contains("@message")) s = s.replace("@message",stone.getMessage());

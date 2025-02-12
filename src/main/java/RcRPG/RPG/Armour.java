@@ -193,12 +193,10 @@ public class Armour extends ItemAttr implements Cloneable {
     }
 
     public static boolean delArmourConfig(String name) {
-        if (getArmourConfig(name) != null) {
-            File file = new File(RcRPGMain.getInstance().getArmourFile(), name + ".yml");
-            file.delete();
-            return true;
-        }
-        return false;
+        if (getArmourConfig(name) == null) return false;
+        File file = new File(RcRPGMain.getInstance().getArmourFile(), name + ".yml");
+        file.delete();
+        return true;
     }
 
     public static Item getItem(String name, int count, LangCode langCode) {

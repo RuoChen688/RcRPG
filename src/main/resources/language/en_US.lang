@@ -22,6 +22,11 @@ rcrpg.commands.guild.help=§2/rpg guild:§f Guild command
 rcrpg.commands.exp.help=§2/rpg exp help:§f Experience command
 rcrpg.commands.money.help=§2/rpg money help:§f Gold coin command
 rcrpg.commands.point.help=§2/rpg point help:§f Point ticket command
+rcrpg.commands.item.give.success=§aSuccessfully give
+rcrpg.commands.item.give.failed=§4Failed give, the specified configuration file does not exist or the item ID is invalid.
+rcrpg.commands.item.invalid.args=§cInvalid arguments, please check command.
+rcrpg.commands.item.delete.success=§aSuccessfully deleted
+rcrpg.commands.item.delete.failed=§4Failed to delete, file not existed.
 
 rcrpg.events.insufficient_level_for_weapon=Insufficient level, unable to use this weapon
 rcrpg.events.life_steal_message=You have drained §c§l{%0}§r health from the opponent

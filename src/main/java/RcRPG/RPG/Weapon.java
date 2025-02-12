@@ -187,12 +187,10 @@ public class Weapon extends ItemAttr implements Cloneable {
     }
 
     public static boolean delWeaponConfig(String name) {
-        if (getWeaponConfig(name) != null) {
-            File file = new File(RcRPGMain.getInstance().getWeaponFile(), "/" + name + ".yml");
-            file.delete();
-            return true;
-        }
-        return false;
+        if (getWeaponConfig(name) == null) return false;
+        File file = new File(RcRPGMain.getInstance().getWeaponFile(), name + ".yml");
+        file.delete();
+        return true;
     }
 
     public static Item getItem(String name, int count, LangCode langCode) {

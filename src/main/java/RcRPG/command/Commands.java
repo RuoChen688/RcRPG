@@ -373,9 +373,9 @@ public class Commands extends PluginCommand<RcRPGMain> {
                         if (player == null) return false;
                         int expValue = Integer.parseInt(args[3]);
                         if (Level.addExp(player, expValue)) {
-                            if (sender.isPlayer()) sender.sendMessage("给予成功");
+                            if (sender.isPlayer()) sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.item.give.success"));
                         } else {
-                            if (sender.isPlayer()) sender.sendMessage("给予失败");
+                            if (sender.isPlayer()) sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.item.give.failed"));
                         }
                         return true;
                     }
@@ -411,9 +411,9 @@ public class Commands extends PluginCommand<RcRPGMain> {
                         int money = Integer.parseInt(args[3]);
                         if (args[1].equals("add")) {
                             if (Money.addMoney(player, money)) {
-                                if (sender.isPlayer()) sender.sendMessage("给予成功");
+                                if (sender.isPlayer()) sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.item.give.success"));
                             } else {
-                                if (sender.isPlayer()) sender.sendMessage("给予失败");
+                                if (sender.isPlayer()) sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.item.give.failed"));
                             }
                         } else {
                             if (Money.delMoney(player, money)) {
@@ -457,9 +457,9 @@ public class Commands extends PluginCommand<RcRPGMain> {
                         }
                         if (args[1].equals("add")) {
                             if (Points.addPoint(player, point)) {
-                                if (sender.isPlayer()) sender.sendMessage("给予成功");
+                                if (sender.isPlayer()) sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.item.give.success"));
                             } else {
-                                if (sender.isPlayer()) sender.sendMessage("给予失败");
+                                if (sender.isPlayer()) sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.item.give.failed"));
                             }
                         } else {
                             if (Points.delPoint(player, point)) {
@@ -506,18 +506,18 @@ public class Commands extends PluginCommand<RcRPGMain> {
                     }
                     case "give" -> {
                         if (args.length < 4) {
-                            sender.sendMessage("参数错误");
+                            sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.item.invalid.args"));
                             return false;
                         }
                         if (Prefix.givePrefix(player, prefix)) {
-                            sender.sendMessage("给予成功");
+                            sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.item.give.success"));
                         } else {
-                            sender.sendMessage("给予失败");
+                            sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.item.give.failed"));
                         }
                     }
                     case "remove" -> {
                         if (args.length < 4) {
-                            sender.sendMessage("参数错误");
+                            sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.item.invalid.args"));
                             return false;
                         }
                         if (Prefix.delPrefix(player, prefix)) {
@@ -556,7 +556,7 @@ public class Commands extends PluginCommand<RcRPGMain> {
                     }
                     case "add" -> {
                         if (args.length < 3) {
-                            sender.sendMessage("参数错误");
+                            sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.item.invalid.args"));
                             return false;
                         }
                         Item item = ((Player) sender).getInventory().getItemInHand();
@@ -578,15 +578,15 @@ public class Commands extends PluginCommand<RcRPGMain> {
                     }
                     case "del" -> {
                         if (args.length < 3) {
-                            sender.sendMessage("参数错误");
+                            sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.item.invalid.args"));
                             return false;
                         }
                         String weaponName = args[2];
                         if (Weapon.delWeaponConfig(weaponName)) {
                             RcRPGMain.loadWeapon.remove(weaponName);
-                            sender.sendMessage("删除成功");
+                            sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.item.delete.success"));
                         } else {
-                            sender.sendMessage("删除失败");
+                            sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.item.delete.failed"));
                         }
                     }
                     case "drop", "give" -> {
@@ -600,16 +600,16 @@ public class Commands extends PluginCommand<RcRPGMain> {
                         }
                         if (args[1].equals("drop")) {
                             Item item = Weapon.getItem(weaponName, count);
-                            if (item == null) {
-                                RcRPGMain.getInstance().getLogger().warning("weapon drop失败：" + weaponName);
+                            if (item.isNull()) {
+                                RcRPGMain.getInstance().getLogger().warning("weapon " + weaponName + " 掉落失败");
                             } else {
                                 player.getLevel().dropItem(player.getPosition(), item);
                             }
                         } else {
                             if (Weapon.giveWeapon(player, weaponName, count)) {
-                                if (sender.isPlayer()) sender.sendMessage("给予成功");
+                                if (sender.isPlayer()) sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.item.give.success"));
                             } else {
-                                if (sender.isPlayer()) sender.sendMessage("给予失败");
+                                if (sender.isPlayer()) sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.item.give.failed"));
                             }
                         }
                     }
@@ -642,7 +642,7 @@ public class Commands extends PluginCommand<RcRPGMain> {
                     }
                     case "add" -> {
                         if (args.length < 3) {
-                            sender.sendMessage("参数错误");
+                            sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.item.invalid.args"));
                             return false;
                         }
                         Item item = ((Player) sender).getInventory().getItemInHand();
@@ -664,15 +664,15 @@ public class Commands extends PluginCommand<RcRPGMain> {
                     }
                     case "del" -> {
                         if (args.length < 3) {
-                            sender.sendMessage("参数错误");
+                            sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.item.invalid.args"));
                             return false;
                         }
                         String armorName = args[2];
                         if (Armour.delArmourConfig(armorName)) {
                             RcRPGMain.loadArmour.remove(armorName);
-                            sender.sendMessage("删除成功");
+                            sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.item.delete.success"));
                         } else {
-                            sender.sendMessage("删除失败");
+                            sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.item.delete.failed"));
                         }
                     }
                     case "drop", "give" -> {
@@ -693,9 +693,9 @@ public class Commands extends PluginCommand<RcRPGMain> {
                             }
                         } else {
                             if (Armour.giveArmour(player, armorName, count)) {
-                                if (sender.isPlayer()) sender.sendMessage("给予成功");
+                                if (sender.isPlayer()) sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.item.give.success"));
                             } else {
-                                if (sender.isPlayer()) sender.sendMessage("给予失败");
+                                if (sender.isPlayer()) sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.item.give.failed"));
                             }
                         }
                     }
@@ -727,7 +727,7 @@ public class Commands extends PluginCommand<RcRPGMain> {
                     }
                     case "add" -> {
                         if (args.length < 3) {
-                            sender.sendMessage("参数错误");
+                            sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.item.invalid.args"));
                             return false;
                         }
                         Item item = ((Player) sender).getInventory().getItemInHand();
@@ -749,15 +749,15 @@ public class Commands extends PluginCommand<RcRPGMain> {
                     }
                     case "del" -> {
                         if (args.length < 3) {
-                            sender.sendMessage("参数错误");
+                            sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.item.invalid.args"));
                             return false;
                         }
                         String stoneName = args[2];
                         if (Stone.delStoneConfig(stoneName)) {
                             RcRPGMain.loadStone.remove(stoneName);
-                            sender.sendMessage("删除成功");
+                            sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.item.delete.success"));
                         } else {
-                            sender.sendMessage("删除失败");
+                            sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.item.delete.failed"));
                         }
                     }
                     case "give" -> {
@@ -770,9 +770,9 @@ public class Commands extends PluginCommand<RcRPGMain> {
                             return false;
                         }
                         if (Stone.giveStone(player, stoneName, count)) {
-                            if (sender.isPlayer()) sender.sendMessage("给予成功");
+                            if (sender.isPlayer()) sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.item.give.success"));
                         } else {
-                            if (sender.isPlayer()) sender.sendMessage("给予失败");
+                            if (sender.isPlayer()) sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.item.give.failed"));
                         }
                     }
                 }
@@ -795,7 +795,7 @@ public class Commands extends PluginCommand<RcRPGMain> {
                     }
                     case "add" -> {
                         if (args.length < 3) {
-                            sender.sendMessage("参数错误");
+                            sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.item.invalid.args"));
                             return false;
                         }
                         Item item = ((Player) sender).getInventory().getItemInHand();
@@ -817,15 +817,15 @@ public class Commands extends PluginCommand<RcRPGMain> {
                     }
                     case "del" -> {
                         if (args.length < 3) {
-                            sender.sendMessage("参数错误");
+                            sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.item.invalid.args"));
                             return false;
                         }
                         String boxName = args[2];
                         if (Box.delBoxConfig(boxName)) {
                             RcRPGMain.loadBox.remove(boxName);
-                            sender.sendMessage("删除成功");
+                            sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.item.delete.success"));
                         } else {
-                            sender.sendMessage("删除失败");
+                            sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.item.delete.failed"));
                         }
                     }
                     case "give" -> {
@@ -838,9 +838,9 @@ public class Commands extends PluginCommand<RcRPGMain> {
                             return false;
                         }
                         if (Box.giveBox(player, boxName, count)) {
-                            if (sender.isPlayer()) sender.sendMessage("给予成功");
+                            if (sender.isPlayer()) sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.item.give.success"));
                         } else {
-                            if (sender.isPlayer()) sender.sendMessage("给予失败");
+                            if (sender.isPlayer()) sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.item.give.failed"));
                         }
                     }
                 }
@@ -879,7 +879,7 @@ public class Commands extends PluginCommand<RcRPGMain> {
                     }
                     case "add" -> {
                         if (args.length < 3) {
-                            sender.sendMessage("参数错误");
+                            sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.item.invalid.args"));
                             return false;
                         }
                         Item item = ((Player) sender).getInventory().getItemInHand();
@@ -901,15 +901,15 @@ public class Commands extends PluginCommand<RcRPGMain> {
                     }
                     case "del" -> {
                         if (args.length < 3) {
-                            sender.sendMessage("参数错误");
+                            sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.item.invalid.args"));
                             return false;
                         }
                         String ornamentName = args[2];
                         if (Ornament.delOrnamentConfig(ornamentName)) {
                             RcRPGMain.loadOrnament.remove(ornamentName);
-                            sender.sendMessage("删除成功");
+                            sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.item.delete.success"));
                         } else {
-                            sender.sendMessage("删除失败");
+                            sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.item.delete.failed"));
                         }
                     }
                     case "give" -> {
@@ -922,9 +922,9 @@ public class Commands extends PluginCommand<RcRPGMain> {
                             return false;
                         }
                         if (Ornament.giveOrnament(player, ornamentName, count)) {
-                            if (sender.isPlayer()) sender.sendMessage("给予成功");
+                            if (sender.isPlayer()) sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.item.give.success"));
                         } else {
-                            if (sender.isPlayer()) sender.sendMessage("给予失败");
+                            if (sender.isPlayer()) sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.item.give.failed"));
                         }
                     }
                 }
@@ -947,9 +947,9 @@ public class Commands extends PluginCommand<RcRPGMain> {
                                 return false;
                             }
                             if (ForgingStone.giveForgingStone(player, itemName, count)) {
-                                if (sender.isPlayer()) sender.sendMessage("给予成功");
+                                if (sender.isPlayer()) sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.item.give.success"));
                             } else {
-                                if (sender.isPlayer()) sender.sendMessage("给予失败");
+                                if (sender.isPlayer()) sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.item.give.failed"));
                             }
                         }
                         return true;
@@ -965,9 +965,9 @@ public class Commands extends PluginCommand<RcRPGMain> {
                                 return false;
                             }
                             if (ForgingPaper.giveForgingPaper(player, itemName, count)) {
-                                if (sender.isPlayer()) sender.sendMessage("给予成功");
+                                if (sender.isPlayer()) sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.item.give.success"));
                             } else {
-                                if (sender.isPlayer()) sender.sendMessage("给予失败");
+                                if (sender.isPlayer()) sender.sendMessage(i18n.tr(langCode, "rcrpg.commands.item.give.failed"));
                             }
                         }
                         return true;
